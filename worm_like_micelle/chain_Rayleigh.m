@@ -32,7 +32,7 @@ for i=1:DP
 %         R = B*C*D;
         
         % quaternion
-        phi_q = 2*(rand-0.5)*pi/2;
+        phi_q = 2*(rand-0.5)*pi;
         theta_q = sqrt(-log(1-rand)/a);
         
         vq = O(:,2,i-1)*cos(phi_q) + O(:,3,i-1)*sin(phi_q);
