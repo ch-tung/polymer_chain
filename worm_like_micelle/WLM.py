@@ -14,8 +14,32 @@ import time
 tStart = time.time()
 
 #%% define functions
-
-def chain_Rayleigh(DP,a,lambda_seg,unit_C):
+def rotation(O,a):
+    # quaternion
+    phi_q = 2*(np.random.rand(1)-0.5)*np.pi
+    delta = 1e-3
+    theta_q = np.sqrt(-np.log(1-np.random.rand(1)*(1-delta))/a);
+    if theta_q>np.pi/3*2:
+        theta_q = np.array([np.pi/3*2])
+    #print(theta_q)
+    
+    vq = O[:,1]*np.cos(phi_q) + O[:,2]*np.sin(phi_q)
+    vq = vq/np.sqrt(np.sum(vq**2))
+    qr = np.cos(theta_q/2);
+    qi = vq[0]*np.sin(theta_q/2);
+    qj = vq[1]*np.sin(theta_q/2);
+    qk = vq[2]*np.sin(theta_q/2);
+    
+    Rq = np.array([[1-2*(qj**2+qk**2), 2*(qi*qj+qk*qr), 2*(qi*qk-qj*qr)],
+                    [2*(qi*qj-qk*qr), 1-2*(qi**2+qk**2), 2*(qj*qk+qi*qr)],
+                    [2*(qi*qk+qj*qr), 2*(qj*qk-qi*qr), 1-2*(qj**2+qk**2)]])
+    #print(Rq)
+    
+    R = Rq[:,:,0]
+    return R
+    
+def chain_Rayleigh(DP, a, lambda_seg, unit_C, apply_SA=True, d_exc=1):
+       
     n = np.zeros((3,DP))
     l = np.zeros((3,DP))
     lc = np.zeros((3,DP))
@@ -35,25 +59,44 @@ def chain_Rayleigh(DP,a,lambda_seg,unit_C):
             R = np.eye(3)
             O[:,:,i] = R
         else:
-            # quaternion
-            phi_q = 2*(np.random.rand(1)-0.5)*np.pi
-            theta_q = np.sqrt(-np.log(1-np.random.rand(1))/a);
+            # # quaternion
+            # phi_q = 2*(np.random.rand(1)-0.5)*np.pi
+            # delta = 1e-4
+            # theta_q = np.sqrt(-np.log(1-np.random.rand(1)*(1-delta))/a);
+            # if theta_q>np.pi:
+            #     theta_q = np.array([np.pi-delta])
+            # #print(theta_q)
             
-            vq = O[:,1,i-1]*np.cos(phi_q) + O[:,2,i-1]*np.sin(phi_q)
-            qr = np.cos(theta_q/2);
-            qi = vq[0]*np.sin(theta_q/2);
-            qj = vq[1]*np.sin(theta_q/2);
-            qk = vq[2]*np.sin(theta_q/2);
+            # vq = O[:,1,i-1]*np.cos(phi_q) + O[:,2,i-1]*np.sin(phi_q)
+            # qr = np.cos(theta_q/2);
+            # qi = vq[0]*np.sin(theta_q/2);
+            # qj = vq[1]*np.sin(theta_q/2);
+            # qk = vq[2]*np.sin(theta_q/2);
             
-            Rq = np.array([[1-2*(qj**2+qk**2), 2*(qi*qj+qk*qr), 2*(qi*qk-qj*qr)],
-                            [2*(qi*qj-qk*qr), 1-2*(qi**2+qk**2), 2*(qj*qk+qi*qr)],
-                            [2*(qi*qk+qj*qr), 2*(qj*qk-qi*qr), 1-2*(qj**2+qk**2)]])
+            # Rq = np.array([[1-2*(qj**2+qk**2), 2*(qi*qj+qk*qr), 2*(qi*qk-qj*qr)],
+            #                 [2*(qi*qj-qk*qr), 1-2*(qi**2+qk**2), 2*(qj*qk+qi*qr)],
+            #                 [2*(qi*qk+qj*qr), 2*(qj*qk-qi*qr), 1-2*(qj**2+qk**2)]])
+            # #print(Rq)
             
-            R = Rq[:,:,0]
+            R = rotation(O[:,:,i-1],a)
             
             O[:,:,i] = R@O[:,:,i-1]
             n[:,i] = R@n[:,i-1]
             l[:,i] = l[:,i-1] + n[:,i]
+            
+            #%% check self avoiding
+            if apply_SA:
+                for u in range(i-1):
+                    d_uv = np.sqrt(np.sum((l[:,i-u-1]-l[:,i])**2))
+                    if d_uv<d_exc:
+                        #print('retry')
+                        R = rotation(O[:,:,i-1],a)
+            
+                        O[:,:,i] = R@O[:,:,i-1]
+                        n[:,i] = R@n[:,i-1]
+                        l[:,i] = l[:,i-1] + n[:,i]
+                    else:
+                        break
             
     lc = l*lambda_seg
 
@@ -75,10 +118,10 @@ def chain_Rayleigh(DP,a,lambda_seg,unit_C):
 unit_C = np.zeros((3,1)) # coordinate of C atoms in each unit
 
 # Degree of polymerization
-DP_backbone = 100
+DP_backbone = 10000
 
 # Chain stiffness
-a_backbone = 10
+a_backbone = 1e2
 
 # Unit persistence
 lambda_backbone = 1
@@ -86,15 +129,29 @@ lambda_backbone = 1
 # call 'chain' function
 lc_backbone, Cc_backbone, O_backbone, n_backbone = chain_Rayleigh(DP_backbone,a_backbone,lambda_backbone,unit_C)
 
+tEnd = time.time()
+print("It cost %f sec" % (tEnd - tStart))
 #%% plot
 fig = plt.figure(figsize=(6, 6),dpi=192)
 ax = fig.add_subplot(projection='3d')
 
 ax.plot(Cc_backbone[0,:],Cc_backbone[1,:],Cc_backbone[2,:], 
-           '-', color='#303030', linewidth=2, markersize=12)
-ax.plot(Cc_backbone[0,:],Cc_backbone[1,:],Cc_backbone[2,:], 
-           'o', markeredgecolor='#800000', markerfacecolor='#D00000')
+           '-', color='#D00000', linewidth=2, alpha = 0.75)
+# ax.plot(Cc_backbone[0,:],Cc_backbone[1,:],Cc_backbone[2,:], 
+#             'o', markeredgecolor='#800000', markerfacecolor='#D00000')
 
-ax.axis('off')
+CM = np.mean(Cc_backbone,axis=1)
+d_box = np.max([np.max(Cc_backbone[0,:])-np.min(Cc_backbone[0,:]),
+                np.max(Cc_backbone[1,:])-np.min(Cc_backbone[1,:]),
+                np.max(Cc_backbone[2,:])-np.min(Cc_backbone[2,:])])
+
+#ax.axis('off')
+ax.set_xlim([CM[0]-d_box/2, CM[0]+d_box/2])
+ax.set_ylim([CM[1]-d_box/2, CM[1]+d_box/2])
+ax.set_zlim([CM[2]-d_box/2, CM[2]+d_box/2])
+ax.set_box_aspect([1,1,1])
+ax.set_xticklabels([])
+ax.set_yticklabels([])
+ax.set_zticklabels([])
 
 plt.show()
