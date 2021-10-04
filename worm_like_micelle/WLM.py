@@ -6,11 +6,11 @@ Generate WLM chain trajectories
 """
 import numpy as np
 import numpy.matlib
-from scipy.io import loadmat
-from scipy.io import savemat
+#from scipy.io import loadmat
+#from scipy.io import savemat
 import matplotlib.pyplot as plt
 
-import time
+#import time
 
 #%% define functions
 def rotation(O,a):
@@ -137,26 +137,48 @@ def chain_Rayleigh(DP, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
 
 #%% class: WLChain
 class WLChain:
+    """
+    Modelling polymer chain based on the worm-like chain model and calculate their scattering function.
+    """
     lc = []
     Cc = []
     O = []
     n = []
     l_contour = []
-    l_end2end = []   
+    l_end2end = []
+    box = []
+    apply_SA = []
+    d_exc = []
     
-    def __init__(self,DP,a,lmbda,unit_C):
+    def __init__(self, DP, a, lmbda, unit_C):
         self.DP = DP
         self.a = a
         self.lmbda = lmbda
         self.unit_C = unit_C
+        self.apply_SA = 1
+        self.d_exc = 1
         
     def chain(self):
+        """
+        Call the chain function acd calculate particle trajectory in WL-chain.
+        """
+        
         # call 'chain' function
-        self.lc, self.Cc, self.O, self.n = chain_Rayleigh(self.DP,self.a,self.lmbda,self.unit_C)
+        self.lc, self.Cc, self.O, self.n = chain_Rayleigh(self.DP,self.a,self.lmbda,self.unit_C,
+                                                          apply_SA=self.apply_SA,d_exc=self.d_exc)
         self.l_contour = np.sum(np.sqrt(np.sum(self.n**2,axis=0)))
         self.l_end2end = np.sqrt(np.sum((self.Cc[:,0]-self.Cc[:,-1])**2,axis=0))
+        self.box = np.vstack((np.min(self.Cc, axis=1), np.max(self.Cc, axis=1)))
     
-    def plot(self,filename=[],show_axes=1,save=0):
+    def plot(self, filename=[], show_axes=1, save=0):
+        """
+        Plot polymer chain
+        
+        Args:
+            show_axes: boolean
+            save: boolean
+        """
+        
         plt.close('all')
         fig = plt.figure(figsize=(6, 6),dpi=192)
         ax = fig.add_subplot(projection='3d')
@@ -194,31 +216,118 @@ class WLChain:
             plt.savefig(filename)
 
         plt.show()
+        
+    def scatter(self, n_grid=256, approx_1D=0):
+        """
+        Calculate scattering function
+        
+        Args:
+            n_grid: int
+                number of grid points
+            approx_1D: boolean
+                1-D FFT for isotropic systems
+        """
+        
+        DP = self.DP
+        chain_box = self.box
+    
+        #box_size = np.max(chain_box[1,:]-chain_box[0,:],axis=0)
+        box_size = DP
+        grid_size = (box_size)/n_grid
+        Cc_relative = self.Cc.T-chain_box[0,:] # relative position of WL-chain in the box
+        bead_coord = np.floor(Cc_relative/grid_size).astype('int')
+        
+        if approx_1D==1:
+            # density in real space
+            rho_rx = np.zeros(n_grid)
+            rho_ry = np.zeros(n_grid)
+            rho_rz = np.zeros(n_grid)
+            
+            for i in range(DP):
+                rho_rx[bead_coord[i,0]] += 1
+                rho_ry[bead_coord[i,0]] += 1
+                rho_rz[bead_coord[i,0]] += 1
+            
+            # FFT and calculate scattering function
+            rho_qx = np.fft.fft(rho_rx)
+            rho_qy = np.fft.fft(rho_ry)
+            rho_qz = np.fft.fft(rho_rz)
+            S_q_x = np.absolute(rho_qx)**2/DP
+            S_q_y = np.absolute(rho_qy)**2/DP
+            S_q_z = np.absolute(rho_qz)**2/DP
+            S_q_ave = (S_q_x + S_q_y + S_q_z)/3
+            
+            # radial average
+            grid_coord = np.meshgrid(np.arange(n_grid))
+            dq_grid = 2*np.pi/(box_size)
+            q_grid = np.sqrt(grid_coord[0]**2)*dq_grid
+            
+            dq = dq_grid
+            nq = int(np.floor(dq_grid/dq*n_grid/2))
+            qq = (np.arange(nq)+0.5)*dq    
+            index_q = np.floor(q_grid/dq) # q to the origin
+            
+            S_q = np.zeros(int(nq))
+            
+            for iq in range(int(nq)):
+                S_q[iq] = np.sum(S_q_ave[index_q==iq])/DP
+                S_q[iq] = np.average(S_q_ave[index_q==iq])/DP
+            
+        else:
+            # density in real space
+            rho_r = np.zeros((n_grid,n_grid,n_grid))
+            
+            for i in range(DP):
+                rho_r[bead_coord[i,0],bead_coord[i,1],bead_coord[i,2]] += 1
+            
+            # FFT and calculate scattering function
+            rho_q = np.fft.fftn(rho_r)
+            S_q_lmn = np.absolute(rho_q)**2/DP
+            
+            # radial average
+            grid_coord = np.meshgrid(np.arange(n_grid),np.arange(n_grid),np.arange(n_grid))
+            dq_grid = 2*np.pi/(box_size)
+            q_grid = np.sqrt(grid_coord[0]**2+grid_coord[1]**2+grid_coord[2]**2)*dq_grid
+            
+            dq = dq_grid
+            nq = int(np.floor(dq_grid/dq*n_grid/2))
+            qq = (np.arange(nq)+0.5)*dq
+            index_q = np.floor(q_grid/dq) # q to the origin
+            
+            S_q = np.zeros(int(nq))
+            
+            for iq in range(int(nq)):
+                #vq = 4*np.pi*(iq+0.5)**2/8
+                #S_q[iq] = np.sum(S_q_lmn[index_q==iq])/vq/DP
+                S_q[iq] = np.average(S_q_lmn[index_q==iq])/DP
+                
+        self.qq = qq
+        self.S_q = S_q
 
 #%% test
-# backbone
-# Coordinate of C atoms in each unit
-# unit_C = load('b_c.dat')';
-unit_C = np.zeros((3,1)) # coordinate of C atoms in each unit
+# # backbone
+# # Coordinate of C atoms in each unit
+# # unit_C = load('b_c.dat')';
+# unit_C = np.zeros((3,1)) # coordinate of C atoms in each unit
 
-# Degree of polymerization
-DP_backbone = 10000
+# # Degree of polymerization
+# DP_backbone = 10000
 
-# Chain stiffness
-a_backbone = 1e2
+# # Chain stiffness
+# a_backbone = 1e2
 
-# Unit persistence
-lambda_backbone = 1
+# # Unit persistence
+# lambda_backbone = 1
 
-# call class
-chain01 = WLChain(DP_backbone,a_backbone,lambda_backbone,unit_C)
-tStart = time.time()
-chain01.chain()
-tEnd = time.time()
-print("It cost %f sec" % (tEnd - tStart))
-print('contour length = {:0.1f}'.format(chain01.l_contour))
-print('end-to-end distance = {:0.1f}'.format(chain01.l_end2end))
-chain01.plot()
+# # call class
+# chain01 = WLChain(DP_backbone,a_backbone,lambda_backbone,unit_C)
+# tStart = time.time()
+# chain01.chain()
+# tEnd = time.time()
+# print("It cost %f sec" % (tEnd - tStart))
+# print('contour length = {:0.1f}'.format(chain01.l_contour))
+# print('end-to-end distance = {:0.1f}'.format(chain01.l_end2end))
+# chain01.plot()
 
 #%%
 # # call 'chain' function
