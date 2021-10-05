@@ -78,48 +78,61 @@ def chain_Rayleigh(DP, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
     R = np.zeros((3,3))
     O = np.zeros((3,3,DP))
     
-    # n_retry = 0
-    for i in range(DP):
-        if i==0:
-            n[:,i] = [1,0,0]
-            l[:,i] = n[:,i]
-            #B = np.eye(3)
-            #C = np.eye(3)
-            #D = np.eye(3)
-            R = np.eye(3)
-            O[:,:,i] = R
-        else:
-            R = rotation(O[:,:,i-1],a)
-            
-            O[:,:,i] = R@O[:,:,i-1]
-            # O[:,:,i] = O[:,:,i]/np.sqrt(np.sum(O[:,:,i]**2,axis=0))
-            n[:,i] = O[:,1,i].reshape((3))
-            # n[:,i] = n[:,i]/np.sqrt(np.sum(n[:,i]**2))
-            l[:,i] = l[:,i-1] + n[:,i]
-            
-            if i<2:
-                continue
-            
-            #%% check self avoiding
-            if apply_SA:
-                SA = 0
+    abort = 1
+    while abort==1:
+        abort = 0
+        for i in range(DP):
+            if i==0:
+                n[:,i] = [1,0,0]
+                l[:,i] = n[:,i]
+                #B = np.eye(3)
+                #C = np.eye(3)
+                #D = np.eye(3)
+                R = np.eye(3)
+                O[:,:,i] = R
+            else:
+                R = rotation(O[:,:,i-1],a)
                 
-                while SA == 0:
-                    d2_uv_min = np.min(np.sum((l[:,:i-1].T-l[:,i].T)**2,axis=1))
+                O[:,:,i] = R@O[:,:,i-1]
+                # O[:,:,i] = O[:,:,i]/np.sqrt(np.sum(O[:,:,i]**2,axis=0))
+                n[:,i] = O[:,1,i].reshape((3))
+                # n[:,i] = n[:,i]/np.sqrt(np.sum(n[:,i]**2))
+                l[:,i] = l[:,i-1] + n[:,i]
+                
+                if i<2:
+                    continue
+                
+                #%% check self avoiding
+                if apply_SA:
+                    SA = 0
                     
-                    if d2_uv_min<d2_exc:                      
-                        print('retry')
-                        # n_retry+=1
-                        R = rotation(O[:,:,i-1],a)
-            
-                        O[:,:,i] = R@O[:,:,i-1]
-                        # O[:,:,i] = O[:,:,i]/np.sqrt(np.sum(O[:,:,i]**2,axis=0))
-                        n[:,i] = O[:,1,i].reshape((3))
-                        # n[:,i] = n[:,i]/np.sqrt(np.sum(n[:,i]**2))
-                        l[:,i] = l[:,i-1] + n[:,i]
-                    else:
+                    n_retry = -1
+                    while SA == 0:
+                        n_retry += 1
+                        
+                        if n_retry > 100:
+                            abort = 1
+                            print('abort')
+                            break
+                            
+                        d2_uv_min = np.min(np.sum((l[:,:i-1].T-l[:,i].T)**2,axis=1))
+                        
+                        if d2_uv_min<d2_exc:                      
+                            print('retry')
+                            # n_retry+=1
+                            R = rotation(O[:,:,i-1],a)
+                
+                            O[:,:,i] = R@O[:,:,i-1]
+                            # O[:,:,i] = O[:,:,i]/np.sqrt(np.sum(O[:,:,i]**2,axis=0))
+                            n[:,i] = O[:,1,i].reshape((3))
+                            # n[:,i] = n[:,i]/np.sqrt(np.sum(n[:,i]**2))
+                            l[:,i] = l[:,i-1] + n[:,i]
+                        else:
+                            break
+                        
+                    if abort==1:
                         break
-            
+        
     lc = l*lambda_seg
 
     #%% map unimer
@@ -172,14 +185,14 @@ class WLChain:
     
     def plot(self, filename=[], show_axes=1, save=0):
         """
-        Plot polymer chain
+        Plot polymer chain.
         
         Args:
             show_axes: boolean
             save: boolean
         """
         
-        plt.close('all')
+        #plt.close('all')
         fig = plt.figure(figsize=(6, 6),dpi=192)
         ax = fig.add_subplot(projection='3d')
         
@@ -219,7 +232,7 @@ class WLChain:
         
     def scatter(self, n_grid=256, approx_1D=0):
         """
-        Calculate scattering function
+        Calculate scattering function.
         
         Args:
             n_grid: int

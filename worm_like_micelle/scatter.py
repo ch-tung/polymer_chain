@@ -29,15 +29,16 @@ lambda_backbone = 1
 
 # call class
 chain01 = WLChain(DP_backbone,a_backbone,lambda_backbone,unit_C)
-chain01.d_exc = 0.5
+chain01.d_exc = 1
 
-n_q = 64
-qq = np.zeros(64)
-S_q = np.zeros(64)
+n_q = 128
+qq = np.zeros(n_q)
+S_q = np.zeros(n_q)
 
-n_chain = 10
+n_chain = 100
+tStart_loop = time.time()
 for i in range(n_chain):
-    
+
     tStart = time.time()
     #chain01.apply_SA = 0
     chain01.chain()
@@ -50,9 +51,13 @@ for i in range(n_chain):
     tEnd = time.time()
     print("\'scatter\' cost %f sec" % (tEnd - tStart))
 
+tEnd_loop = time.time()
+print("\'loop\' cost %f sec" % (tEnd - tStart))
+
 qq = chain01.qq    
 S_q = S_q/n_chain
 
+chain01.plot()
 
 import matplotlib.pyplot as plt
 fig = plt.figure(figsize=(6, 6),dpi=192)
