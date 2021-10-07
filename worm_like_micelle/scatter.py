@@ -35,7 +35,7 @@ n_q = 128
 qq = np.zeros(n_q)
 S_q = np.zeros(n_q)
 
-n_chain = 10
+n_chain = 100
 tStart_loop = time.time()
 for i in range(n_chain):
 
@@ -59,12 +59,23 @@ S_q = S_q/n_chain
 
 chain01.plot()
 
+#%%
 import matplotlib.pyplot as plt
 fig = plt.figure(figsize=(6, 6),dpi=192)
 ax = fig.add_subplot()
+
+for i in range(5):
+    ax.plot((10**(i+3)*np.array([1e-3, 1e1]))**-(1/2),np.array([1e-3, 1e1]),
+            '--',color='#C0C0C0',linewidth=0.5)
+    ax.plot((10**(i+3)*np.array([1e-3, 1e1]))**-(3/5),np.array([1e-3, 1e1]),
+            ':',color='#C0C0C0',linewidth=0.5)
+
 ax.plot(qq,S_q)
 ax.set_xscale('log')
 ax.set_yscale('log')
+ax.set_xlim([np.sqrt(np.min(qq)*np.max(qq))*10**-1.5,np.sqrt(np.min(qq)*np.max(qq))*10**1.5])
+ax.set_ylim([1e-3, 2e0])
+ax.grid(True,which='major')
 plt.show()
 
 # #%% Calculate scattering function
