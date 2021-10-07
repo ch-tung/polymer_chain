@@ -35,7 +35,7 @@ n_q = 128
 qq = np.zeros(n_q)
 S_q = np.zeros(n_q)
 
-n_chain = 100
+n_chain = 10
 tStart_loop = time.time()
 for i in range(n_chain):
 
