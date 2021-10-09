@@ -153,7 +153,7 @@ def ring_harmonic(N,n_harmonics):
     for i in range(3):
         phi_i = 2*np.pi*np.random.rand(1)
         
-        weight = 1/(np.arange(n_harmonics)+1)**2
+        weight = np.exp(-(np.arange(n_harmonics)+1)**2/5)
         weight = weight/np.sqrt(np.sum(weight**2))
         coeff_c_i = np.random.rand(n_harmonics)*weight
         coeff_s_i = np.random.rand(n_harmonics)*weight
