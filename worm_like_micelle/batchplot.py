@@ -8,8 +8,10 @@ import numpy as np
 import numpy.matlib
 import time
 from WLM import WLChain
+import matplotlib.pyplot as plt
 
-n_plot = 2
+n_plot = 1
+plt.close('all')
 for i in range(n_plot):
     #%% test
     # backbone
@@ -18,7 +20,7 @@ for i in range(n_plot):
     unit_C = np.zeros((3,1)) # coordinate of C atoms in each unit
     
     # Degree of polymerization
-    DP_backbone = 10000
+    N_backbone = 10000
     
     # Chain stiffness
     a_backbone = 1e2
@@ -27,8 +29,9 @@ for i in range(n_plot):
     lambda_backbone = 1
     
     # call class
-    chain01 = WLChain(DP_backbone,a_backbone,lambda_backbone,unit_C)
+    chain01 = WLChain(N_backbone,a_backbone,lambda_backbone,unit_C)
     tStart = time.time()
+    chain01.d_exc = 1
     chain01.chain()
     tEnd = time.time()
     print("It cost %f sec" % (tEnd - tStart))

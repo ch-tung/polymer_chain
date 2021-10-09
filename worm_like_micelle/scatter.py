@@ -19,7 +19,7 @@ from WLM import WLChain
 unit_C = np.zeros((3,1)) # coordinate of C atoms in each unit
 
 # Degree of polymerization
-DP_backbone = 10000
+N_backbone = 10000
 
 # Chain stiffness
 a_backbone = 1e2
@@ -28,14 +28,14 @@ a_backbone = 1e2
 lambda_backbone = 1
 
 # call class
-chain01 = WLChain(DP_backbone,a_backbone,lambda_backbone,unit_C)
+chain01 = WLChain(N_backbone,a_backbone,lambda_backbone,unit_C)
 chain01.d_exc = 1
 
 n_q = 128
 qq = np.zeros(n_q)
 S_q = np.zeros(n_q)
 
-n_chain = 100
+n_chain = 1
 tStart_loop = time.time()
 for i in range(n_chain):
 
@@ -79,12 +79,12 @@ ax.grid(True,which='major')
 plt.show()
 
 # #%% Calculate scattering function
-# DP = chain01.DP
+# N = chain01.N
 # chain_box = chain01.box
 # approx_1D = 0
 
 # #box_size = np.max(chain_box[1,:]-chain_box[0,:],axis=0)
-# box_size = DP
+# box_size = N
 # n_grid = 256
 # grid_size = (box_size)/n_grid
 # Cc_relative = chain01.Cc.T-chain_box[0,:] # relative position of WL-chain in the box
@@ -96,7 +96,7 @@ plt.show()
 #     rho_ry = np.zeros(n_grid)
 #     rho_rz = np.zeros(n_grid)
     
-#     for i in range(DP):
+#     for i in range(N):
 #         rho_rx[bead_coord[i,0]] += 1
 #         rho_ry[bead_coord[i,0]] += 1
 #         rho_rz[bead_coord[i,0]] += 1
@@ -105,9 +105,9 @@ plt.show()
 #     rho_qx = np.fft.fft(rho_rx)
 #     rho_qy = np.fft.fft(rho_ry)
 #     rho_qz = np.fft.fft(rho_rz)
-#     S_q_x = np.absolute(rho_qx)**2/DP
-#     S_q_y = np.absolute(rho_qy)**2/DP
-#     S_q_z = np.absolute(rho_qz)**2/DP
+#     S_q_x = np.absolute(rho_qx)**2/N
+#     S_q_y = np.absolute(rho_qy)**2/N
+#     S_q_z = np.absolute(rho_qz)**2/N
 #     S_q_ave = (S_q_x + S_q_y + S_q_z)/3
     
 #     # radial average
@@ -123,19 +123,19 @@ plt.show()
 #     S_q = np.zeros(int(nq))
     
 #     for iq in range(int(nq)):
-#         S_q[iq] = np.sum(S_q_ave[index_q==iq])/DP
-#         S_q[iq] = np.average(S_q_ave[index_q==iq])/DP
+#         S_q[iq] = np.sum(S_q_ave[index_q==iq])/N
+#         S_q[iq] = np.average(S_q_ave[index_q==iq])/N
     
 # else:
 #     # density in real space
 #     rho_r = np.zeros((n_grid,n_grid,n_grid))
     
-#     for i in range(DP):
+#     for i in range(N):
 #         rho_r[bead_coord[i,0],bead_coord[i,1],bead_coord[i,2]] += 1
     
 #     # FFT and calculate scattering function
 #     rho_q = np.fft.fftn(rho_r)
-#     S_q_lmn = np.absolute(rho_q)**2/DP
+#     S_q_lmn = np.absolute(rho_q)**2/N
     
 #     # radial average
 #     grid_coord = np.meshgrid(np.arange(n_grid),np.arange(n_grid),np.arange(n_grid))
@@ -151,7 +151,7 @@ plt.show()
     
 #     for iq in range(int(nq)):
 #         #vq = 4*np.pi*(iq+0.5)**2/8
-#         #S_q[iq] = np.sum(S_q_lmn[index_q==iq])/vq/DP
-#         S_q[iq] = np.average(S_q_lmn[index_q==iq])/DP
+#         #S_q[iq] = np.sum(S_q_lmn[index_q==iq])/vq/N
+#         S_q[iq] = np.average(S_q_lmn[index_q==iq])/N
 
 
