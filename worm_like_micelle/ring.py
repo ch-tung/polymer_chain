@@ -16,8 +16,8 @@ from WLM import WLChain
 import time
 
 # parameters
-N = 1024
-n_harmonics = 10
+# N = 10000
+# n_harmonics = 10
 
 # c_ring = np.zeros((3,N+1))
 
@@ -38,16 +38,16 @@ n_harmonics = 10
     
 #     c_ring[i,:] = np.sum(harmonics_i,axis=1)
 
-chain01 = WLChain(N=1024)
+chain01 = WLChain(N = 10000)
 plt.close('all')
-for i in range(20):
+for i in range(1):
     tStart = time.time()
     #chain01.apply_SA = 0
-    chain01.ring(n_harmonics=10)
+    chain01.ring(n_harmonics = 10)
     tEnd = time.time()
     
     filename_ring = './figures/ring/ring_test_{:d}.png'.format(i+1)
-    chain01.plot(filename=filename_ring, show_axes=0, save=1, end=0)
+    chain01.plot(filename=filename_ring, show_axes=0, save=0, end=0)
 #%% plot
 
 
@@ -85,3 +85,10 @@ for i in range(20):
 # ax.set_box_aspect([1,1,1])
 
 # plt.show()
+
+#%% test segment length
+Cc = chain01.Cc
+d_Cc = Cc[:,:-1]-Cc[:,1:]
+dist_Cc = np.sqrt(np.sum(d_Cc**2,axis=0))
+print(max(dist_Cc))
+print(min(dist_Cc))

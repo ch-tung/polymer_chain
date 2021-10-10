@@ -157,7 +157,7 @@ def ring_harmonic(N,n_harmonics):
     for i in range(3):
         phi_i = 2*np.pi*np.random.rand(1)
         
-        weight = np.exp(-(np.arange(n_harmonics)+1)**2/5)
+        weight = np.exp(-(np.arange(n_harmonics)+1)**2/10)
         weight = weight/np.sqrt(np.sum(weight**2))
         coeff_c_i = np.random.rand(n_harmonics)*weight
         coeff_s_i = np.random.rand(n_harmonics)*weight
@@ -166,32 +166,37 @@ def ring_harmonic(N,n_harmonics):
         harmonics_s_i = np.sin(np.outer(theta,(np.arange(n_harmonics)+1)) + phi_i)*coeff_s_i
         
         harmonics_i = harmonics_c_i + harmonics_s_i
-        # harmonics_i_deriv = harmonics_s_i + -harmonics_c_i
+        # harmonics_i_deriv = harmonics_s_i*(np.arange(n_harmonics)+1) + -harmonics_c_i*(np.arange(n_harmonics)+1)
         
         c_ring[i,:] = np.sum(harmonics_i,axis=1)
         # c_ring_deriv[i,:] = np.sum(harmonics_i_deriv,axis=1)
-        
-    # arc_length = np.sqrt(np.sum(c_ring_deriv**2,axis=0))
-    # arc_length_sum = np.sum(arc_length)
     
-    # arc_length_cum = np.zeros(N+1)
-    # for i in range(N+1):
-    #     if i==0:
-    #         arc_length_cum[i] = 0
+    arc_segment = np.sqrt(np.sum((c_ring[:,:-1]-c_ring[:,1:])**2,axis=0))
+    
+    # arc_segment = np.sqrt(np.sum(c_ring_deriv**2,axis=0))
+    arc_sum = np.sum(arc_segment)
+    
+    arc_cum = np.zeros(N+1)
+    for i in range(N+1):
+        if i==0:
+            arc_cum[i] = 0
             
-    #     else:
-    #         arc_length_cum[i] = arc_length_cum[i-1] + arc_length[i-1]
+        else:
+            arc_cum[i] = arc_cum[i-1] + arc_segment[i-1]
             
-    # f_arc = interpolate.interp1d(arc_length_cum, theta)
+    f_arc = interpolate.interp1d(arc_cum, theta, kind='quadratic', fill_value='extrapolate')
     
-    # arc_seq = np.arange(N+1)/(N+1)*arc_length_sum
+    arc_seq = np.arange(N+1)/(N+1)*arc_sum
     
-    # theta_interpolate = f_arc(arc_seq[:-1])
+    print(arc_cum)
+    print(arc_seq)
     
-    # f_ring = interpolate.interp1d(theta, c_ring)
-    # Cc = f_ring(theta_interpolate)
+    theta_interpolate = f_arc(arc_seq)
     
-    return c_ring
+    f_ring = interpolate.interp1d(theta, c_ring, kind='quadratic', fill_value='extrapolate')
+    Cc = f_ring(theta_interpolate)/arc_sum*(N+1)
+    
+    return Cc
 #%% class: WLChain
 class WLChain:
     """
