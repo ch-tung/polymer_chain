@@ -9,7 +9,7 @@ import numpy.matlib
 #from scipy.io import loadmat
 #from scipy.io import savemat
 import matplotlib.pyplot as plt
-
+from scipy import interpolate
 #import time
 
 #%% define functions
@@ -150,6 +150,10 @@ def chain_Rayleigh(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
 
 def ring_harmonic(N,n_harmonics):
     c_ring = np.zeros((3,N+1))
+    # c_ring_deriv = np.zeros((3,N+1))
+    
+    theta = np.arange(N+1)/N*2*np.pi
+    
     for i in range(3):
         phi_i = 2*np.pi*np.random.rand(1)
         
@@ -158,14 +162,35 @@ def ring_harmonic(N,n_harmonics):
         coeff_c_i = np.random.rand(n_harmonics)*weight
         coeff_s_i = np.random.rand(n_harmonics)*weight
         
-        theta = np.arange(N+1)/N*2*np.pi
-        
         harmonics_c_i = np.cos(np.outer(theta,(np.arange(n_harmonics)+1)) + phi_i)*coeff_c_i
         harmonics_s_i = np.sin(np.outer(theta,(np.arange(n_harmonics)+1)) + phi_i)*coeff_s_i
         
         harmonics_i = harmonics_c_i + harmonics_s_i
+        # harmonics_i_deriv = harmonics_s_i + -harmonics_c_i
         
         c_ring[i,:] = np.sum(harmonics_i,axis=1)
+        # c_ring_deriv[i,:] = np.sum(harmonics_i_deriv,axis=1)
+        
+    # arc_length = np.sqrt(np.sum(c_ring_deriv**2,axis=0))
+    # arc_length_sum = np.sum(arc_length)
+    
+    # arc_length_cum = np.zeros(N+1)
+    # for i in range(N+1):
+    #     if i==0:
+    #         arc_length_cum[i] = 0
+            
+    #     else:
+    #         arc_length_cum[i] = arc_length_cum[i-1] + arc_length[i-1]
+            
+    # f_arc = interpolate.interp1d(arc_length_cum, theta)
+    
+    # arc_seq = np.arange(N+1)/(N+1)*arc_length_sum
+    
+    # theta_interpolate = f_arc(arc_seq[:-1])
+    
+    # f_ring = interpolate.interp1d(theta, c_ring)
+    # Cc = f_ring(theta_interpolate)
+    
     return c_ring
 #%% class: WLChain
 class WLChain:
