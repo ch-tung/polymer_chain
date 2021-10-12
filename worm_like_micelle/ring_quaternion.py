@@ -9,6 +9,7 @@ sys.modules[__name__].__dict__.clear()
 
 import numpy as np
 import numpy.matlib
+import quaternion
 #from scipy.io import loadmat
 #from scipy.io import savemat
 import matplotlib.pyplot as plt
@@ -21,22 +22,46 @@ n_harmonics = 10
 
 c_ring = np.zeros((3,N+1))
 
-for i in range(3):
-    phi_i = 2*np.pi*np.random.rand(1)
+list_u = []
+list_v = []
+
+tStart = time.time()
+for i in range(N):
+    U = np.random.rand(2)
+    u_re = np.sqrt(-np.log(U[0]))*np.cos(2*np.pi*U[1])
+    u_im = np.sqrt(-np.log(U[0]))*np.sin(2*np.pi*U[1])
+    u = np.quaternion(u_re,u_im,0,0)
+    list_u.append(u)
+    V = np.random.rand(2)
+    v_re = np.sqrt(-np.log(V[0]))*np.cos(2*np.pi*V[1])
+    v_im = np.sqrt(-np.log(V[0]))*np.sin(2*np.pi*V[1])
+    v = np.quaternion(v_re,v_im,0,0)
+    list_v.append(v)
+
+uu = np.array(list_u)
+vv = np.array(list_v)
+
+vv2 = vv - np.sum(vv*uu)*uu/np.sum(uu*uu)
+
+tEnd = time.time()    
+print("it cost %f sec" % (tEnd - tStart))
+
+# for i in range(3):
+#     phi_i = 2*np.pi*np.random.rand(1)
     
-    weight = 1/(np.arange(n_harmonics)+1)**1.5
-    weight = weight/np.sqrt(np.sum(weight**2))
-    coeff_c_i = np.random.rand(n_harmonics)*weight
-    coeff_s_i = np.random.rand(n_harmonics)*weight
+#     weight = 1/(np.arange(n_harmonics)+1)**1.5
+#     weight = weight/np.sqrt(np.sum(weight**2))
+#     coeff_c_i = np.random.rand(n_harmonics)*weight
+#     coeff_s_i = np.random.rand(n_harmonics)*weight
     
-    theta = np.arange(N+1)/N*2*np.pi
+#     theta = np.arange(N+1)/N*2*np.pi
     
-    harmonics_c_i = np.cos(np.outer(theta,(np.arange(n_harmonics)+1)) + phi_i)*coeff_c_i
-    harmonics_s_i = np.sin(np.outer(theta,(np.arange(n_harmonics)+1)) + phi_i)*coeff_s_i
+#     harmonics_c_i = np.cos(np.outer(theta,(np.arange(n_harmonics)+1)) + phi_i)*coeff_c_i
+#     harmonics_s_i = np.sin(np.outer(theta,(np.arange(n_harmonics)+1)) + phi_i)*coeff_s_i
     
-    harmonics_i = harmonics_c_i + harmonics_s_i
+#     harmonics_i = harmonics_c_i + harmonics_s_i
     
-    c_ring[i,:] = np.sum(harmonics_i,axis=1)
+#     c_ring[i,:] = np.sum(harmonics_i,axis=1)
 
 # chain01 = WLChain(N = 10000)
 # plt.close('all')
