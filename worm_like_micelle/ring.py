@@ -43,7 +43,7 @@ plt.close('all')
 for i in range(1):
     tStart = time.time()
     #chain01.apply_SA = 0
-    chain01.ring(n_harmonics = 10)
+    chain01.ring(n_harmonics=10,sigma=20)
     tEnd = time.time()
     
     filename_ring = './figures/ring/ring_test_{:d}.png'.format(i+1)

@@ -148,7 +148,7 @@ def chain_Rayleigh(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
     # print(n_retry)
     return lc, Cc, O, n
 
-def ring_harmonic(N,n_harmonics):
+def ring_harmonic(N,n_harmonics,sigma):
     c_ring = np.zeros((3,N+1))
     # c_ring_deriv = np.zeros((3,N+1))
     
@@ -157,7 +157,7 @@ def ring_harmonic(N,n_harmonics):
     for i in range(3):
         phi_i = 2*np.pi*np.random.rand(1)
         
-        weight = np.exp(-(np.arange(n_harmonics)+1)**2/10)
+        weight = np.exp(-(np.arange(n_harmonics)+1)**2/sigma)
         weight = weight/np.sqrt(np.sum(weight**2))
         coeff_c_i = np.random.rand(n_harmonics)*weight
         coeff_s_i = np.random.rand(n_harmonics)*weight
@@ -188,8 +188,8 @@ def ring_harmonic(N,n_harmonics):
     
     arc_seq = np.arange(N+1)/(N+1)*arc_sum
     
-    print(arc_cum)
-    print(arc_seq)
+    # print(arc_cum)
+    # print(arc_seq)
     
     theta_interpolate = f_arc(arc_seq)
     
@@ -232,13 +232,13 @@ class WLChain:
         self.l_end2end = np.sqrt(np.sum((self.Cc[:,0]-self.Cc[:,-1])**2,axis=0))
         self.box = np.vstack((np.min(self.Cc, axis=1), np.max(self.Cc, axis=1)))
         
-    def ring(self,n_harmonics):
+    def ring(self,n_harmonics,sigma):
         """
         Call the chain function acd calculate particle trajectory in WL-chain.
         """
         
         # call 'ring_harmonics' function
-        self.Cc = ring_harmonic(self.N,n_harmonics)
+        self.Cc = ring_harmonic(self.N,n_harmonics,sigma)
         self.l_end2end = np.sqrt(np.sum((self.Cc[:,0]-self.Cc[:,-1])**2,axis=0))
         self.box = np.vstack((np.min(self.Cc, axis=1), np.max(self.Cc, axis=1)))
     

@@ -35,13 +35,14 @@ n_q = 128
 qq = np.zeros(n_q)
 S_q = np.zeros(n_q)
 
-n_chain = 1
+n_chain = 20
 tStart_loop = time.time()
 for i in range(n_chain):
 
     tStart = time.time()
     #chain01.apply_SA = 0
-    chain01.chain()
+    #chain01.chain()
+    chain01.ring(n_harmonics=40,sigma=10)
     tEnd = time.time()
     print("\'chain\' cost %f sec" % (tEnd - tStart))
     
