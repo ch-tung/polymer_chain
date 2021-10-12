@@ -6,6 +6,7 @@ Generate WLM chain trajectories
 """
 import numpy as np
 import numpy.matlib
+import quaternion
 #from scipy.io import loadmat
 #from scipy.io import savemat
 import matplotlib.pyplot as plt
@@ -197,6 +198,47 @@ def ring_harmonic(N,n_harmonics,sigma):
     Cc = f_ring(theta_interpolate)/arc_sum*(N+1)
     
     return Cc
+
+def ring_q(N,lmbda):
+    list_u = []
+    list_v = []
+
+    for i in range(N):
+        U = np.random.rand(2)
+        u_re = np.sqrt(-np.log(U[0]))*np.cos(2*np.pi*U[1])
+        u_im = np.sqrt(-np.log(U[0]))*np.sin(2*np.pi*U[1])
+        u = np.quaternion(u_re,u_im,0,0)
+        list_u.append(u)
+        V = np.random.rand(2)
+        v_re = np.sqrt(-np.log(V[0]))*np.cos(2*np.pi*V[1])
+        v_im = np.sqrt(-np.log(V[0]))*np.sin(2*np.pi*V[1])
+        v = np.quaternion(v_re,v_im,0,0)
+        list_v.append(v)
+    
+    uu = np.array(list_u)
+    vv = np.array(list_v)
+    
+    vv2 = vv - uu*np.sum(np.conjugate(uu)*vv)/np.sum(np.conjugate(uu)*uu)
+    uu = uu/np.sqrt(np.sum(np.conjugate(uu)*uu))
+    vv2 = vv2/np.sqrt(np.sum(np.conjugate(vv2)*vv2))
+    
+    h = uu + vv2*np.quaternion(0,0,1,0)
+    
+    h_Hopf = np.conjugate(h)*np.quaternion(0,1,0,0)*h
+    
+    n = quaternion.as_float_array(h_Hopf)[:,1:]*N
+    
+    l = np.zeros((N+1,3))
+    for i in range(N+1):
+        if i==0:
+            l[i,:] = 0
+            
+        else:
+            l[i,:] = l[i-1,:] + n[i-1,:]
+    
+    Cc = l.T*lmbda
+    
+    return Cc
 #%% class: WLChain
 class WLChain:
     """
@@ -239,6 +281,16 @@ class WLChain:
         
         # call 'ring_harmonics' function
         self.Cc = ring_harmonic(self.N,n_harmonics,sigma)
+        self.l_end2end = np.sqrt(np.sum((self.Cc[:,0]-self.Cc[:,-1])**2,axis=0))
+        self.box = np.vstack((np.min(self.Cc, axis=1), np.max(self.Cc, axis=1)))
+        
+    def ring_q(self):
+        """
+        Call the chain function acd calculate particle trajectory in WL-chain.
+        """
+        
+        # call 'ring_harmonics' function
+        self.Cc = ring_q(self.N,self.lmbda)
         self.l_end2end = np.sqrt(np.sum((self.Cc[:,0]-self.Cc[:,-1])**2,axis=0))
         self.box = np.vstack((np.min(self.Cc, axis=1), np.max(self.Cc, axis=1)))
     

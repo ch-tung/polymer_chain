@@ -42,7 +42,8 @@ for i in range(n_chain):
     tStart = time.time()
     #chain01.apply_SA = 0
     #chain01.chain()
-    chain01.ring(n_harmonics=40,sigma=10)
+    #chain01.ring(n_harmonics=40,sigma=10)
+    chain01.ring_q()
     tEnd = time.time()
     print("\'chain\' cost %f sec" % (tEnd - tStart))
     
