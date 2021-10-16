@@ -1,4 +1,4 @@
-clear;
+%clear;
 close all
 %% backbone
 % Coordinate of C atoms in each unit
@@ -9,13 +9,13 @@ unit_C = zeros(3,1); % coordinate of C atoms in each unit
 DP_backbone = 100; 
 
 % Chain stiffness
-a_backbone = 2;
+a_backbone = 10;
 
 % Unit persistence
 % lambda = 2.5234667395;
 lambda = 1;
 
-[lc_backbone,Cc_backbone,O_backbone,n_backbone] = chain(DP_backbone,a_backbone,lambda,unit_C);
+[lc_backbone,Cc_backbone,O_backbone,n_backbone] = chain_Rayleigh(DP_backbone,a_backbone,lambda,unit_C);
 
 % plot backbone
 pC_b=plot3(Cc_backbone(1,:),Cc_backbone(2,:),Cc_backbone(3,:), 'o-','Color','#303030','MarkerSize',8,'MarkerFaceColor','#303030','LineWidth',2);
@@ -26,7 +26,7 @@ axis equal
 %% branch
 inteval = 1;
 DP_branch = 1;
-a_branch = 10;
+a_branch = 1000;
 
 N_branch = floor(DP_backbone/inteval);
 Cc_branch = zeros(3,DP_branch,N_branch);
@@ -35,7 +35,7 @@ Cc_branch_r = zeros(3,DP_branch,N_branch);
 hold on
 
 for i = 1:N_branch
-Cc_branch(:,:,i) = chain(DP_branch,a_branch,lambda,unit_C);
+Cc_branch(:,:,i) = chain_Rayleigh(DP_branch,a_branch,lambda,unit_C);
 Cc_branch(:,:,i) = Cc_branch(:,:,i) - Cc_branch(:,1,i);
 
 t = pi/2;
