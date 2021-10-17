@@ -23,9 +23,10 @@ N_backbone = 10000
 
 a = np.zeros(10)
 S_q = np.zeros((128,10))
-for i in range(10):
+n_j = 10
+for j in range(n_j):
     # Chain stiffness
-    a_backbone = 10**((i+1)/2)
+    a_backbone = n_j**((j+1)/2)
     
     # Unit persistence
     lambda_backbone = 1
@@ -36,7 +37,7 @@ for i in range(10):
     
     n_q = 128
     qq = np.zeros(n_q)
-    S_q = np.zeros(n_q)
+    S_q_j = np.zeros(n_q)
     
     n_chain = 100
     tStart_loop = time.time()
@@ -44,15 +45,15 @@ for i in range(10):
     
         tStart = time.time()
         #chain01.apply_SA = 0
-        #chain01.chain()
+        chain01.chain()
         #chain01.ring(n_harmonics=40,sigma=10)
-        chain01.ring_q()
+        #chain01.ring_q()
         tEnd = time.time()
         print("\'chain\' cost %f sec" % (tEnd - tStart))
         
         tStart = time.time()
         chain01.scatter(n_grid=n_q*2)
-        S_q = S_q + chain01.S_q
+        S_q_j = S_q_j + chain01.S_q
         tEnd = time.time()
         print("\'scatter\' cost %f sec" % (tEnd - tStart))
     
@@ -60,9 +61,9 @@ for i in range(10):
     print("\'loop\' cost %f sec" % (tEnd - tStart))
     
     qq = chain01.qq    
-    S_q_i = S_q/n_chain
-    a[i] = a_backbone
-    S_q[:,i] = S_q_i
+    S_q_j = S_q_j/n_chain
+    a[j] = a_backbone
+    S_q[:,j] = S_q_j
 
 from scipy.io import savemat
 filename = 'scatter_chain.mat'
