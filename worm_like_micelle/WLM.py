@@ -96,7 +96,7 @@ def chain_Rayleigh(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
                 
                 O[:,:,i] = R@O[:,:,i-1]
                 # O[:,:,i] = O[:,:,i]/np.sqrt(np.sum(O[:,:,i]**2,axis=0))
-                n[:,i] = O[:,1,i].reshape((3))
+                n[:,i] = O[:,0,i].reshape((3))
                 # n[:,i] = n[:,i]/np.sqrt(np.sum(n[:,i]**2))
                 l[:,i] = l[:,i-1] + n[:,i]
                 
@@ -158,7 +158,7 @@ def ring_harmonic(N,n_harmonics,sigma):
     for i in range(3):
         phi_i = 2*np.pi*np.random.rand(1)
         
-        weight = np.exp(-(np.arange(n_harmonics)+1)**2/sigma)
+        weight = np.exp(-(np.arange(n_harmonics)+1)**2/sigma**2/2)
         weight = weight/np.sqrt(np.sum(weight**2))
         coeff_c_i = np.random.rand(n_harmonics)*weight
         coeff_s_i = np.random.rand(n_harmonics)*weight
@@ -250,6 +250,7 @@ class WLChain:
     n = []
     l_contour = []
     l_end2end = []
+    l_prstnc = []
     box = []
     apply_SA = []
     d_exc = []
@@ -272,11 +273,20 @@ class WLChain:
                                                           apply_SA=self.apply_SA,d_exc=self.d_exc)
         self.l_contour = np.sum(np.sqrt(np.sum(self.n**2,axis=0)))
         self.l_end2end = np.sqrt(np.sum((self.Cc[:,0]-self.Cc[:,-1])**2,axis=0))
+        self.l_prstnc = self.lmbda/(1-(1/np.tanh(self.a/2)-2/self.a))
+        #self.l_prstnc = np.dot(self.n[:,0].T,self.lc[:,-1])
         self.box = np.vstack((np.min(self.Cc, axis=1), np.max(self.Cc, axis=1)))
         
     def ring(self,n_harmonics,sigma):
         """
-        Call the chain function acd calculate particle trajectory in WL-chain.
+        Call the chain function and calculate particle trajectory in WL-chain.
+        
+        Args:
+            n_harmonics: int
+                harmonics used in fourier series
+                
+            sigma: float
+                controlled the spread of k-distribution (p(k) = exp(-k^2/(2*sigma^2)))
         """
         
         # call 'ring_harmonics' function
@@ -286,7 +296,14 @@ class WLChain:
         
     def ring_q(self):
         """
-        Call the chain function acd calculate particle trajectory in WL-chain.
+        Call the chain function and calculate particle trajectory in WL-chain.
+        
+        Uehara, E., Tanaka, R., Inoue, M., Hirose, F., & Deguchi, T. (2014). 
+        Mean-square radius of gyration and hydrodynamic radius for topological 
+        polymers evaluated through the quaternionic algorithm. 
+        Reactive and Functional Polymers, 80, 48-56.
+        
+        numpy-quaternion package required https://github.com/moble/quaternion
         """
         
         # call 'ring_harmonics' function
@@ -299,8 +316,15 @@ class WLChain:
         Plot polymer chain.
         
         Args:
+            filename: str
+                path of the generated figure
+                
             show_axes: boolean
+            
             save: boolean
+            
+            end: boolean
+                whether to display the end-point of loop
         """
         
         #plt.close('all')
@@ -428,83 +452,3 @@ class WLChain:
                 
         self.qq = qq
         self.S_q = S_q
-
-#%% test
-# # backbone
-# # Coordinate of C atoms in each unit
-# # unit_C = load('b_c.dat')';
-# unit_C = np.zeros((3,1)) # coordinate of C atoms in each unit
-
-# # Degree of polymerization
-# N_backbone = 10000
-
-# # Chain stiffness
-# a_backbone = 1e2
-
-# # Unit persistence
-# lambda_backbone = 1
-
-# # call class
-# chain01 = WLChain(N_backbone,a_backbone,lambda_backbone,unit_C)
-# tStart = time.time()
-# chain01.chain()
-# tEnd = time.time()
-# print("It cost %f sec" % (tEnd - tStart))
-# print('contour length = {:0.1f}'.format(chain01.l_contour))
-# print('end-to-end distance = {:0.1f}'.format(chain01.l_end2end))
-# chain01.plot()
-
-#%%
-# # call 'chain' function
-# lc_backbone, Cc_backbone, O_backbone, n_backbone = chain_Rayleigh(N_backbone,a_backbone,lambda_backbone,unit_C)
-
-# tEnd = time.time()
-# print("It cost %f sec" % (tEnd - tStart))
-
-# l_contour = np.sum(np.sqrt(np.sum(n_backbone**2,axis=0)))
-# l_end2end = np.sqrt(np.sum((Cc_backbone[:,0]-Cc_backbone[:,-1])**2,axis=0))
-# print('contour length = {:0.1f}'.format(l_contour))
-# print('end-to-end length = {:0.1f}'.format(l_end2end))
-       
-# #%% plot
-# plt.close('all')
-# fig = plt.figure(figsize=(6, 6),Ni=192)
-# ax = fig.add_subplot(projection='3d')
-
-# ax.plot(Cc_backbone[0,:],Cc_backbone[1,:],Cc_backbone[2,:], 
-#         '-', color='#D00000', linewidth=2, alpha = 0.75)
-# # ax.plot(Cc_backbone[0,:],Cc_backbone[1,:],Cc_backbone[2,:], 
-# #         'o', markeredgecolor='#800000', markerfacecolor='#D00000')
-
-# ax.plot(Cc_backbone[0,0],Cc_backbone[1,0],Cc_backbone[2,0], 
-#             'o', markeredgecolor='#800000', markerfacecolor='#D00000')
-# ax.plot(Cc_backbone[0,-1],Cc_backbone[1,-1],Cc_backbone[2,-1], 
-#             'o', markeredgecolor='#800000', markerfacecolor='#D00000')
-
-# CM = np.mean(Cc_backbone,axis=1)
-# CT = np.array([np.max(Cc_backbone[0,:])+np.min(Cc_backbone[0,:]),
-#                np.max(Cc_backbone[1,:])+np.min(Cc_backbone[1,:]),
-#                np.max(Cc_backbone[2,:])+np.min(Cc_backbone[2,:])])/2
-# d_box = np.max([np.max(Cc_backbone[0,:])-np.min(Cc_backbone[0,:]),
-#                 np.max(Cc_backbone[1,:])-np.min(Cc_backbone[1,:]),
-#                 np.max(Cc_backbone[2,:])-np.min(Cc_backbone[2,:])])
-
-# #ax.axis('off')
-# ax.set_xlim([CT[0]-d_box/2, CT[0]+d_box/2])
-# ax.set_ylim([CT[1]-d_box/2, CT[1]+d_box/2])
-# ax.set_zlim([CT[2]-d_box/2, CT[2]+d_box/2])
-# ax.set_box_aspect([1,1,1])
-# # ax.set_xticklabels([])
-# # ax.set_yticklabels([])
-# # ax.set_zticklabels([])
-
-# plt.show()
-
-# #%%
-# # fig2 = plt.figure(figsize=(6, 6),Ni=192)
-# # ax2 = fig2.add_subplot()
-
-# # ax2.plot(np.arange(N_backbone), np.sum(n_backbone**2,axis=0),'-')
-# # ax2.set_yscale('log')
-# # ax2.set_ylim([0.5, 2])
-
