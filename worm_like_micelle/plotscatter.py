@@ -23,7 +23,7 @@ a  = scatter_dict['a'].T
 fig = plt.figure(figsize=(5, 5),dpi=192)
 ax = fig.add_subplot()
 
-n_plot = 7
+n_plot = 8
 x = np.linspace(0.0, 1.0, n_plot)
 color = plt.get_cmap('viridis')(x)
 
