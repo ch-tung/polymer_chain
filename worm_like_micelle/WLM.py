@@ -117,8 +117,11 @@ def chain_Rayleigh(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
                             break
                             
                         d2_uv_min = np.min(np.sum((l[:,:i-1].T-l[:,i].T)**2,axis=1))
+                        # d1_uv_min = np.min(np.max(np.abs(l[:,:i-1].T-l[:,i].T),axis=1))
+                        # print(d1_uv_min)
                         
-                        if d2_uv_min<d2_exc:                      
+                        if d2_uv_min<d2_exc:
+                        # if d1_uv_min<d_exc:
                             print('retry')
                             # n_retry+=1
                             R = rotation(O[:,:,i-1],a)
