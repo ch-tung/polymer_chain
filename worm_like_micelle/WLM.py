@@ -369,7 +369,7 @@ class WLChain:
 
         plt.show()
         
-    def scatter(self, n_grid=256, approx_1D=0):
+    def scatter(self, n_grid=256, approx_1D=0, box_size=1e4):
         """
         Calculate scattering function.
         
@@ -384,7 +384,7 @@ class WLChain:
         chain_box = self.box
     
         #box_size = np.max(chain_box[1,:]-chain_box[0,:],axis=0)
-        box_size = N
+        #box_size = N
         grid_size = (box_size)/n_grid
         Cc_relative = self.Cc.T-chain_box[0,:] # relative position of WL-chain in the box
         bead_coord = np.floor(Cc_relative/grid_size).astype('int')

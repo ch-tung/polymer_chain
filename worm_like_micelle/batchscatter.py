@@ -52,7 +52,7 @@ for j in range(n_j):
         print("\'chain\' cost %f sec" % (tEnd - tStart))
         
         tStart = time.time()
-        chain01.scatter(n_grid=n_q*2)
+        chain01.scatter(n_grid=n_q*2,box_size=chain01.l_prstnc*1e4)
         S_q_j = S_q_j + chain01.S_q
         tEnd = time.time()
         print("\'scatter\' cost %f sec" % (tEnd - tStart))
@@ -66,6 +66,6 @@ for j in range(n_j):
     S_q[:,j] = S_q_j
 
 from scipy.io import savemat
-filename = 'scatter_chain.mat'
+filename = 'scatter_chain_prstnc.mat'
 mdic = {'S_q':S_q, 'a':a, 'qq':qq}
 savemat(filename, mdic)
