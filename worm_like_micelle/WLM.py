@@ -69,6 +69,7 @@ def rotation(O,a):
    
 def chain_Rayleigh(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
     d2_exc = d_exc**2
+    i_diameter = int(np.ceil(2*d_exc/lambda_seg))
        
     n = np.zeros((3,N))
     l = np.zeros((3,N))
@@ -100,7 +101,7 @@ def chain_Rayleigh(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
                 # n[:,i] = n[:,i]/np.sqrt(np.sum(n[:,i]**2))
                 l[:,i] = l[:,i-1] + n[:,i]
                 
-                if i<2:
+                if i<i_diameter:
                     continue
                 
                 #%% check self avoiding
@@ -116,7 +117,7 @@ def chain_Rayleigh(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
                             print('abort')
                             break
                             
-                        d2_uv_min = np.min(np.sum((l[:,:i-1].T-l[:,i].T)**2,axis=1))
+                        d2_uv_min = np.min(np.sum((l[:,:i-i_diameter+1].T-l[:,i].T)**2,axis=1))
                         # d1_uv_min = np.min(np.max(np.abs(l[:,:i-1].T-l[:,i].T),axis=1))
                         # print(d1_uv_min)
                         
@@ -368,6 +369,9 @@ class WLChain:
             plt.savefig(filename)
 
         plt.show()
+    
+    def close(self):
+        plt.close('all')
         
     def scatter(self, n_grid=256, approx_1D=0, box_size=1e4):
         """
