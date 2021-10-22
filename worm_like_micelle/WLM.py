@@ -255,6 +255,7 @@ class WLChain:
     l_contour = []
     l_end2end = []
     l_prstnc = []
+    Rg = []
     box = []
     apply_SA = []
     d_exc = []
@@ -278,6 +279,8 @@ class WLChain:
         self.l_contour = np.sum(np.sqrt(np.sum(self.n**2,axis=0)))
         self.l_end2end = np.sqrt(np.sum((self.Cc[:,0]-self.Cc[:,-1])**2,axis=0))
         self.l_prstnc = self.lmbda/(1-(1/np.tanh(self.a/2)-2/self.a))
+        Cc_centered = self.Cc.T-np.mean(self.Cc.T,axis=0)
+        self.Rg = np.sqrt(np.trace(Cc_centered.T@Cc_centered/self.N))
         #self.l_prstnc = np.dot(self.n[:,0].T,self.lc[:,-1])
         self.box = np.vstack((np.min(self.Cc, axis=1), np.max(self.Cc, axis=1)))
         
