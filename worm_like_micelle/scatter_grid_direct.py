@@ -38,6 +38,10 @@ def scatter(Cc, n_grid=256, box_size=1e4):
     for i in range(N):
         rho_r[bead_coord[i,0],bead_coord[i,1],bead_coord[i,2]] += 1
     
+    list_rho_r = rho_r[:]
+    print(list_rho_r)
+    
+    
     # FFT and calculate scattering function
     rho_q = np.fft.fftn(rho_r)
     S_q_lmn = np.absolute(rho_q)**2/N
@@ -100,7 +104,50 @@ N = chain01.N
 chain_box = chain01.box
 Cc = chain01.Cc
 
-S_q, qq = scatter(Cc)
+# S_q, qq = scatter(Cc)
+
+n_grid=256
+box_size=1e4
+
+grid_size = (box_size)/n_grid
+Cc_relative = Cc.T-chain_box[0,:] # relative position of WL-chain in the box
+bead_coord = np.floor(Cc_relative/grid_size).astype('int')
+
+# density in real space
+rho_r = np.zeros((n_grid,n_grid,n_grid))
+
+for i in range(N):
+    rho_r[bead_coord[i,0],bead_coord[i,1],bead_coord[i,2]] += 1
+
+list_rho_r_all = rho_r.reshape(-1)
+index_rho_r = np.nonzero(list_rho_r_all)[0]
+list_rho_r = list_rho_r_all[index_rho_r]
+coord_rho_r_x = np.floor_divide(index_rho_r, n_grid**2)
+coord_rho_r_y = np.floor_divide(index_rho_r-coord_rho_r_x*n_grid**2, n_grid)
+coord_rho_r_z = index_rho_r-coord_rho_r_x*n_grid**2-coord_rho_r_y*n_grid
+coord_rho_r = np.vstack((coord_rho_r_x,coord_rho_r_y,coord_rho_r_z))*box_size/n_grid
+
+# two-point correlation
+n_list = len(list_rho_r)
+r_jk = coord_rho_r.reshape(n_list,1,3) - coord_rho_r.reshape(1,n_list,3)
+d_jk = np.sqrt(np.sum(r_jk**2,axis=2))
+rho_jk = np.outer(list_rho_r, list_rho_r)
+
+# radial average
+dq_grid = 2*np.pi/(box_size)
+dq = dq_grid
+nq = int(np.floor(dq_grid/dq*n_grid/2))
+# qq0 = np.arange(nq)+0.5
+qq0 = np.logspace(-3,-1,20)
+nq = len(qq0)
+# qq = qq0*dq
+qq = qq0 
+
+S_q = np.zeros(int(nq))
+
+for iq in range(int(nq)):
+    sinqr_qr = rho_jk*np.sin(qq0[iq]*d_jk)/(qq0[iq]*d_jk)
+    S_q[iq] = np.sum(sinqr_qr[np.isnan(sinqr_qr)==0])/np.trace(rho_jk)
 
 tEnd = time.time()
 print("\'scatter\' cost %f sec" % (tEnd - tStart))
@@ -125,6 +172,6 @@ ax.plot(qq,S_q)
 ax.set_xscale('log')
 ax.set_yscale('log')
 ax.set_xlim([np.sqrt(np.min(qq)*np.max(qq))*10**-1.5,np.sqrt(np.min(qq)*np.max(qq))*10**1.5])
-ax.set_ylim([1e-3, 2e0])
+# ax.set_ylim([1e-3, 2e0])
 ax.grid(True,which='major')
 plt.show()
