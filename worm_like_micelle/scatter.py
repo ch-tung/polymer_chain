@@ -22,7 +22,7 @@ unit_C = np.zeros((3,1)) # coordinate of C atoms in each unit
 N_backbone = 10000
 
 # Chain stiffness
-a_backbone = 1e1
+a_backbone = 1e3
 
 # Unit persistence
 lambda_backbone = 1
