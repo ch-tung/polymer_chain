@@ -77,7 +77,7 @@ unit_C = np.zeros((3,1)) # coordinate of C atoms in each unit
 N_backbone = 10000
 
 # Chain stiffness
-a_backbone = 2e2
+a_backbone = 1e2
 
 # Unit persistence
 lambda_backbone = 1
@@ -107,7 +107,7 @@ Cc = chain01.Cc
 
 # S_q, qq = scatter(Cc)
 
-n_grid=512
+n_grid=1024
 box_size=1e4
 
 grid_size = (box_size)/n_grid
@@ -132,7 +132,8 @@ coord_rho_r = np.vstack((coord_rho_r_x,coord_rho_r_y,coord_rho_r_z))*box_size/n_
 n_list = len(list_rho_r)
 r_jk = coord_rho_r.reshape(n_list,1,3) - coord_rho_r.reshape(1,n_list,3)
 d_jk = np.sqrt(np.sum(r_jk**2,axis=2))
-rho_jk = np.outer(list_rho_r, list_rho_r)
+n_jk = np.outer(list_rho_r, list_rho_r)
+rho_jk = n_jk/np.sum(n_jk)
 
 # radial average
 # dq_grid = 2*np.pi/(box_size)
@@ -140,7 +141,7 @@ rho_jk = np.outer(list_rho_r, list_rho_r)
 # nq = int(np.floor(dq_grid/dq*n_grid/2))
 # qq0 = np.arange(nq)+0.5
 # qq = qq0*dq
-qq0 = np.logspace(0,3,40)*2*np.pi/1e5
+qq0 = np.logspace(0,3,32)*2*np.pi/1e5
 nq = len(qq0)
 qq = qq0 
 
@@ -150,13 +151,13 @@ rho_jk_list = rho_jk[d_jk!=0]
 
 for iq in range(int(nq)):
     sinqr_qr = rho_jk_list*np.sin(qq0[iq]*d_jk_list)/(qq0[iq]*d_jk_list)
-    S_q[iq] = np.sum(sinqr_qr[np.isnan(sinqr_qr)==0])/np.trace(rho_jk)
+    S_q[iq] = np.sum(sinqr_qr[np.isnan(sinqr_qr)==0])
 
 tEnd = time.time()
 print("\'scatter\' cost %f sec" % (tEnd - tStart))
 
 tEnd_loop = time.time()
-print("\'loop\' cost %f sec" % (tEnd - tStart))
+print("\'loop\' cost %f sec" % (tEnd_loop - tStart_loop))
 
 chain01.plot()
 
