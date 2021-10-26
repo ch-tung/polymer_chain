@@ -85,6 +85,7 @@ lambda_backbone = 1
 # call class
 chain01 = WLChain(N_backbone,a_backbone,lambda_backbone,unit_C)
 chain01.d_exc = 1
+chain01.close()
 
 n_q = 128
 qq = np.zeros(n_q)
@@ -106,7 +107,7 @@ Cc = chain01.Cc
 
 # S_q, qq = scatter(Cc)
 
-n_grid=256
+n_grid=512
 box_size=1e4
 
 grid_size = (box_size)/n_grid
@@ -134,19 +135,21 @@ d_jk = np.sqrt(np.sum(r_jk**2,axis=2))
 rho_jk = np.outer(list_rho_r, list_rho_r)
 
 # radial average
-dq_grid = 2*np.pi/(box_size)
-dq = dq_grid
-nq = int(np.floor(dq_grid/dq*n_grid/2))
+# dq_grid = 2*np.pi/(box_size)
+# dq = dq_grid
+# nq = int(np.floor(dq_grid/dq*n_grid/2))
 # qq0 = np.arange(nq)+0.5
-qq0 = np.logspace(-3,-1,20)
-nq = len(qq0)
 # qq = qq0*dq
+qq0 = np.logspace(0,3,40)*2*np.pi/1e5
+nq = len(qq0)
 qq = qq0 
 
 S_q = np.zeros(int(nq))
+d_jk_list = d_jk[d_jk!=0]
+rho_jk_list = rho_jk[d_jk!=0]
 
 for iq in range(int(nq)):
-    sinqr_qr = rho_jk*np.sin(qq0[iq]*d_jk)/(qq0[iq]*d_jk)
+    sinqr_qr = rho_jk_list*np.sin(qq0[iq]*d_jk_list)/(qq0[iq]*d_jk_list)
     S_q[iq] = np.sum(sinqr_qr[np.isnan(sinqr_qr)==0])/np.trace(rho_jk)
 
 tEnd = time.time()
