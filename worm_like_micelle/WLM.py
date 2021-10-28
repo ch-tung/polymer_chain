@@ -472,8 +472,10 @@ class WLChain:
         Args:
             n_grid: int
                 number of grid points
-            approx_1D: boolean
-                1-D FFT for isotropic systems
+            n_q: int
+                number of q points
+            box_size: float
+                size of cubic box containing the polymer chain
         """
         
         N = self.N
@@ -501,7 +503,7 @@ class WLChain:
         
         # two-point correlation
         n_list = len(list_rho_r)
-        r_jk = coord_rho_r.reshape(n_list,1,3) - coord_rho_r.reshape(1,n_list,3)
+        r_jk = coord_rho_r.T.reshape(n_list,1,3) - coord_rho_r.T.reshape(1,n_list,3)
         d_jk = np.sqrt(np.sum(r_jk**2,axis=2))
         n_jk = np.outer(list_rho_r, list_rho_r)
         rho_jk = n_jk/np.sum(n_jk)
@@ -547,12 +549,12 @@ class WLChain:
         for i in range(N_merge):
             Cc_merge[:,i] = np.mean(self.Cc[:,i*n_merge:(i*n_merge+n_merge)],axis=1)
             
-        print(Cc_merge.shape)
+        print('{:d} beads used to calculating S(q)'.format(Cc_merge.shape[1]))
 
         # two-point correlation
         n_list = N_merge
-        # r_jk = self.Cc.reshape(n_list,1,3) - self.Cc.reshape(1,n_list,3)
-        r_jk = Cc_merge.reshape(n_list,1,3) - Cc_merge.reshape(1,n_list,3)
+        # r_jk = self.Cc.T.reshape(n_list,1,3) - self.Cc.T.reshape(1,n_list,3)
+        r_jk = Cc_merge.T.reshape(n_list,1,3) - Cc_merge.T.reshape(1,n_list,3)
         d_jk = np.sqrt(np.sum(r_jk**2,axis=2))
         
         # radial average
