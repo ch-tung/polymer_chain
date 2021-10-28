@@ -527,23 +527,32 @@ class WLChain:
         self.qq = qq
         self.S_q = S_q
         
-    def scatter_direct(self, n_q=32):
+    def scatter_direct(self, n_q=32, n_merge=1):
         """
         Calculate scattering function.
         
         Args:
-            n_grid: int
-                number of grid points
-            approx_1D: boolean
-                1-D FFT for isotropic systems
+            n_q: int
+                number of q points
+            n_merge: int
+                merge consecutive n_merge beads into one bead
         """
         
         N = self.N
         # chain_box = self.box
+        
+        # merge beads
+        N_merge = int(N/n_merge)
+        Cc_merge = np.zeros((3,N_merge))
+        for i in range(N_merge):
+            Cc_merge[:,i] = np.mean(self.Cc[:,i*n_merge:(i*n_merge+n_merge)],axis=1)
+            
+        print(Cc_merge.shape)
 
         # two-point correlation
-        n_list = N
-        r_jk = self.Cc.reshape(n_list,1,3) - self.Cc.reshape(1,n_list,3)
+        n_list = N_merge
+        # r_jk = self.Cc.reshape(n_list,1,3) - self.Cc.reshape(1,n_list,3)
+        r_jk = Cc_merge.reshape(n_list,1,3) - Cc_merge.reshape(1,n_list,3)
         d_jk = np.sqrt(np.sum(r_jk**2,axis=2))
         
         # radial average
@@ -563,7 +572,7 @@ class WLChain:
             sinqr_qr = np.sin(qq0[iq]*d_jk_list)/(qq0[iq]*d_jk_list)
             S_q[iq] = np.sum(sinqr_qr[np.isnan(sinqr_qr)==0])
         
-        S_q = S_q/N**2
+        S_q = S_q/N_merge**2
             
         self.qq = qq
         self.S_q = S_q
