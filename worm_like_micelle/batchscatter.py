@@ -26,7 +26,7 @@ S_q = np.zeros((128,10))
 n_j = 10
 for j in range(n_j):
     # Chain stiffness
-    a_backbone = n_j**((j+1)/2)
+    a_backbone = 2*n_j**((j+1)/2)
     
     # Unit persistence
     lambda_backbone = 1
@@ -44,21 +44,26 @@ for j in range(n_j):
     for i in range(n_chain):
     
         tStart = time.time()
-        #chain01.apply_SA = 0
+        chain01.apply_SA = 1
         chain01.chain()
         #chain01.ring(n_harmonics=40,sigma=10)
         #chain01.ring_q()
         tEnd = time.time()
         print("\'chain\' cost %f sec" % (tEnd - tStart))
         
+        N = chain01.N
+        chain_box = chain01.box
+        
         tStart = time.time()
-        chain01.scatter(n_grid=n_q*2,box_size=chain01.l_prstnc*1e4)
-        S_q_j = S_q_j + chain01.S_q
+        # chain01.scatter_grid(n_grid=n_q*2)
+        # chain01.scatter_grid_direct(n_q=len(qq),n_grid=256,box_size=np.max(chain_box[1,:]-chain_box[0,:])+1) 
+        chain01.scatter_direct(n_q=len(qq),n_merge=4)
+        S_q = S_q + chain01.S_q
         tEnd = time.time()
         print("\'scatter\' cost %f sec" % (tEnd - tStart))
     
     tEnd_loop = time.time()
-    print("\'loop\' cost %f sec" % (tEnd - tStart))
+    print("\'loop\' cost %f sec" % (tEnd_loop - tStart_loop))
     
     qq = chain01.qq    
     S_q_j = S_q_j/n_chain

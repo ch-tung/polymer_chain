@@ -22,7 +22,7 @@ unit_C = np.zeros((3,1)) # coordinate of C atoms in each unit
 N_backbone = 10000
 
 # Chain stiffness
-a_backbone = 1e1
+a_backbone = 1e2
 
 # Unit persistence
 lambda_backbone = 1
@@ -35,7 +35,7 @@ n_q = 32
 qq = np.zeros(n_q)
 S_q = np.zeros(n_q)
 
-n_chain = 20
+n_chain = 1
 tStart_loop = time.time()
 for i in range(n_chain):
 
@@ -59,11 +59,12 @@ for i in range(n_chain):
     print("\'scatter\' cost %f sec" % (tEnd - tStart))
 
 tEnd_loop = time.time()
-print("\'loop\' cost %f sec" % (tEnd - tStart))
+print("\'loop\' cost %f sec" % (tEnd_loop - tStart_loop))
 
 qq = chain01.qq    
 S_q = S_q/n_chain
 
+chain01.close()
 chain01.plot()
 
 #%%
@@ -71,20 +72,20 @@ import matplotlib.pyplot as plt
 fig = plt.figure(figsize=(6, 6),dpi=192)
 ax = fig.add_subplot()
 
-for i in range(12):
-    ax.plot((10**(2*i+4)*np.array([1e-3, 1e1]))**-(1/4),np.array([1e-3, 1e1]),
+for i in range(16):
+    ax.plot((10**(2*i+2)*np.array([1e-3, 1e1]))**-(1/4),np.array([1e-3, 1e1]),
         '--',color='#C0C0C0',linewidth=0.5)
-    ax.plot((10**(i+2)*np.array([1e-3, 1e1]))**-(1/2),np.array([1e-3, 1e1]),
+    ax.plot((10**(i+1)*np.array([1e-3, 1e1]))**-(1/2),np.array([1e-3, 1e1]),
             '--',color='#C0C0C0',linewidth=0.5)
-    ax.plot((10**(i+2)*np.array([1e-3, 1e1]))**-(0.588),np.array([1e-3, 1e1]),
+    ax.plot((10**(i+1)*np.array([1e-3, 1e1]))**-(0.588),np.array([1e-3, 1e1]),
             ':',color='#C0C0C0',linewidth=0.5)
-    ax.plot((10**(i+2)*np.array([1e-3, 1e1]))**-(1),np.array([1e-3, 1e1]),
+    ax.plot((10**(i+1)*np.array([1e-3, 1e1]))**-(1),np.array([1e-3, 1e1]),
             '-.',color='#C0C0C0',linewidth=0.5)
 
 ax.plot(qq,S_q)
 ax.set_xscale('log')
 ax.set_yscale('log')
-ax.set_xlim([np.sqrt(np.min(qq)*np.max(qq))*10**-1.5,np.sqrt(np.min(qq)*np.max(qq))*10**1.5])
+ax.set_xlim([np.sqrt(np.min(qq)*np.max(qq))*10**-2,np.sqrt(np.min(qq)*np.max(qq))*10**2])
 ax.set_ylim([1e-3, 2e0])
 ax.grid(True,which='major')
 plt.show()

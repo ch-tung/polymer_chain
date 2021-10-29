@@ -514,7 +514,7 @@ class WLChain:
         # nq = int(np.floor(dq_grid/dq*n_grid/2))
         # qq0 = np.arange(nq)+0.5
         # qq = qq0*dq
-        qq0 = np.logspace(0,3,n_q)*2*np.pi/1e5
+        qq0 = 2*np.pi/(np.logspace(1,5,n_q))
         nq = len(qq0)
         qq = qq0 
         
@@ -563,7 +563,7 @@ class WLChain:
         # nq = int(np.floor(dq_grid/dq*n_grid/2))
         # qq0 = np.arange(nq)+0.5
         # qq = qq0*dq
-        qq0 = np.logspace(0,3,n_q)*2*np.pi/1e5
+        qq0 = 2*np.pi/(np.logspace(1,5,n_q))
         nq = len(qq0)
         qq = qq0 
         
