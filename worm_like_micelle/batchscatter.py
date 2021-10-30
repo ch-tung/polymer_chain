@@ -22,7 +22,7 @@ unit_C = np.zeros((3,1)) # coordinate of C atoms in each unit
 N_backbone = 10000
 
 a = np.zeros(10)
-S_q = np.zeros((128,10))
+S_q = np.zeros((64,10))
 n_j = 10
 for j in range(n_j):
     # Chain stiffness
@@ -35,7 +35,7 @@ for j in range(n_j):
     chain01 = WLChain(N_backbone,a_backbone,lambda_backbone,unit_C)
     chain01.d_exc = 1
     
-    n_q = 128
+    n_q = 64
     qq = np.zeros(n_q)
     S_q_j = np.zeros(n_q)
     
@@ -58,7 +58,7 @@ for j in range(n_j):
         # chain01.scatter_grid(n_grid=n_q*2)
         # chain01.scatter_grid_direct(n_q=len(qq),n_grid=256,box_size=np.max(chain_box[1,:]-chain_box[0,:])+1) 
         chain01.scatter_direct(n_q=len(qq),n_merge=4)
-        S_q = S_q + chain01.S_q
+        S_q_j = S_q_j + chain01.S_q
         tEnd = time.time()
         print("\'scatter\' cost %f sec" % (tEnd - tStart))
     
