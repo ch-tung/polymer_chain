@@ -41,7 +41,7 @@ def scattering_loop(n_q,n_chain,chain01):
         # tStart = time.time()
         # chain01.scatter_grid(n_grid=n_q*2)
         # chain01.scatter_grid_direct(n_q=len(qq),n_grid=256,box_size=np.max(chain_box[1,:]-chain_box[0,:])+1) 
-        chain01.scatter_direct(n_q=np.size(qq),n_merge=4)
+        chain01.scatter_direct(n_q=np.size(qq),n_merge=1)
         S_q_j = S_q_j + chain01.S_q
         # tEnd = time.time()
         # print("\'scatter\' cost %f sec" % (tEnd - tStart))
@@ -53,7 +53,8 @@ def scattering_loop(n_q,n_chain,chain01):
 def job(j):
     # Chain stiffness
     a_backbone = 2*n_j**((j+1)/2)
-    
+    # a_backbone = 2e3
+	
     # Unit persistence
     lambda_backbone = 1
     
@@ -62,7 +63,7 @@ def job(j):
     chain01.d_exc = 1
     
     n_q = 64 
-    n_chain = 1
+    n_chain = 100
 
     # tStart_loop = time.time()
     qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
@@ -73,6 +74,7 @@ def job(j):
     
 a = np.zeros(10)
 S_q = np.zeros((64,10))
+qq = np.zeros(64)
 n_j = 10
 
 class MyThread(threading.Thread):
@@ -88,6 +90,7 @@ tStart = time.time()
 
 for j in range(n_j):
     a_backbone = 2*n_j**((j+1)/2)
+    # a_backbone = 2e3
     a[j] = a_backbone
     
     # job(j)
@@ -100,7 +103,7 @@ for j in range(n_j):
     
 tEnd = time.time()
 print("it cost %f sec" % (tEnd - tStart))
-# from scipy.io import savemat
-# filename = 'scatter_chain_prstnc.mat'
-# mdic = {'S_q':S_q, 'a':a, 'qq':qq}
-# savemat(filename, mdic)
+from scipy.io import savemat
+filename = 'scatter_chain_prstnc.mat'
+mdic = {'S_q':S_q, 'a':a, 'qq':qq}
+savemat(filename, mdic)
