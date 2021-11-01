@@ -18,7 +18,13 @@ def rotation(O,a):
     # quaternion
     phi_q = 2*(np.random.rand(1)-0.5)*np.pi
     delta = 1e-3
-    theta_q = np.sqrt(-np.log(1-np.random.rand(1)*(1-delta))/a)/2;
+    theta_q = np.sqrt(-np.log(1-np.random.rand(1)*(1-delta))*2/a)/2
+    # ----------------------------------------
+    # theta = 2*theta_q = sqrt(-ln(1-X)/a)
+    # where X is a random variable in [0,1]
+    #       a is the persistence length
+    # ----------------------------------------
+    
     # if theta_q>np.pi/3*2:
     #     theta_q = np.array([np.pi/3*2])/2
     #print(theta_q)
@@ -51,6 +57,64 @@ def rotation(O,a):
                    [2*(qik+qjr), 2*(qjk-qir), 1-2*(qii+qjj)]])
     
     R = Rq[:,:,0]
+    
+    # Re-orthogonalize
+    Rx = R[:,0]
+    Ry = R[:,1]
+    err = np.dot(Rx,Ry)
+    Rx_ort = Rx-(err/2)*Ry
+    Ry_ort = Ry-(err/2)*Rx
+    #Rz_ort = np.cross(Rx_ort,Ry_ort)
+    Rx_new = 0.5*(3-np.dot(Rx_ort,Rx_ort))*Rx_ort
+    Ry_new = 0.5*(3-np.dot(Ry_ort,Ry_ort))*Ry_ort
+    Rz_new = np.cross(Rx_new,Ry_new)
+    #Rz_new = 0.5*(3-np.dot(Rz_ort,Rz_ort))*Rz_ort
+    R = np.array([Rx_new, Ry_new, Rz_new]).T
+    
+    return R
+
+def rotation_dihedral(O,a):
+    # quaternion
+    phi_q = 2*(np.random.rand(1)-0.5)*np.pi
+    theta_q = np.arctan(1/np.sqrt(a/2))/2
+    # ----------------------------------------
+    # theta = 2*theta_q
+    # 2*a = [1+cos(theta)]/[1-cos(theta)]
+    # where a is the persistence length
+    # ----------------------------------------
+    
+    # if theta_q>np.pi/3*2:
+    #     theta_q = np.array([np.pi/3*2])/2
+    #print(theta_q)
+    sin_theta_q = np.sin(theta_q)
+    
+    vq = O[:,1]*np.cos(phi_q) + O[:,2]*np.sin(phi_q)
+    # vq = vq/np.sqrt(np.sum(vq**2))
+    qr = np.cos(theta_q);
+    qi = vq[0]*sin_theta_q;
+    qj = vq[1]*sin_theta_q;
+    qk = vq[2]*sin_theta_q;
+    # nq = np.sqrt(qr**2 + qi**2 + qj**2 + qk**2)
+    # qr = qr/nq
+    # qi = qi/nq
+    # qj = qj/nq
+    # qk = qk/nq
+    
+    qij = qi*qj
+    qjk = qj*qk
+    qik = qi*qk
+    qir = qi*qr
+    qjr = qj*qr
+    qkr = qk*qr
+    qii = qi*qi
+    qjj = qj*qj
+    qkk = qk*qk
+    
+    Rq = np.array([[1-2*(qjj+qkk), 2*(qij+qkr), 2*(qik-qjr)],
+                   [2*(qij-qkr), 1-2*(qii+qkk), 2*(qjk+qir)],
+                   [2*(qik+qjr), 2*(qjk-qir), 1-2*(qii+qjj)]])
+    
+    R = Rq
     
     # Re-orthogonalize
     Rx = R[:,0]
@@ -126,6 +190,94 @@ def chain_Rayleigh(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
                             print('retry ({:d})'.format(n_retry+1))
                             # n_retry+=1
                             R = rotation(O[:,:,i-1],a)
+                
+                            O[:,:,i] = R@O[:,:,i-1]
+                            # O[:,:,i] = O[:,:,i]/np.sqrt(np.sum(O[:,:,i]**2,axis=0))
+                            n[:,i] = O[:,1,i].reshape((3))
+                            # n[:,i] = n[:,i]/np.sqrt(np.sum(n[:,i]**2))
+                            l[:,i] = l[:,i-1] + n[:,i]
+                        else:
+                            if n_retry!=0:
+                                print('retry (end)')
+                            break
+                        
+                    if abort==1:
+                        break
+        
+    lc = l*lambda_seg
+
+    #%% map unimer
+    #C
+    nC = unit_C.shape[1]
+    m_backbone_C = np.zeros((3,nC,N))
+    for j in range(N):
+        for k in range(nC):
+            m_backbone_C[:,k,j] = O[:,:,j]@unit_C[:,k] + lc[:,j] + np.array([0,0,0])
+    
+    Cc = np.reshape(m_backbone_C,(3,N*nC))
+    
+    # print(n_retry)
+    return lc, Cc, O, n
+
+def chain_fix_val_free_rot(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
+    d2_exc = d_exc**2
+    i_diameter = int(np.ceil(2*d_exc/lambda_seg))
+       
+    n = np.zeros((3,N))
+    l = np.zeros((3,N))
+    lc = np.zeros((3,N))
+    #B = np.zeros((3,3))
+    #C = np.zeros((3,3))
+    #D = np.zeros((3,3))
+    R = np.zeros((3,3))
+    O = np.zeros((3,3,N))
+    
+    abort = 1
+    while abort==1:
+        abort = 0
+        for i in range(N):
+            if i==0:
+                n[:,i] = [1,0,0]
+                l[:,i] = n[:,i]
+                #B = np.eye(3)
+                #C = np.eye(3)
+                #D = np.eye(3)
+                R = np.eye(3)
+                O[:,:,i] = R
+            else:
+                R = rotation_dihedral(O[:,:,i-1],a)
+                
+                O[:,:,i] = R@O[:,:,i-1]
+                # O[:,:,i] = O[:,:,i]/np.sqrt(np.sum(O[:,:,i]**2,axis=0))
+                n[:,i] = O[:,0,i].reshape((3))
+                # n[:,i] = n[:,i]/np.sqrt(np.sum(n[:,i]**2))
+                l[:,i] = l[:,i-1] + n[:,i]
+                
+                if i<i_diameter:
+                    continue
+                
+                #%% check self avoiding
+                if apply_SA:
+                    SA = 0
+                    
+                    n_retry = -1
+                    while SA == 0:
+                        n_retry += 1
+                        
+                        if n_retry > 100:
+                            abort = 1
+                            print('abort')
+                            break
+                            
+                        d2_uv_min = np.min(np.sum((l[:,:i-i_diameter+1].T-l[:,i].T)**2,axis=1))
+                        # d1_uv_min = np.min(np.max(np.abs(l[:,:i-1].T-l[:,i].T),axis=1))
+                        # print(d1_uv_min)
+                        
+                        if d2_uv_min<d2_exc:
+                        # if d1_uv_min<d_exc:
+                            print('retry ({:d})'.format(n_retry+1))
+                            # n_retry+=1
+                            R = rotation_dihedral(O[:,:,i-1],a)
                 
                             O[:,:,i] = R@O[:,:,i-1]
                             # O[:,:,i] = O[:,:,i]/np.sqrt(np.sum(O[:,:,i]**2,axis=0))
@@ -280,7 +432,23 @@ class WLChain:
                                                           apply_SA=self.apply_SA,d_exc=self.d_exc)
         self.l_contour = np.sum(np.sqrt(np.sum(self.n**2,axis=0)))
         self.l_end2end = np.sqrt(np.sum((self.Cc[:,0]-self.Cc[:,-1])**2,axis=0))
-        self.l_prstnc = self.lmbda/(1-(1/np.tanh(self.a/2)-2/self.a))
+        self.l_prstnc = self.lmbda/(1-(1/np.tanh(self.a)-1/self.a))
+        Cc_centered = self.Cc.T-np.mean(self.Cc.T,axis=0)
+        self.Rg = np.sqrt(np.trace(Cc_centered.T@Cc_centered/self.N))
+        #self.l_prstnc = np.dot(self.n[:,0].T,self.lc[:,-1])
+        self.box = np.vstack((np.min(self.Cc, axis=1), np.max(self.Cc, axis=1)))
+        
+    def chain_fix_val_free_rot(self):
+        """
+        Call the chain function acd calculate particle trajectory in WL-chain.
+        """
+        
+        # call 'chain_Rayleigh' function
+        self.lc, self.Cc, self.O, self.n = chain_fix_val_free_rot(self.N,self.a,self.lmbda,self.unit_C,
+                                                          apply_SA=self.apply_SA,d_exc=self.d_exc)
+        self.l_contour = np.sum(np.sqrt(np.sum(self.n**2,axis=0)))
+        self.l_end2end = np.sqrt(np.sum((self.Cc[:,0]-self.Cc[:,-1])**2,axis=0))
+        self.l_prstnc = self.lmbda/(1-(1/np.tanh(self.a)-1/self.a))
         Cc_centered = self.Cc.T-np.mean(self.Cc.T,axis=0)
         self.Rg = np.sqrt(np.trace(Cc_centered.T@Cc_centered/self.N))
         #self.l_prstnc = np.dot(self.n[:,0].T,self.lc[:,-1])

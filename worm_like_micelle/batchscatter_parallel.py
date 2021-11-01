@@ -52,7 +52,7 @@ def scattering_loop(n_q,n_chain,chain01):
 
 def job(j):
     # Chain stiffness
-    a_backbone = 2*n_j**((j+1)/2)
+    a_backbone = n_j**((j+1)/2)
     # a_backbone = 2e3
 	
     # Unit persistence
@@ -100,7 +100,9 @@ for j in range(n_j):
     
 for j in range(n_j):
     threads[j].join()
-    
+
+qq = 2*np.pi/(np.logspace(1,5,64))
+
 tEnd = time.time()
 print("it cost %f sec" % (tEnd - tStart))
 from scipy.io import savemat

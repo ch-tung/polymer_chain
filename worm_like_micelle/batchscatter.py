@@ -24,9 +24,11 @@ N_backbone = 10000
 a = np.zeros(10)
 S_q = np.zeros((64,10))
 n_j = 10
+
+tStart_loopj = time.time()
 for j in range(n_j):
     # Chain stiffness
-    a_backbone = 2*n_j**((j+1)/2)
+    a_backbone = n_j**((j+1)/2)
     
     # Unit persistence
     lambda_backbone = 1
@@ -39,7 +41,7 @@ for j in range(n_j):
     qq = np.zeros(n_q)
     S_q_j = np.zeros(n_q)
     
-    n_chain = 100
+    n_chain = 20
     tStart_loop = time.time()
     for i in range(n_chain):
     
@@ -69,8 +71,11 @@ for j in range(n_j):
     S_q_j = S_q_j/n_chain
     a[j] = a_backbone
     S_q[:,j] = S_q_j
+	
+tEnd_loopj = time.time()
+print("it cost %f sec" % (tEnd_loopj - tStart_loopj))
 
-from scipy.io import savemat
-filename = 'scatter_chain_prstnc.mat'
-mdic = {'S_q':S_q, 'a':a, 'qq':qq}
-savemat(filename, mdic)
+#from scipy.io import savemat
+#filename = 'scatter_chain_prstnc.mat'
+#mdic = {'S_q':S_q, 'a':a, 'qq':qq}
+#savemat(filename, mdic)

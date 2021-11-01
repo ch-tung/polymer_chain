@@ -41,7 +41,8 @@ for i in range(n_chain):
 
     tStart = time.time()
     chain01.apply_SA = 1
-    chain01.chain()
+    #chain01.chain()
+    chain01.chain_fix_val_free_rot()
     #chain01.ring(n_harmonics=40,sigma=10)
     #chain01.ring_q()
     tEnd = time.time()
