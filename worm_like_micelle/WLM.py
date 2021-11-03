@@ -735,7 +735,7 @@ class WLChain:
         self.qq = qq
         self.S_q = S_q
 
-    def scatter_grid_direct(self, n_grid=128, n_q=32, box_size=1e4):
+    def scatter_grid_direct(self, qq, n_grid=128, box_size=1e4):
         """
         Calculate scattering function.
         
@@ -784,22 +784,22 @@ class WLChain:
         # nq = int(np.floor(dq_grid/dq*n_grid/2))
         # qq0 = np.arange(nq)+0.5
         # qq = qq0*dq
-        qq0 = 2*np.pi/(np.logspace(1,5,n_q))
-        nq = len(qq0)
-        qq = qq0 
+        # qq0 = 2*np.pi/(np.logspace(1,5,n_q))
+        nq = len(qq)
+        # qq = qq0 
         
         S_q = np.zeros(int(nq))
         d_jk_list = d_jk[d_jk!=0]
         rho_jk_list = rho_jk[d_jk!=0]
         
         for iq in range(int(nq)):
-            sinqr_qr = rho_jk_list*np.sin(qq0[iq]*d_jk_list)/(qq0[iq]*d_jk_list)
+            sinqr_qr = rho_jk_list*np.sin(qq[iq]*d_jk_list)/(qq[iq]*d_jk_list)
             S_q[iq] = np.sum(sinqr_qr[np.isnan(sinqr_qr)==0])
                 
         self.qq = qq
         self.S_q = S_q
         
-    def scatter_direct(self, n_q=32, n_merge=1):
+    def scatter_direct(self, qq, n_merge=1):
         """
         Calculate scattering function.
         
@@ -833,15 +833,15 @@ class WLChain:
         # nq = int(np.floor(dq_grid/dq*n_grid/2))
         # qq0 = np.arange(nq)+0.5
         # qq = qq0*dq
-        qq0 = 2*np.pi/(np.logspace(1,5,n_q))
-        nq = len(qq0)
-        qq = qq0 
+        # qq0 = 2*np.pi/(np.logspace(1,5,n_q))
+        nq = len(qq)
+        # qq = qq0 
         
         S_q = np.zeros(int(nq))
         d_jk_list = d_jk[d_jk!=0]
         
         for iq in range(int(nq)):
-            sinqr_qr = np.sin(qq0[iq]*d_jk_list)/(qq0[iq]*d_jk_list)
+            sinqr_qr = np.sin(qq[iq]*d_jk_list)/(qq[iq]*d_jk_list)
             S_q[iq] = np.sum(sinqr_qr[np.isnan(sinqr_qr)==0])
         
         S_q = S_q/N_merge**2

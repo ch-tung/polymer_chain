@@ -23,12 +23,13 @@ unit_C = np.zeros((3,1)) # coordinate of C atoms in each unit
 N_backbone = 10000
 
 def scattering_loop(n_q,n_chain,chain01):
-    qq = np.zeros(n_q)
+    qq = 2*np.pi/(np.logspace(1,5,n_q))
     S_q_j = np.zeros(n_q)
     for i in np.arange(n_chain):
 
         # tStart = time.time()
         chain01.apply_SA = 1
+        chain01.d_exc = chain01.a*0.1*2
         chain01.chain()
         #chain01.ring(n_harmonics=40,sigma=10)
         #chain01.ring_q()
@@ -41,7 +42,7 @@ def scattering_loop(n_q,n_chain,chain01):
         # tStart = time.time()
         # chain01.scatter_grid(n_grid=n_q*2)
         # chain01.scatter_grid_direct(n_q=len(qq),n_grid=256,box_size=np.max(chain_box[1,:]-chain_box[0,:])+1) 
-        chain01.scatter_direct(n_q=np.size(qq),n_merge=1)
+        chain01.scatter_direct(qq,n_merge=4)
         S_q_j = S_q_j + chain01.S_q
         # tEnd = time.time()
         # print("\'scatter\' cost %f sec" % (tEnd - tStart))
@@ -52,7 +53,7 @@ def scattering_loop(n_q,n_chain,chain01):
 
 def job(j):
     # Chain stiffness
-    a_backbone = n_j**((j+1)/2)
+    a_backbone = n_j**((j+2)/2)
     # a_backbone = 2e3
 	
     # Unit persistence
@@ -60,10 +61,10 @@ def job(j):
     
     # call class
     chain01 = WLChain(N_backbone,a_backbone,lambda_backbone,unit_C)
-    chain01.d_exc = 1
+    #chain01.d_exc = 1
     
     n_q = 64 
-    n_chain = 100
+    n_chain = 1
 
     # tStart_loop = time.time()
     qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
@@ -74,7 +75,6 @@ def job(j):
     
 a = np.zeros(10)
 S_q = np.zeros((64,10))
-qq = np.zeros(64)
 n_j = 10
 
 class MyThread(threading.Thread):
@@ -89,7 +89,7 @@ threads = []
 tStart = time.time()
 
 for j in range(n_j):
-    a_backbone = 2*n_j**((j+1)/2)
+    a_backbone = n_j**((j+2)/2)
     # a_backbone = 2e3
     a[j] = a_backbone
     
@@ -106,6 +106,6 @@ qq = 2*np.pi/(np.logspace(1,5,64))
 tEnd = time.time()
 print("it cost %f sec" % (tEnd - tStart))
 from scipy.io import savemat
-filename = 'scatter_chain_prstnc.mat'
+filename = 'scatter_chain_sfr_SA.mat'
 mdic = {'S_q':S_q, 'a':a, 'qq':qq}
 savemat(filename, mdic)
