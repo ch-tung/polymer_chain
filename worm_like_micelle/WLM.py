@@ -235,9 +235,9 @@ def rotation_dihedral(O,a):
 
 def chain_Rayleigh(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
     d2_exc = d_exc**2
-    i_diameter = int(np.ceil(5/3*d_exc/lambda_seg)) 
+    i_diameter = int(np.ceil(np.pi/2*d_exc/lambda_seg)) 
     # Check for sphere overlap was done for points 
-    # separated by more than b/3 along the contour
+    # separated by more than pi*d_exc/2 along the contour
        
     n = np.zeros((3,N))
     l = np.zeros((3,N))
@@ -327,9 +327,9 @@ def chain_Rayleigh(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
 
 def chain_fix_val_free_rot(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
     d2_exc = d_exc**2
-    i_diameter = int(np.ceil(5/3*d_exc/lambda_seg))
+    i_diameter = int(np.ceil(np.pi/2*d_exc/lambda_seg)) 
     # Check for sphere overlap was done for points 
-    # separated by more than b/3 along the contour
+    # separated by more than pi*d_exc/2 along the contour
        
     n = np.zeros((3,N))
     l = np.zeros((3,N))
