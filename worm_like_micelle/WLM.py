@@ -235,7 +235,9 @@ def rotation_dihedral(O,a):
 
 def chain_Rayleigh(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
     d2_exc = d_exc**2
-    i_diameter = int(np.ceil(5/3*d_exc/lambda_seg))
+    i_diameter = int(np.ceil(5/3*d_exc/lambda_seg)) 
+    # Check for sphere overlap was done for points 
+    # separated by more than b/3 along the contour
        
     n = np.zeros((3,N))
     l = np.zeros((3,N))
@@ -275,13 +277,13 @@ def chain_Rayleigh(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
                     SA = 0
                     
                     n_retry = -1
-                    while SA == 0:
+                    while (SA == 0) & (n_retry < 100):
                         n_retry += 1
                         
-                        if n_retry > 100:
-                            abort = 1
-                            print('abort')
-                            break
+                        # if n_retry > 100:
+                        #     abort = 1
+                        #     print('abort')
+                        #     break
                             
                         d2_uv_min = np.min(np.sum((l[:,:i-i_diameter+1].T-l[:,i].T)**2,axis=1))
                         # d1_uv_min = np.min(np.max(np.abs(l[:,:i-1].T-l[:,i].T),axis=1))
@@ -303,7 +305,9 @@ def chain_Rayleigh(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
                                 print('retry (end)')
                             break
                         
-                    if abort==1:
+                    if n_retry >= 100:
+                        abort = 1
+                        print('abort')
                         break
         
     lc = l*lambda_seg
@@ -324,6 +328,8 @@ def chain_Rayleigh(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
 def chain_fix_val_free_rot(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
     d2_exc = d_exc**2
     i_diameter = int(np.ceil(5/3*d_exc/lambda_seg))
+    # Check for sphere overlap was done for points 
+    # separated by more than b/3 along the contour
        
     n = np.zeros((3,N))
     l = np.zeros((3,N))
@@ -363,13 +369,13 @@ def chain_fix_val_free_rot(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
                     SA = 0
                     
                     n_retry = -1
-                    while SA == 0:
+                    while (SA == 0) & (n_retry < 100):
                         n_retry += 1
                         
-                        if n_retry > 100:
-                            abort = 1
-                            print('abort')
-                            break
+                        # if n_retry > 100:
+                        #     abort = 1
+                        #     print('abort')
+                        #     break
                             
                         d2_uv_min = np.min(np.sum((l[:,:i-i_diameter+1].T-l[:,i].T)**2,axis=1))
                         # d1_uv_min = np.min(np.max(np.abs(l[:,:i-1].T-l[:,i].T),axis=1))
@@ -379,7 +385,7 @@ def chain_fix_val_free_rot(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
                         # if d1_uv_min<d_exc:
                             print('retry ({:d})'.format(n_retry+1))
                             # n_retry+=1
-                            R = rotation_dihedral(O[:,:,i-1],a)
+                            R = rotation(O[:,:,i-1],a)
                 
                             O[:,:,i] = R@O[:,:,i-1]
                             # O[:,:,i] = O[:,:,i]/np.sqrt(np.sum(O[:,:,i]**2,axis=0))
@@ -391,11 +397,13 @@ def chain_fix_val_free_rot(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
                                 print('retry (end)')
                             break
                         
-                    if abort==1:
+                    if n_retry >= 100:
+                        abort = 1
+                        print('abort')
                         break
         
     lc = l*lambda_seg
-
+    
     #%% map unimer
     #C
     nC = unit_C.shape[1]
@@ -848,3 +856,22 @@ class WLChain:
             
         self.qq = qq
         self.S_q = S_q
+        
+    def check_SA(self):
+        """
+        check self avoiding
+        """
+        d2_exc = self.d_exc**2
+        i_diameter = int(np.ceil(5/3*self.d_exc/self.lmbda))
+        n_intersection = 0
+        for i in range(i_diameter,self.N):
+            d2_ij = np.min(np.sum((self.Cc[:,i].T-self.Cc[:,:i-i_diameter+1].T)**2,axis=1))
+            if d2_ij < d2_exc:
+                n_intersection += 1
+                # break
+                    
+        if n_intersection != 0:
+            print('Self intersection detected! ({:d})'.format(n_intersection))
+        else:
+            print('No self intersection detected')
+        
