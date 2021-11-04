@@ -235,7 +235,7 @@ def rotation_dihedral(O,a):
 
 def chain_Rayleigh(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
     d2_exc = d_exc**2
-    i_diameter = int(np.ceil(2*d_exc/lambda_seg))
+    i_diameter = int(np.ceil(5/3*d_exc/lambda_seg))
        
     n = np.zeros((3,N))
     l = np.zeros((3,N))
@@ -323,7 +323,7 @@ def chain_Rayleigh(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
 
 def chain_fix_val_free_rot(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
     d2_exc = d_exc**2
-    i_diameter = int(np.ceil(2*d_exc/lambda_seg))
+    i_diameter = int(np.ceil(5/3*d_exc/lambda_seg))
        
     n = np.zeros((3,N))
     l = np.zeros((3,N))
@@ -742,8 +742,8 @@ class WLChain:
         Args:
             n_grid: int
                 number of grid points
-            n_q: int
-                number of q points
+            qq: array
+                wave vectors
             box_size: float
                 size of cubic box containing the polymer chain
         """
@@ -804,8 +804,8 @@ class WLChain:
         Calculate scattering function.
         
         Args:
-            n_q: int
-                number of q points
+            qq: array
+                wave vectors
             n_merge: int
                 merge consecutive n_merge beads into one bead
         """
@@ -819,7 +819,7 @@ class WLChain:
         for i in range(N_merge):
             Cc_merge[:,i] = np.mean(self.Cc[:,i*n_merge:(i*n_merge+n_merge)],axis=1)
             
-        print('{:d} beads used to calculating S(q)'.format(Cc_merge.shape[1]))
+        print('{:d} beads used to calculate S(q)'.format(Cc_merge.shape[1]))
 
         # two-point correlation
         n_list = N_merge
