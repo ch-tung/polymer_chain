@@ -17,7 +17,7 @@ from scipy import interpolate
 def rotation(O,a):
     # quaternion
     phi_q = 2*(np.random.rand(1)-0.5)*np.pi
-    delta = 1e-3
+    delta = 0
     theta_q = np.sqrt(-np.log(1-np.random.rand(1)*(1-delta))*2/a)/2
     # ----------------------------------------
     # theta = 2*theta_q = sqrt(-ln(1-X)/a)
