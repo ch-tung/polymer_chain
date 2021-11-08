@@ -19,7 +19,7 @@ import time
 N_backbone = 10000
 
 # Chain stiffness
-a_backbone = 1e2
+a_backbone = 1e1
 
 # Unit persistence
 lambda_backbone = 1
@@ -33,8 +33,14 @@ for i in range(1):
     tStart = time.time()
     chain01.d_exc = chain01.a*0.1*2
     chain01.apply_SA = 1
-    chain01.chain()
+    # chain01.chain()
     # chain01.chain_fix_val_free_rot()
+    
+    # chain_grid method
+    chain01.d_exc = 1
+    chain01.kappa = 5
+    chain01.epsilon = 0.1
+    chain01.chain_grid()
     tEnd = time.time()
     print("\'chain\' cost %f sec" % (tEnd - tStart))
     
