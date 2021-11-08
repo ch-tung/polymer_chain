@@ -305,6 +305,152 @@ def chain_fix_val_free_rot_woSA(N, a, lambda_seg, unit_C, apply_SA=0, d_exc=1):
     # print(n_retry)
     return lc, Cc, O, n
 
+#%% 
+import random
+def chain_grid(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
+    d2_exc = d_exc**2
+    i_diameter = int(np.ceil(np.pi/2*d_exc/lambda_seg))
+    
+    # coordinate 
+    # 6 orientations following the arrangement of standard dice
+    # 1/6 for +x/-x; 2/5 for +y/-y; 3/4 for +z/-z
+    r_n = np.array([[1,0,0],[0,1,0],[0,0,1],[0,0,-1],[0,-1,0],[-1,0,0]])
+    r_opp = np.array([5,4,3,2,1,0])
+    
+    cos_ij = r_n@r_n.T
+    sin_ij2 = 1-cos_ij**2
+    
+    n = np.zeros((3,N))
+    n_i = np.zeros((N)).astype(int)
+    l = np.zeros((3,N))
+    
+    # energy
+    Z = np.zeros((6,6))
+    for i in range(6):
+        E_phi = kappa*(sin_ij2[i,:])
+        E_x = -epsilon*(cos_ij[0,:])
+        
+        E = E_phi + E_x
+        z_i = np.exp(-E)
+        z_i[r_opp[i]] = 0     
+        
+        z_i = z_i/np.sum(z_i)
+        Z[:,i] = z_i
+    
+    abort = 1
+    while abort==1:
+        abort = 0
+        for i in range(N):
+            if i==0:
+                n_i[i] = 0
+                n[:,i] = r_n[n_i[i],:]
+                l[:,i] = n[:,i]
+                
+            else:
+                z = Z[:,n_i[i-1]]
+                n_i[i] = random.choices(np.arange(6),weights=z)[0]
+                            
+                n[:,i] = r_n[n_i[i],:]
+                l[:,i] = l[:,i-1] + n[:,i]
+                
+                if i<i_diameter:
+                        continue
+                
+                #%% check self avoiding
+                if apply_SA:
+                    SA = 0
+                    
+                    n_retry = -1
+                    while (SA == 0) & (n_retry < 100):
+                        n_retry += 1
+                        
+                        # if n_retry > 100:
+                        #     abort = 1
+                        #     print('abort')
+                        #     break
+                            
+                        d2_uv_min = np.min(np.sum((l[:,:i-i_diameter+1].T-l[:,i].T)**2,axis=1))
+                        # d1_uv_min = np.min(np.max(np.abs(l[:,:i-1].T-l[:,i].T),axis=1))
+                        # print(d1_uv_min)
+                        
+                        if d2_uv_min<d2_exc:
+                        # if d1_uv_min<d_exc:
+                            print('retry ({:d})'.format(n_retry+1))
+                            # n_retry+=1
+                            z = Z[:,n_i[i-1]]
+                            n_i[i] = random.choices(np.arange(6),weights=z)[0]
+                                        
+                            n[:,i] = r_n[n_i[i],:]
+                            l[:,i] = l[:,i-1] + n[:,i]
+                            
+                        else:
+                            if n_retry!=0:
+                                print('retry (end)')
+                            break
+                        
+                    if n_retry >= 100:
+                        abort = 1
+                        print('abort')
+                        break
+                    
+    lc = l*lambda_seg
+    Cc = lc
+    
+    return lc, Cc, n
+
+def chain_grid_woSA(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=0):
+    # d2_exc = d_exc**2
+    i_diameter = int(np.ceil(np.pi/2*d_exc/lambda_seg))
+    
+    # coordinate 
+    # 6 orientations following the arrangement of standard dice
+    # 1/6 for +x/-x; 2/5 for +y/-y; 3/4 for +z/-z
+    r_n = np.array([[1,0,0],[0,1,0],[0,0,1],[0,0,-1],[0,-1,0],[-1,0,0]])
+    r_opp = np.array([5,4,3,2,1,0])
+    
+    cos_ij = r_n@r_n.T
+    sin_ij2 = 1-cos_ij**2
+    
+    n = np.zeros((3,N))
+    n_i = np.zeros((N)).astype(int)
+    l = np.zeros((3,N))
+    
+    # energy
+    Z = np.zeros((6,6))
+    for i in range(6):
+        E_phi = kappa*(sin_ij2[i,:])
+        E_x = -epsilon*(cos_ij[0,:])
+        
+        E = E_phi + E_x
+        z_i = np.exp(-E)
+        z_i[r_opp[i]] = 0     
+        
+        z_i = z_i/np.sum(z_i)
+        Z[:,i] = z_i
+    
+    abort = 1
+    while abort==1:
+        abort = 0
+        for i in range(N):
+            if i==0:
+                n_i[i] = 0
+                n[:,i] = r_n[n_i[i],:]
+                l[:,i] = n[:,i]
+                
+            else:
+                z = Z[:,n_i[i-1]]
+                n_i[i] = random.choices(np.arange(6),weights=z)[0]
+                            
+                n[:,i] = r_n[n_i[i],:]
+                l[:,i] = l[:,i-1] + n[:,i]
+                
+                if i<i_diameter:
+                        continue
+                    
+    lc = l*lambda_seg
+    Cc = lc
+    
+    return lc, Cc, n
 #%%
 # def chain_stretched(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
 #     d2_exc = d_exc**2

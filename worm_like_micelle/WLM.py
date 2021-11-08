@@ -6,507 +6,30 @@ Generate WLM chain trajectories
 """
 import numpy as np
 import numpy.matlib
-import quaternion
+# import quaternion
 #from scipy.io import loadmat
 #from scipy.io import savemat
 import matplotlib.pyplot as plt
-from scipy import interpolate
+# from scipy import interpolate
 #import time
 
 #%% define functions
-def rotation(O,a):
-    # quaternion
-    phi_q = 2*(np.random.rand(1)-0.5)*np.pi
-    delta = 0
-    theta_q = np.sqrt(-np.log(1-np.random.rand(1)*(1-delta))*2/a)/2
-    # ----------------------------------------
-    # theta = 2*theta_q = sqrt(-ln(1-X)/a)
-    # where X is a random variable in [0,1]
-    #       a is the persistence length
-    # ----------------------------------------
-    
-    # if theta_q>np.pi/3*2:
-    #     theta_q = np.array([np.pi/3*2])/2
-    #print(theta_q)
-    sin_theta_q = np.sin(theta_q)
-    
-    vq = O[:,1]*np.cos(phi_q) + O[:,2]*np.sin(phi_q)
-    # vq = vq/np.sqrt(np.sum(vq**2))
-    qr = np.cos(theta_q);
-    qi = vq[0]*sin_theta_q;
-    qj = vq[1]*sin_theta_q;
-    qk = vq[2]*sin_theta_q;
-    # nq = np.sqrt(qr**2 + qi**2 + qj**2 + qk**2)
-    # qr = qr/nq
-    # qi = qi/nq
-    # qj = qj/nq
-    # qk = qk/nq
-    
-    qij = qi*qj
-    qjk = qj*qk
-    qik = qi*qk
-    qir = qi*qr
-    qjr = qj*qr
-    qkr = qk*qr
-    qii = qi*qi
-    qjj = qj*qj
-    qkk = qk*qk
-    
-    Rq = np.array([[1-2*(qjj+qkk), 2*(qij+qkr), 2*(qik-qjr)],
-                   [2*(qij-qkr), 1-2*(qii+qkk), 2*(qjk+qir)],
-                   [2*(qik+qjr), 2*(qjk-qir), 1-2*(qii+qjj)]])
-    
-    R = Rq[:,:,0]
-    
-    # Re-orthogonalize
-    Rx = R[:,0]
-    Ry = R[:,1]
-    err = np.dot(Rx,Ry)
-    Rx_ort = Rx-(err/2)*Ry
-    Ry_ort = Ry-(err/2)*Rx
-    #Rz_ort = np.cross(Rx_ort,Ry_ort)
-    Rx_new = 0.5*(3-np.dot(Rx_ort,Rx_ort))*Rx_ort
-    Ry_new = 0.5*(3-np.dot(Ry_ort,Ry_ort))*Ry_ort
-    Rz_new = np.cross(Rx_new,Ry_new)
-    #Rz_new = 0.5*(3-np.dot(Rz_ort,Rz_ort))*Rz_ort
-    R = np.array([Rx_new, Ry_new, Rz_new]).T
-    
-    return R
+import f_rotation
+rotation = f_rotation.rotation
+rotation_dihedral = f_rotation.rotation_dihedral
 
-def rotation_dihedral(O,a):
-    # quaternion
-    phi_q = 2*(np.random.rand(1)-0.5)*np.pi
-    theta_q = np.arctan(1/np.sqrt(a/2))/2
-    # ----------------------------------------
-    # theta = 2*theta_q
-    # 2*a = [1+cos(theta)]/[1-cos(theta)]
-    # where a is the persistence length
-    # ----------------------------------------
-    
-    # if theta_q>np.pi/3*2:
-    #     theta_q = np.array([np.pi/3*2])/2
-    #print(theta_q)
-    sin_theta_q = np.sin(theta_q)
-    
-    vq = O[:,1]*np.cos(phi_q) + O[:,2]*np.sin(phi_q)
-    # vq = vq/np.sqrt(np.sum(vq**2))
-    qr = np.cos(theta_q);
-    qi = vq[0]*sin_theta_q;
-    qj = vq[1]*sin_theta_q;
-    qk = vq[2]*sin_theta_q;
-    # nq = np.sqrt(qr**2 + qi**2 + qj**2 + qk**2)
-    # qr = qr/nq
-    # qi = qi/nq
-    # qj = qj/nq
-    # qk = qk/nq
-    
-    qij = qi*qj
-    qjk = qj*qk
-    qik = qi*qk
-    qir = qi*qr
-    qjr = qj*qr
-    qkr = qk*qr
-    qii = qi*qi
-    qjj = qj*qj
-    qkk = qk*qk
-    
-    Rq = np.array([[1-2*(qjj+qkk), 2*(qij+qkr), 2*(qik-qjr)],
-                   [2*(qij-qkr), 1-2*(qii+qkk), 2*(qjk+qir)],
-                   [2*(qik+qjr), 2*(qjk-qir), 1-2*(qii+qjj)]])
-    
-    R = Rq
-    
-    # Re-orthogonalize
-    Rx = R[:,0]
-    Ry = R[:,1]
-    err = np.dot(Rx,Ry)
-    Rx_ort = Rx-(err/2)*Ry
-    Ry_ort = Ry-(err/2)*Rx
-    #Rz_ort = np.cross(Rx_ort,Ry_ort)
-    Rx_new = 0.5*(3-np.dot(Rx_ort,Rx_ort))*Rx_ort
-    Ry_new = 0.5*(3-np.dot(Ry_ort,Ry_ort))*Ry_ort
-    Rz_new = np.cross(Rx_new,Ry_new)
-    #Rz_new = 0.5*(3-np.dot(Rz_ort,Rz_ort))*Rz_ort
-    R = np.array([Rx_new, Ry_new, Rz_new]).T
-    
-    return R
-   
-# def chain_Rayleigh_skip(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
-#     d2_exc = d_exc**2
-#     i_diameter = int(np.ceil(2*d_exc/lambda_seg))
-#     C = int(np.floor(d_exc/lambda_seg))+1
-       
-#     n = np.zeros((3,N))
-#     l = np.zeros((3,N))
-#     lc = np.zeros((3,N))
-#     #B = np.zeros((3,3))
-#     #C = np.zeros((3,3))
-#     #D = np.zeros((3,3))
-#     R = np.zeros((3,3))
-#     O = np.zeros((3,3,N))
-    
-#     list_i = []
-#     for i in range(N):
-#         list_i.append(list(range(0,i-i_diameter+1)))
-    
-#     abort = 1
-#     while abort==1:
-#         abort = 0
-#         for i in range(N):
-#             # print(i)
-#             if i==0:
-#                 n[:,i] = [1,0,0]
-#                 l[:,i] = n[:,i]
-#                 #B = np.eye(3)
-#                 #C = np.eye(3)
-#                 #D = np.eye(3)
-#                 R = np.eye(3)
-#                 O[:,:,i] = R
-#             else:
-#                 R = rotation(O[:,:,i-1],a)
-                
-#                 O[:,:,i] = R@O[:,:,i-1]
-#                 # O[:,:,i] = O[:,:,i]/np.sqrt(np.sum(O[:,:,i]**2,axis=0))
-#                 n[:,i] = O[:,0,i].reshape((3))
-#                 # n[:,i] = n[:,i]/np.sqrt(np.sum(n[:,i]**2))
-#                 l[:,i] = l[:,i-1] + n[:,i]
-                
-#                 if i<i_diameter:
-#                     continue
-                
-#                 #%% check self avoiding
-#                 if apply_SA:
-#                     SA = 0
-                    
-#                     n_retry = -1
-#                     while SA == 0:
-#                         n_retry += 1
-                        
-#                         if n_retry > 100:
-#                             abort = 1
-#                             print('abort')
-#                             break
+import f_chain
+chain_Rayleigh = f_chain.chain_Rayleigh
+chain_Rayleigh_woSA = f_chain.chain_Rayleigh_woSA
+chain_fix_val_free_rot = f_chain.chain_fix_val_free_rot
+chain_fix_val_free_rot_woSA = f_chain.chain_fix_val_free_rot_woSA
+chain_grid = f_chain.chain_grid
+chain_grid_woSA = f_chain.chain_grid_woSA
 
-#                         d2_uv = np.sum((l[:,list_i[i]].T-l[:,i].T)**2,axis=1)
-#                         d2_uv_min = np.min(d2_uv)
-#                         # d2_uv_min = np.min(np.sum((l[:,:i-i_diameter+1].T-l[:,i].T)**2,axis=1))
-#                         # d1_uv_min = np.min(np.max(np.abs(l[:,:i-1].T-l[:,i].T),axis=1))
-#                         # print(d1_uv_min)
-                        
-#                         if d2_uv_min<d2_exc:
-#                         # if d1_uv_min<d_exc:
-#                             print('retry ({:d})'.format(n_retry+1))
-#                             # n_retry+=1
-#                             R = rotation(O[:,:,i-1],a)
-                
-#                             O[:,:,i] = R@O[:,:,i-1]
-#                             # O[:,:,i] = O[:,:,i]/np.sqrt(np.sum(O[:,:,i]**2,axis=0))
-#                             n[:,i] = O[:,1,i].reshape((3))
-#                             # n[:,i] = n[:,i]/np.sqrt(np.sum(n[:,i]**2))
-#                             l[:,i] = l[:,i-1] + n[:,i]
-#                         else:
-#                             k_uv = np.floor(np.sqrt(d2_uv))-C
-#                             k_uv_check = k_uv[k_uv<=0]
-#                             for i_l in range(len(k_uv_check)):
-#                                 for i_k in range(int(k_uv_check[i_l])):
-#                                     if i+i_k+1<N & i in list_i[i+i_k+1]:
-#                                         list_i[i+i_k+1].remove(i)                                
-                                
-#                             if n_retry!=0:
-#                                 print('retry (end)')
-#                             break
-                        
-#                     if abort==1:
-#                         break
-        
-#     lc = l*lambda_seg
-#     #%% map unimer
-#     #C
-#     nC = unit_C.shape[1]
-#     m_backbone_C = np.zeros((3,nC,N))
-#     for j in range(N):
-#         for k in range(nC):
-#             m_backbone_C[:,k,j] = O[:,:,j]@unit_C[:,k] + lc[:,j] + np.array([0,0,0])
-    
-#     Cc = np.reshape(m_backbone_C,(3,N*nC))
-    
-#     # print(n_retry)
-#     return lc, Cc, O, n
+import f_ring
+ring_harmonic = f_ring.ring_harmonic
+# ring_q = f_ring.ring_q
 
-def chain_Rayleigh(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
-    d2_exc = d_exc**2
-    i_diameter = int(np.ceil(np.pi/2*d_exc/lambda_seg)) 
-    # Check for sphere overlap was done for points 
-    # separated by more than pi*d_exc/2 along the contour
-       
-    n = np.zeros((3,N))
-    l = np.zeros((3,N))
-    lc = np.zeros((3,N))
-    #B = np.zeros((3,3))
-    #C = np.zeros((3,3))
-    #D = np.zeros((3,3))
-    R = np.zeros((3,3))
-    O = np.zeros((3,3,N))
-    
-    abort = 1
-    while abort==1:
-        abort = 0
-        for i in range(N):
-            if i==0:
-                n[:,i] = [1,0,0]
-                l[:,i] = n[:,i]
-                #B = np.eye(3)
-                #C = np.eye(3)
-                #D = np.eye(3)
-                R = np.eye(3)
-                O[:,:,i] = R
-            else:
-                R = rotation(O[:,:,i-1],a)
-                
-                O[:,:,i] = R@O[:,:,i-1]
-                # O[:,:,i] = O[:,:,i]/np.sqrt(np.sum(O[:,:,i]**2,axis=0))
-                n[:,i] = O[:,0,i].reshape((3))
-                # n[:,i] = n[:,i]/np.sqrt(np.sum(n[:,i]**2))
-                l[:,i] = l[:,i-1] + n[:,i]
-                
-                if i<i_diameter:
-                    continue
-                
-                #%% check self avoiding
-                if apply_SA:
-                    SA = 0
-                    
-                    n_retry = -1
-                    while (SA == 0) & (n_retry < 100):
-                        n_retry += 1
-                        
-                        # if n_retry > 100:
-                        #     abort = 1
-                        #     print('abort')
-                        #     break
-                            
-                        d2_uv_min = np.min(np.sum((l[:,:i-i_diameter+1].T-l[:,i].T)**2,axis=1))
-                        # d1_uv_min = np.min(np.max(np.abs(l[:,:i-1].T-l[:,i].T),axis=1))
-                        # print(d1_uv_min)
-                        
-                        if d2_uv_min<d2_exc:
-                        # if d1_uv_min<d_exc:
-                            print('retry ({:d})'.format(n_retry+1))
-                            # n_retry+=1
-                            R = rotation(O[:,:,i-1],a)
-                
-                            O[:,:,i] = R@O[:,:,i-1]
-                            # O[:,:,i] = O[:,:,i]/np.sqrt(np.sum(O[:,:,i]**2,axis=0))
-                            n[:,i] = O[:,1,i].reshape((3))
-                            # n[:,i] = n[:,i]/np.sqrt(np.sum(n[:,i]**2))
-                            l[:,i] = l[:,i-1] + n[:,i]
-                        else:
-                            if n_retry!=0:
-                                print('retry (end)')
-                            break
-                        
-                    if n_retry >= 100:
-                        abort = 1
-                        print('abort')
-                        break
-        
-    lc = l*lambda_seg
-
-    #%% map unimer
-    #C
-    nC = unit_C.shape[1]
-    m_backbone_C = np.zeros((3,nC,N))
-    for j in range(N):
-        for k in range(nC):
-            m_backbone_C[:,k,j] = O[:,:,j]@unit_C[:,k] + lc[:,j] + np.array([0,0,0])
-    
-    Cc = np.reshape(m_backbone_C,(3,N*nC))
-    
-    # print(n_retry)
-    return lc, Cc, O, n
-
-def chain_fix_val_free_rot(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
-    d2_exc = d_exc**2
-    i_diameter = int(np.ceil(np.pi/2*d_exc/lambda_seg)) 
-    # Check for sphere overlap was done for points 
-    # separated by more than pi*d_exc/2 along the contour
-       
-    n = np.zeros((3,N))
-    l = np.zeros((3,N))
-    lc = np.zeros((3,N))
-    #B = np.zeros((3,3))
-    #C = np.zeros((3,3))
-    #D = np.zeros((3,3))
-    R = np.zeros((3,3))
-    O = np.zeros((3,3,N))
-    
-    abort = 1
-    while abort==1:
-        abort = 0
-        for i in range(N):
-            if i==0:
-                n[:,i] = [1,0,0]
-                l[:,i] = n[:,i]
-                #B = np.eye(3)
-                #C = np.eye(3)
-                #D = np.eye(3)
-                R = np.eye(3)
-                O[:,:,i] = R
-            else:
-                R = rotation_dihedral(O[:,:,i-1],a)
-                
-                O[:,:,i] = R@O[:,:,i-1]
-                # O[:,:,i] = O[:,:,i]/np.sqrt(np.sum(O[:,:,i]**2,axis=0))
-                n[:,i] = O[:,0,i].reshape((3))
-                # n[:,i] = n[:,i]/np.sqrt(np.sum(n[:,i]**2))
-                l[:,i] = l[:,i-1] + n[:,i]
-                
-                if i<i_diameter:
-                    continue
-                
-                #%% check self avoiding
-                if apply_SA:
-                    SA = 0
-                    
-                    n_retry = -1
-                    while (SA == 0) & (n_retry < 100):
-                        n_retry += 1
-                        
-                        # if n_retry > 100:
-                        #     abort = 1
-                        #     print('abort')
-                        #     break
-                            
-                        d2_uv_min = np.min(np.sum((l[:,:i-i_diameter+1].T-l[:,i].T)**2,axis=1))
-                        # d1_uv_min = np.min(np.max(np.abs(l[:,:i-1].T-l[:,i].T),axis=1))
-                        # print(d1_uv_min)
-                        
-                        if d2_uv_min<d2_exc:
-                        # if d1_uv_min<d_exc:
-                            print('retry ({:d})'.format(n_retry+1))
-                            # n_retry+=1
-                            R = rotation(O[:,:,i-1],a)
-                
-                            O[:,:,i] = R@O[:,:,i-1]
-                            # O[:,:,i] = O[:,:,i]/np.sqrt(np.sum(O[:,:,i]**2,axis=0))
-                            n[:,i] = O[:,1,i].reshape((3))
-                            # n[:,i] = n[:,i]/np.sqrt(np.sum(n[:,i]**2))
-                            l[:,i] = l[:,i-1] + n[:,i]
-                        else:
-                            if n_retry!=0:
-                                print('retry (end)')
-                            break
-                        
-                    if n_retry >= 100:
-                        abort = 1
-                        print('abort')
-                        break
-        
-    lc = l*lambda_seg
-    
-    #%% map unimer
-    #C
-    nC = unit_C.shape[1]
-    m_backbone_C = np.zeros((3,nC,N))
-    for j in range(N):
-        for k in range(nC):
-            m_backbone_C[:,k,j] = O[:,:,j]@unit_C[:,k] + lc[:,j] + np.array([0,0,0])
-    
-    Cc = np.reshape(m_backbone_C,(3,N*nC))
-    
-    # print(n_retry)
-    return lc, Cc, O, n
-
-def ring_harmonic(N,n_harmonics,sigma):
-    c_ring = np.zeros((3,N+1))
-    # c_ring_deriv = np.zeros((3,N+1))
-    
-    theta = np.arange(N+1)/N*2*np.pi
-    
-    for i in range(3):
-        phi_i = 2*np.pi*np.random.rand(1)
-        
-        weight = np.exp(-(np.arange(n_harmonics)+1)**2/sigma**2/2)
-        weight = weight/np.sqrt(np.sum(weight**2))
-        coeff_c_i = np.random.rand(n_harmonics)*weight
-        coeff_s_i = np.random.rand(n_harmonics)*weight
-        
-        harmonics_c_i = np.cos(np.outer(theta,(np.arange(n_harmonics)+1)) + phi_i)*coeff_c_i
-        harmonics_s_i = np.sin(np.outer(theta,(np.arange(n_harmonics)+1)) + phi_i)*coeff_s_i
-        
-        harmonics_i = harmonics_c_i + harmonics_s_i
-        # harmonics_i_deriv = harmonics_s_i*(np.arange(n_harmonics)+1) + -harmonics_c_i*(np.arange(n_harmonics)+1)
-        
-        c_ring[i,:] = np.sum(harmonics_i,axis=1)
-        # c_ring_deriv[i,:] = np.sum(harmonics_i_deriv,axis=1)
-    
-    arc_segment = np.sqrt(np.sum((c_ring[:,:-1]-c_ring[:,1:])**2,axis=0))
-    
-    # arc_segment = np.sqrt(np.sum(c_ring_deriv**2,axis=0))
-    arc_sum = np.sum(arc_segment)
-    
-    arc_cum = np.zeros(N+1)
-    for i in range(N+1):
-        if i==0:
-            arc_cum[i] = 0
-            
-        else:
-            arc_cum[i] = arc_cum[i-1] + arc_segment[i-1]
-            
-    f_arc = interpolate.interp1d(arc_cum, theta, kind='quadratic', fill_value='extrapolate')
-    
-    arc_seq = np.arange(N+1)/(N+1)*arc_sum
-    
-    # print(arc_cum)
-    # print(arc_seq)
-    
-    theta_interpolate = f_arc(arc_seq)
-    
-    f_ring = interpolate.interp1d(theta, c_ring, kind='quadratic', fill_value='extrapolate')
-    Cc = f_ring(theta_interpolate)/arc_sum*(N+1)
-    
-    return Cc
-
-def ring_q(N,lmbda):
-    list_u = []
-    list_v = []
-
-    for i in range(N):
-        U = np.random.rand(2)
-        u_re = np.sqrt(-np.log(U[0]))*np.cos(2*np.pi*U[1])
-        u_im = np.sqrt(-np.log(U[0]))*np.sin(2*np.pi*U[1])
-        u = np.quaternion(u_re,u_im,0,0)
-        list_u.append(u)
-        V = np.random.rand(2)
-        v_re = np.sqrt(-np.log(V[0]))*np.cos(2*np.pi*V[1])
-        v_im = np.sqrt(-np.log(V[0]))*np.sin(2*np.pi*V[1])
-        v = np.quaternion(v_re,v_im,0,0)
-        list_v.append(v)
-    
-    uu = np.array(list_u)
-    vv = np.array(list_v)
-    
-    vv2 = vv - uu*np.sum(np.conjugate(uu)*vv)/np.sum(np.conjugate(uu)*uu)
-    uu = uu/np.sqrt(np.sum(np.conjugate(uu)*uu))
-    vv2 = vv2/np.sqrt(np.sum(np.conjugate(vv2)*vv2))
-    
-    h = uu + vv2*np.quaternion(0,0,1,0)
-    
-    h_Hopf = np.conjugate(h)*np.quaternion(0,1,0,0)*h
-    
-    n = quaternion.as_float_array(h_Hopf)[:,1:]*N
-    
-    l = np.zeros((N+1,3))
-    for i in range(N+1):
-        if i==0:
-            l[i,:] = 0
-            
-        else:
-            l[i,:] = l[i-1,:] + n[i-1,:]
-    
-    Cc = l.T*lmbda
-    
-    return Cc
 #%% class: WLChain
 class WLChain:
     """
@@ -531,6 +54,8 @@ class WLChain:
         self.unit_C = unit_C
         self.apply_SA = 1
         self.d_exc = 1
+        self.kappa = 1
+        self.epsilon = 0
         
     def chain(self):
         """
@@ -538,8 +63,13 @@ class WLChain:
         """
         
         # call 'chain_Rayleigh' function
-        self.lc, self.Cc, self.O, self.n = chain_Rayleigh(self.N,self.a,self.lmbda,self.unit_C,
-                                                          apply_SA=self.apply_SA,d_exc=self.d_exc)
+        if self.apply_SA == 0:
+            self.lc, self.Cc, self.O, self.n = chain_Rayleigh_woSA(self.N,self.a,self.lmbda,self.unit_C,
+                                                              apply_SA=self.apply_SA,d_exc=self.d_exc)
+        else:
+            self.lc, self.Cc, self.O, self.n = chain_Rayleigh(self.N,self.a,self.lmbda,self.unit_C,
+                                                              apply_SA=self.apply_SA,d_exc=self.d_exc)
+            
         self.l_contour = np.sum(np.sqrt(np.sum(self.n**2,axis=0)))
         self.l_end2end = np.sqrt(np.sum((self.Cc[:,0]-self.Cc[:,-1])**2,axis=0))
         self.l_prstnc = self.lmbda/(1-(1/np.tanh(self.a)-1/self.a))
@@ -554,8 +84,34 @@ class WLChain:
         """
         
         # call 'chain_Rayleigh' function
-        self.lc, self.Cc, self.O, self.n = chain_fix_val_free_rot(self.N,self.a,self.lmbda,self.unit_C,
-                                                          apply_SA=self.apply_SA,d_exc=self.d_exc)
+        if self.apply_SA == 0:
+            self.lc, self.Cc, self.O, self.n = chain_fix_val_free_rot_woSA(self.N,self.a,self.lmbda,self.unit_C,
+                                                              apply_SA=self.apply_SA,d_exc=self.d_exc)
+        else:
+            self.lc, self.Cc, self.O, self.n = chain_fix_val_free_rot(self.N,self.a,self.lmbda,self.unit_C,
+                                                              apply_SA=self.apply_SA,d_exc=self.d_exc)
+            
+        self.l_contour = np.sum(np.sqrt(np.sum(self.n**2,axis=0)))
+        self.l_end2end = np.sqrt(np.sum((self.Cc[:,0]-self.Cc[:,-1])**2,axis=0))
+        self.l_prstnc = self.lmbda/(1-(1/np.tanh(self.a)-1/self.a))
+        Cc_centered = self.Cc.T-np.mean(self.Cc.T,axis=0)
+        self.Rg = np.sqrt(np.trace(Cc_centered.T@Cc_centered/self.N))
+        #self.l_prstnc = np.dot(self.n[:,0].T,self.lc[:,-1])
+        self.box = np.vstack((np.min(self.Cc, axis=1), np.max(self.Cc, axis=1)))
+        
+    def chain_grid(self):
+        """
+        Call the chain function acd calculate particle trajectory in WL-chain.
+        """
+        
+        # call 'chain_Rayleigh' function
+        if self.apply_SA == 0:
+            self.lc, self.Cc, self.n = chain_grid_woSA(self.N,self.kappa,self.epsilon,self.lmbda,
+                                                              apply_SA=self.apply_SA,d_exc=self.d_exc)
+        else:
+            self.lc, self.Cc, self.n = chain_grid(self.N,self.kappa,self.epsilon,self.lmbda,
+                                                              apply_SA=self.apply_SA,d_exc=self.d_exc)
+            
         self.l_contour = np.sum(np.sqrt(np.sum(self.n**2,axis=0)))
         self.l_end2end = np.sqrt(np.sum((self.Cc[:,0]-self.Cc[:,-1])**2,axis=0))
         self.l_prstnc = self.lmbda/(1-(1/np.tanh(self.a)-1/self.a))
@@ -581,22 +137,22 @@ class WLChain:
         self.l_end2end = np.sqrt(np.sum((self.Cc[:,0]-self.Cc[:,-1])**2,axis=0))
         self.box = np.vstack((np.min(self.Cc, axis=1), np.max(self.Cc, axis=1)))
         
-    def ring_q(self):
-        """
-        Call the chain function and calculate particle trajectory in WL-chain.
+    # def ring_q(self):
+    #     """
+    #     Call the chain function and calculate particle trajectory in WL-chain.
         
-        Uehara, E., Tanaka, R., Inoue, M., Hirose, F., & Deguchi, T. (2014). 
-        Mean-square radius of gyration and hydrodynamic radius for topological 
-        polymers evaluated through the quaternionic algorithm. 
-        Reactive and Functional Polymers, 80, 48-56.
+    #     Uehara, E., Tanaka, R., Inoue, M., Hirose, F., & Deguchi, T. (2014). 
+    #     Mean-square radius of gyration and hydrodynamic radius for topological 
+    #     polymers evaluated through the quaternionic algorithm. 
+    #     Reactive and Functional Polymers, 80, 48-56.
         
-        numpy-quaternion package required https://github.com/moble/quaternion
-        """
+    #     numpy-quaternion package required https://github.com/moble/quaternion
+    #     """
         
-        # call 'ring_harmonics' function
-        self.Cc = ring_q(self.N,self.lmbda)
-        self.l_end2end = np.sqrt(np.sum((self.Cc[:,0]-self.Cc[:,-1])**2,axis=0))
-        self.box = np.vstack((np.min(self.Cc, axis=1), np.max(self.Cc, axis=1)))
+    #     # call 'ring_q' function
+    #     self.Cc = ring_q(self.N,self.lmbda)
+    #     self.l_end2end = np.sqrt(np.sum((self.Cc[:,0]-self.Cc[:,-1])**2,axis=0))
+    #     self.box = np.vstack((np.min(self.Cc, axis=1), np.max(self.Cc, axis=1)))
     
     def plot(self, filename=[], show_axes=1, save=0, end=1):
         """
