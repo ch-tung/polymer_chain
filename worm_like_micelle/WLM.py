@@ -106,10 +106,10 @@ class WLChain:
         
         # call 'chain_Rayleigh' function
         if self.apply_SA == 0:
-            self.lc, self.Cc, self.n = chain_grid_woSA(self.N,self.kappa,self.epsilon,self.lmbda,
+            self.lc, self.Cc, self.n, self.Z = chain_grid_woSA(self.N,self.kappa,self.epsilon,self.lmbda,
                                                               apply_SA=self.apply_SA,d_exc=self.d_exc)
         else:
-            self.lc, self.Cc, self.n = chain_grid(self.N,self.kappa,self.epsilon,self.lmbda,
+            self.lc, self.Cc, self.n, self.Z = chain_grid(self.N,self.kappa,self.epsilon,self.lmbda,
                                                               apply_SA=self.apply_SA,d_exc=self.d_exc)
             
         self.l_contour = np.sum(np.sqrt(np.sum(self.n**2,axis=0)))
@@ -122,7 +122,7 @@ class WLChain:
         
     def ring(self,n_harmonics,sigma):
         """
-        Call the chain function and calculate particle trajectory in WL-chain.
+        Call the ring function and calculate particle trajectory in ring polymer.
         
         Args:
             n_harmonics: int
@@ -139,7 +139,7 @@ class WLChain:
         
     # def ring_q(self):
     #     """
-    #     Call the chain function and calculate particle trajectory in WL-chain.
+    #     Call the ring function and calculate particle trajectory in ring polymer.
         
     #     Uehara, E., Tanaka, R., Inoue, M., Hirose, F., & Deguchi, T. (2014). 
     #     Mean-square radius of gyration and hydrodynamic radius for topological 

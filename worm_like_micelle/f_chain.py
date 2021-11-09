@@ -11,6 +11,47 @@ rotation_dihedral = f_rotation.rotation_dihedral
 # rotation_stretched = f_rotation.rotation_stretched
 
 def chain_Rayleigh(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
+    """
+    Modelling the polymer chain as a semi-flexible rod.
+    
+    Assuming the bending energy is propotional to the square of bending angle
+        e = 1/2 * a * theta^2
+        
+    the partition function: 
+        Z = exp(-e/kT)
+        
+    probability distribution of theta:
+        p(theta) = Z(theta)sin(theta) / integral(Z(theta)sin(theta)) from 0 to pi
+                 = exp(-a*theta^2/2kT)*sin(theta)
+                 
+    for theta << 1, p(theta) can be approximated by:
+        exp(-a*theta^2/2kT)*(theta) (Rayleigh distribution).
+        
+    The CDF of Rayleigh distribution is:
+        1-exp(-theta^2/2a^2)
+        
+    and its inverse function:
+        sqrt(-2/a ln(1-X)).
+    -------------------------------------------------------
+    Args:
+    N: int
+        Number of segments
+        
+    a: float
+        chain stiffness, persistence length
+    
+    lambda_seg: float
+        segment length
+    
+    unit_C: 3*n float array
+        repetive units in each segment
+        
+    apply_SA: boolean
+        apply self avoiding check
+        
+    d_exc: float
+        minimum interparticle distance of the self avoiding chain
+    """
     d2_exc = d_exc**2
     i_diameter = int(np.ceil(np.pi/2*d_exc/lambda_seg)) 
     # Check for sphere overlap was done for points 
@@ -104,7 +145,7 @@ def chain_Rayleigh(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
 
 #%%
 def chain_Rayleigh_woSA(N, a, lambda_seg, unit_C, apply_SA=0, d_exc=1):
-    d2_exc = d_exc**2
+    # d2_exc = d_exc**2
     i_diameter = int(np.ceil(np.pi/2*d_exc/lambda_seg)) 
     # Check for sphere overlap was done for points 
     # separated by more than pi*d_exc/2 along the contour
@@ -159,6 +200,34 @@ def chain_Rayleigh_woSA(N, a, lambda_seg, unit_C, apply_SA=0, d_exc=1):
 
 #%%
 def chain_fix_val_free_rot(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
+    """
+    Modelling the polymer chain by fixed-valence-free-rotation model
+    
+    theta is fixed
+    persistence:
+        2*l_b = l_0*(1+cos(theta))/(1-cos(theta)) 
+              = l_0*cot^2(theta/2)
+        theta = 2*arctan(1/sqrt(2*l_b))
+    -------------------------------------------------------
+    Args:
+    N: int
+        Number of segments
+        
+    a: float
+        chain stiffness, persistence length
+    
+    lambda_seg: float
+        segment length
+    
+    unit_C: 3*n float array
+        repetive units in each segment
+        
+    apply_SA: boolean
+        apply self avoiding check
+        
+    d_exc: float
+        minimum interparticle distance of the self avoiding chain
+    """
     d2_exc = d_exc**2
     i_diameter = int(np.ceil(np.pi/2*d_exc/lambda_seg)) 
     # Check for sphere overlap was done for points 
@@ -218,7 +287,7 @@ def chain_fix_val_free_rot(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
                         # if d1_uv_min<d_exc:
                             print('retry ({:d})'.format(n_retry+1))
                             # n_retry+=1
-                            R = rotation(O[:,:,i-1],a)
+                            R = rotation_dihedral(O[:,:,i-1],a)
                 
                             O[:,:,i] = R@O[:,:,i-1]
                             # O[:,:,i] = O[:,:,i]/np.sqrt(np.sum(O[:,:,i]**2,axis=0))
@@ -396,7 +465,7 @@ def chain_grid(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
     lc = l*lambda_seg
     Cc = lc
     
-    return lc, Cc, n
+    return lc, Cc, n, Z
 
 def chain_grid_woSA(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=0):
     # d2_exc = d_exc**2
@@ -450,7 +519,7 @@ def chain_grid_woSA(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=0):
     lc = l*lambda_seg
     Cc = lc
     
-    return lc, Cc, n
+    return lc, Cc, n, Z
 #%%
 # def chain_stretched(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
 #     d2_exc = d_exc**2
