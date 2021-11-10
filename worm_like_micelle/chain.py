@@ -39,12 +39,20 @@ for i in range(1):
     # chain_grid method
     chain01.d_exc = 1
     chain01.kappa = 5
-    chain01.epsilon = 0.1
-    chain01.chain_grid()
+    chain01.epsilon = 2e-3
+    chain01.chain_grid_shear()
+    
+    Z = chain01.Z
+    w,v = np.linalg.eig(Z)
+    
+    iw = np.argsort(w)
+    w = w[iw]
+    v = v[:,iw]
+    
     tEnd = time.time()
     print("\'chain\' cost %f sec" % (tEnd - tStart))
     
     filename_ring = './figures/ring/ring_test_{:d}.png'.format(i+1)
-    chain01.plot(filename=filename_ring, show_axes=0, save=0, end=0)
+    chain01.plot(filename=filename_ring, show_axes=0, save=0, end=1)
 
 chain01.check_SA()

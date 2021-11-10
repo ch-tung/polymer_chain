@@ -24,6 +24,7 @@ chain_Rayleigh_woSA = f_chain.chain_Rayleigh_woSA
 chain_fix_val_free_rot = f_chain.chain_fix_val_free_rot
 chain_fix_val_free_rot_woSA = f_chain.chain_fix_val_free_rot_woSA
 chain_grid = f_chain.chain_grid
+chain_grid_shear = f_chain.chain_grid_shear
 chain_grid_woSA = f_chain.chain_grid_woSA
 
 import f_ring
@@ -110,6 +111,27 @@ class WLChain:
                                                               apply_SA=self.apply_SA,d_exc=self.d_exc)
         else:
             self.lc, self.Cc, self.n, self.Z = chain_grid(self.N,self.kappa,self.epsilon,self.lmbda,
+                                                              apply_SA=self.apply_SA,d_exc=self.d_exc)
+            
+        self.l_contour = np.sum(np.sqrt(np.sum(self.n**2,axis=0)))
+        self.l_end2end = np.sqrt(np.sum((self.Cc[:,0]-self.Cc[:,-1])**2,axis=0))
+        self.l_prstnc = self.lmbda/(1-(1/np.tanh(self.a)-1/self.a))
+        Cc_centered = self.Cc.T-np.mean(self.Cc.T,axis=0)
+        self.Rg = np.sqrt(np.trace(Cc_centered.T@Cc_centered/self.N))
+        #self.l_prstnc = np.dot(self.n[:,0].T,self.lc[:,-1])
+        self.box = np.vstack((np.min(self.Cc, axis=1), np.max(self.Cc, axis=1)))
+        
+    def chain_grid_shear(self):
+        """
+        Call the chain function acd calculate particle trajectory in WL-chain.
+        """
+        
+        # call 'chain_Rayleigh' function
+        if self.apply_SA == 0:
+            self.lc, self.Cc, self.n, self.Z = chain_grid_woSA(self.N,self.kappa,self.epsilon,self.lmbda,
+                                                              apply_SA=self.apply_SA,d_exc=self.d_exc)
+        else:
+            self.lc, self.Cc, self.n, self.Z = chain_grid_shear(self.N,self.kappa,self.epsilon,self.lmbda,
                                                               apply_SA=self.apply_SA,d_exc=self.d_exc)
             
         self.l_contour = np.sum(np.sqrt(np.sum(self.n**2,axis=0)))
