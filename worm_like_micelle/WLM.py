@@ -26,6 +26,7 @@ chain_fix_val_free_rot_woSA = f_chain.chain_fix_val_free_rot_woSA
 chain_grid = f_chain.chain_grid
 chain_grid_shear = f_chain.chain_grid_shear
 chain_grid_woSA = f_chain.chain_grid_woSA
+chain_grid_shear_woSA = f_chain.chain_grid_shear_woSA
 
 import f_ring
 ring_harmonic = f_ring.ring_harmonic
@@ -115,7 +116,7 @@ class WLChain:
             
         self.l_contour = np.sum(np.sqrt(np.sum(self.n**2,axis=0)))
         self.l_end2end = np.sqrt(np.sum((self.Cc[:,0]-self.Cc[:,-1])**2,axis=0))
-        self.l_prstnc = self.lmbda/(1-(1/np.tanh(self.a)-1/self.a))
+        self.l_prstnc = 0.25/np.exp(-self.kappa)*self.lmbda
         Cc_centered = self.Cc.T-np.mean(self.Cc.T,axis=0)
         self.Rg = np.sqrt(np.trace(Cc_centered.T@Cc_centered/self.N))
         #self.l_prstnc = np.dot(self.n[:,0].T,self.lc[:,-1])
@@ -128,7 +129,7 @@ class WLChain:
         
         # call 'chain_Rayleigh' function
         if self.apply_SA == 0:
-            self.lc, self.Cc, self.n, self.Z = chain_grid_woSA(self.N,self.kappa,self.epsilon,self.lmbda,
+            self.lc, self.Cc, self.n, self.Z = chain_grid_shear_woSA(self.N,self.kappa,self.epsilon,self.lmbda,
                                                               apply_SA=self.apply_SA,d_exc=self.d_exc)
         else:
             self.lc, self.Cc, self.n, self.Z = chain_grid_shear(self.N,self.kappa,self.epsilon,self.lmbda,
@@ -136,7 +137,7 @@ class WLChain:
             
         self.l_contour = np.sum(np.sqrt(np.sum(self.n**2,axis=0)))
         self.l_end2end = np.sqrt(np.sum((self.Cc[:,0]-self.Cc[:,-1])**2,axis=0))
-        self.l_prstnc = self.lmbda/(1-(1/np.tanh(self.a)-1/self.a))
+        self.l_prstnc = 0.25/np.exp(-self.kappa)*self.lmbda
         Cc_centered = self.Cc.T-np.mean(self.Cc.T,axis=0)
         self.Rg = np.sqrt(np.trace(Cc_centered.T@Cc_centered/self.N))
         #self.l_prstnc = np.dot(self.n[:,0].T,self.lc[:,-1])
@@ -201,6 +202,7 @@ class WLChain:
         # ax.plot(self.Cc[0,:],self.Cc[1,:],self.Cc[2,:], 
         #         'o', markeredgecolor='#800000', markerfacecolor='#D00000')
         
+        # plot chain end
         if end==1:
             ax.plot(self.Cc[0,0],self.Cc[1,0],self.Cc[2,0], 
                         'o', markeredgecolor='#800000', markerfacecolor='#D00000')
