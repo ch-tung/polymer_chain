@@ -205,9 +205,9 @@ class WLChain:
         # plot chain end
         if end==1:
             ax.plot(self.Cc[0,0],self.Cc[1,0],self.Cc[2,0], 
-                        'o', markeredgecolor='#800000', markerfacecolor='#D00000')
+                        'o', markeredgecolor='#000080', markerfacecolor='#0000D0')
             ax.plot(self.Cc[0,-1],self.Cc[1,-1],self.Cc[2,-1], 
-                        'o', markeredgecolor='#800000', markerfacecolor='#D00000')
+                        'o', markeredgecolor='#008000', markerfacecolor='#00D000')
         
         #CM = np.mean(Cc_backbone,axis=1)
         CT = np.array([np.max(self.Cc[0,:])+np.min(self.Cc[0,:]),
