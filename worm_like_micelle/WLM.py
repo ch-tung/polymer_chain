@@ -143,6 +143,14 @@ class WLChain:
         #self.l_prstnc = np.dot(self.n[:,0].T,self.lc[:,-1])
         self.box = np.vstack((np.min(self.Cc, axis=1), np.max(self.Cc, axis=1)))
         
+    def cos_ave(self):
+        c_ave = 0
+        for i in range(self.N-1):
+            c_ave = c_ave + np.dot(self.n[:,i],self.n[:,i+1])
+            
+        c_ave = c_ave/self.N 
+        return c_ave
+        
     def ring(self,n_harmonics,sigma):
         """
         Call the ring function and calculate particle trajectory in ring polymer.
