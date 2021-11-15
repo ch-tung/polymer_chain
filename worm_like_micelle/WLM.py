@@ -152,13 +152,17 @@ class WLChain:
         return c_ave
     
     def corr_o(self):
-        corr = np.zeros(1000-1)
-        for i in range(1000-1):
-            for j in range(1000-i):
-                corr[i] = corr[i] + np.dot(self.n[:,i],self.n[:,i+j])
-            corr[i] = corr[i]/(1000-i)
+        d = np.ceil(10**(np.arange(64)/8)).astype('int')
+        d = d[d<self.N]
+        print(len(d))
+        corr = np.zeros(len(d))
+        for i, d_i in enumerate(d):
+            print(i)
+            for j in range(self.N-d_i):
+                corr[i] = corr[i] + np.dot(self.n[:,j],self.n[:,j+d_i])
+            corr[i] = corr[i]/(self.N-d_i)
             
-        return corr
+        return d, corr
         
     def ring(self,n_harmonics,sigma):
         """
