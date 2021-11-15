@@ -150,6 +150,15 @@ class WLChain:
             
         c_ave = c_ave/self.N 
         return c_ave
+    
+    def corr_o(self):
+        corr = np.zeros(1000-1)
+        for i in range(1000-1):
+            for j in range(1000-i):
+                corr[i] = corr[i] + np.dot(self.n[:,i],self.n[:,i+j])
+            corr[i] = corr[i]/(1000-i)
+            
+        return corr
         
     def ring(self,n_harmonics,sigma):
         """
