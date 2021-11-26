@@ -778,6 +778,161 @@ def chain_grid_shear_woSA(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
     Cc = lc
     
     return lc, Cc, n, Z
+
+#%% block co-polymer
+def chain_Rayleigh_block(N, a_s, f, lambda_seg, unit_C, apply_SA=1, d_exc=np.array([1,1])):
+    """
+    Modelling the polymer chain as a semi-flexible rod.
+    
+    Assuming the bending energy is propotional to the square of bending angle
+        e = 1/2 * a * theta^2
+        
+    the partition function: 
+        Z = exp(-e/kT)
+        
+    probability distribution of theta:
+        p(theta) = Z(theta)sin(theta) / integral(Z(theta)sin(theta)) from 0 to pi
+                 = exp(-a*theta^2/2kT)*sin(theta)
+                 
+    for theta << 1, p(theta) can be approximated by:
+        exp(-a*theta^2/2kT)*(theta) (Rayleigh distribution).
+        
+    The CDF of Rayleigh distribution is:
+        1-exp(-theta^2/2a^2)
+        
+    and its inverse function:
+        sqrt(-2/a ln(1-X)).
+    -------------------------------------------------------
+    Args:
+    N: int
+        Number of segments
+        
+    a: 2 float
+        chain stiffness, persistence length of the blocks
+    
+    lambda_seg: float
+        segment length
+    
+    unit_C: 3*n float array
+        repetive units in each segment
+        
+    apply_SA: boolean
+        apply self avoiding check
+        
+    d_exc: float
+        minimum interparticle distance of the two blocks in the self avoiding chain 
+    """
+    d2_exc_s = d_exc**2
+    i_diameter_s = (np.ceil(np.pi/2*d_exc/lambda_seg)).astype(int)
+    # print(i_diameter_s)
+    a = a_s[0]
+    d2_exc = d2_exc_s[0]
+    i_diameter = i_diameter_s[0]
+    # Check for sphere overlap was done for points 
+    # separated by more than pi*d_exc/2 along the contour
+       
+    n = np.zeros((3,N))
+    l = np.zeros((3,N))
+    lc = np.zeros((3,N))
+    #B = np.zeros((3,3))
+    #C = np.zeros((3,3))
+    #D = np.zeros((3,3))
+    R = np.zeros((3,3))
+    O = np.zeros((3,3,N))
+    
+    N1 = int(N*f)
+    
+    abort = 1
+    while abort==1:
+        abort = 0
+        a = a_s[0]
+        d2_exc = d2_exc_s[0]
+        i_diameter = i_diameter_s[0]
+        
+        i_seg = 0
+        for i in range(N):
+            i_seg += 1
+            
+            if i_seg>N1:
+                a = a_s[1]
+                d2_exc = d2_exc_s[1]
+                i_diameter = i_diameter_s[1]
+                
+            
+            if i==0:
+                n[:,i] = [1,0,0]
+                l[:,i] = n[:,i]
+                #B = np.eye(3)
+                #C = np.eye(3)
+                #D = np.eye(3)
+                R = np.eye(3)
+                O[:,:,i] = R
+            else:
+                R = rotation(O[:,:,i-1],a)
+                
+                O[:,:,i] = R@O[:,:,i-1]
+                # O[:,:,i] = O[:,:,i]/np.sqrt(np.sum(O[:,:,i]**2,axis=0))
+                n[:,i] = O[:,0,i].reshape((3))
+                # n[:,i] = n[:,i]/np.sqrt(np.sum(n[:,i]**2))
+                l[:,i] = l[:,i-1] + n[:,i]
+                
+                if i<i_diameter:
+                    continue
+                
+                #%% check self avoiding
+                # if apply_SA:
+                SA = 0
+                
+                n_retry = -1
+                while (SA == 0) & (n_retry < 100):
+                    n_retry += 1
+                    
+                    # if n_retry > 100:
+                    #     abort = 1
+                    #     print('abort')
+                    #     break
+                        
+                    d2_uv_min = np.min(np.sum((l[:,:i-i_diameter+1].T-l[:,i].T)**2,axis=1))
+                    # d1_uv_min = np.min(np.max(np.abs(l[:,:i-1].T-l[:,i].T),axis=1))
+                    # print(d1_uv_min)
+                    
+                    if d2_uv_min<d2_exc:
+                    # if d1_uv_min<d_exc:
+                        print('retry ({:d})'.format(n_retry+1))
+                        # n_retry+=1
+                        R = rotation(O[:,:,i-1],a)
+            
+                        O[:,:,i] = R@O[:,:,i-1]
+                        # O[:,:,i] = O[:,:,i]/np.sqrt(np.sum(O[:,:,i]**2,axis=0))
+                        n[:,i] = O[:,1,i].reshape((3))
+                        # n[:,i] = n[:,i]/np.sqrt(np.sum(n[:,i]**2))
+                        l[:,i] = l[:,i-1] + n[:,i]
+                    else:
+                        if n_retry!=0:
+                            print('retry (end)')
+                        break
+                    
+                if n_retry >= 100:
+                    abort = 1
+                    print('abort')
+                    i_seg = 0
+                    break
+        
+    lc = l*lambda_seg
+
+    #%% map unimer
+    #C
+    nC = unit_C.shape[1]
+    m_backbone_C = np.zeros((3,nC,N))
+    for j in range(N):
+        for k in range(nC):
+            m_backbone_C[:,k,j] = O[:,:,j]@unit_C[:,k] + lc[:,j] + np.array([0,0,0])
+    
+    Cc = np.reshape(m_backbone_C,(3,N*nC))
+    
+    # print(n_retry)
+    return lc, Cc, O, n, N1
+
 #%%
 # def chain_stretched(N, a, lambda_seg, unit_C, apply_SA=1, d_exc=1):
 #     d2_exc = d_exc**2

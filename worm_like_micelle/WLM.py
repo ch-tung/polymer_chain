@@ -27,6 +27,7 @@ chain_grid = f_chain.chain_grid
 chain_grid_shear = f_chain.chain_grid_shear
 chain_grid_woSA = f_chain.chain_grid_woSA
 chain_grid_shear_woSA = f_chain.chain_grid_shear_woSA
+chain_Rayleigh_block = f_chain.chain_Rayleigh_block
 
 import f_ring
 ring_harmonic = f_ring.ring_harmonic
@@ -58,6 +59,7 @@ class WLChain:
         self.d_exc = 1
         self.kappa = 1
         self.epsilon = 0
+        self.f = 0
         
     def chain(self):
         """
@@ -70,6 +72,27 @@ class WLChain:
                                                               apply_SA=self.apply_SA,d_exc=self.d_exc)
         else:
             self.lc, self.Cc, self.O, self.n = chain_Rayleigh(self.N,self.a,self.lmbda,self.unit_C,
+                                                              apply_SA=self.apply_SA,d_exc=self.d_exc)
+            
+        self.l_contour = np.sum(np.sqrt(np.sum(self.n**2,axis=0)))
+        self.l_end2end = np.sqrt(np.sum((self.Cc[:,0]-self.Cc[:,-1])**2,axis=0))
+        self.l_prstnc = self.lmbda/(1-(1/np.tanh(self.a)-1/self.a))
+        Cc_centered = self.Cc.T-np.mean(self.Cc.T,axis=0)
+        self.Rg = np.sqrt(np.trace(Cc_centered.T@Cc_centered/self.N))
+        #self.l_prstnc = np.dot(self.n[:,0].T,self.lc[:,-1])
+        self.box = np.vstack((np.min(self.Cc, axis=1), np.max(self.Cc, axis=1)))
+        
+    def chain_block(self):
+        """
+        Call the chain function acd calculate particle trajectory in WL-chain.
+        """
+        
+        # call 'chain_Rayleigh' function
+        # if self.apply_SA == 0:
+        #     self.lc, self.Cc, self.O, self.n = chain_Rayleigh_woSA(self.N,self.a,self.lmbda,self.unit_C,
+        #                                                       apply_SA=self.apply_SA,d_exc=self.d_exc)
+        # else:
+        self.lc, self.Cc, self.O, self.n, self.N1 = chain_Rayleigh_block(self.N,self.a,self.f,self.lmbda,self.unit_C,
                                                               apply_SA=self.apply_SA,d_exc=self.d_exc)
             
         self.l_contour = np.sum(np.sqrt(np.sum(self.n**2,axis=0)))
@@ -227,6 +250,64 @@ class WLChain:
         if end==1:
             ax.plot(self.Cc[0,0],self.Cc[1,0],self.Cc[2,0], 
                         'o', markeredgecolor='#000080', markerfacecolor='#0000D0')
+            ax.plot(self.Cc[0,-1],self.Cc[1,-1],self.Cc[2,-1], 
+                        'o', markeredgecolor='#008000', markerfacecolor='#00D000')
+        
+        #CM = np.mean(Cc_backbone,axis=1)
+        CT = np.array([np.max(self.Cc[0,:])+np.min(self.Cc[0,:]),
+                       np.max(self.Cc[1,:])+np.min(self.Cc[1,:]),
+                       np.max(self.Cc[2,:])+np.min(self.Cc[2,:])])/2
+        d_box = np.max([np.max(self.Cc[0,:])-np.min(self.Cc[0,:]),
+                        np.max(self.Cc[1,:])-np.min(self.Cc[1,:]),
+                        np.max(self.Cc[2,:])-np.min(self.Cc[2,:])])
+        
+        if show_axes==0:
+            ax.set_xticklabels([])
+            ax.set_yticklabels([])
+            ax.set_zticklabels([])
+            #ax.axis('off')
+        
+        ax.set_xlim([CT[0]-d_box/2, CT[0]+d_box/2])
+        ax.set_ylim([CT[1]-d_box/2, CT[1]+d_box/2])
+        ax.set_zlim([CT[2]-d_box/2, CT[2]+d_box/2])
+        ax.set_box_aspect([1,1,1])
+        
+        if save==1:
+            plt.savefig(filename)
+
+        plt.show()
+        
+    def plot_block(self, filename=[], show_axes=1, save=0, end=1):
+        """
+        Plot polymer chain.
+        
+        Args:
+            filename: str
+                path of the generated figure
+                
+            show_axes: boolean
+            
+            save: boolean
+            
+            end: boolean
+                whether to display the end-point of loop
+        """
+        
+        #plt.close('all')
+        fig = plt.figure(figsize=(6, 6),dpi=192)
+        ax = fig.add_subplot(projection='3d')
+        
+        ax.plot(self.Cc[0,:self.N1],self.Cc[1,:self.N1],self.Cc[2,:self.N1], 
+                '-', color='#D00000', linewidth=2, alpha = 0.75)
+        ax.plot(self.Cc[0,self.N1:],self.Cc[1,self.N1:],self.Cc[2,self.N1:], 
+                '-', color='#0000D0', linewidth=2, alpha = 0.75)
+        # ax.plot(self.Cc[0,:],self.Cc[1,:],self.Cc[2,:], 
+        #         'o', markeredgecolor='#800000', markerfacecolor='#D00000')
+        
+        # plot chain end
+        if end==1:
+            ax.plot(self.Cc[0,0],self.Cc[1,0],self.Cc[2,0], 
+                        'o', markeredgecolor='#008000', markerfacecolor='#00D000')
             ax.plot(self.Cc[0,-1],self.Cc[1,-1],self.Cc[2,-1], 
                         'o', markeredgecolor='#008000', markerfacecolor='#00D000')
         
@@ -463,7 +544,7 @@ class WLChain:
         check self avoiding
         """
         d2_exc = self.d_exc**2
-        i_diameter = int(np.ceil(5/3*self.d_exc/self.lmbda))
+        i_diameter = (np.ceil(5/3*self.d_exc/self.lmbda)).astype(int)
         n_intersection = 0
         for i in range(i_diameter,self.N):
             d2_ij = np.min(np.sum((self.Cc[:,i].T-self.Cc[:,:i-i_diameter+1].T)**2,axis=1))
