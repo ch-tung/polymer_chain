@@ -64,7 +64,7 @@ def scattering_loop(n_q,n_chain,chain01):
         # tStart = time.time()
         # chain01.scatter_grid(n_grid=n_q*2)
         # chain01.scatter_grid_direct(n_q=len(qq),n_grid=256,box_size=np.max(chain_box[1,:]-chain_box[0,:])+1) 
-        chain01.scatter_direct(qq,n_merge=0)
+        chain01.scatter_direct(qq,n_merge=1)
         S_q_j = S_q_j + chain01.S_q
         # tEnd = time.time()
         # print("\'scatter\' cost %f sec" % (tEnd - tStart))

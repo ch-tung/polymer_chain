@@ -1,0 +1,24 @@
+#!/bin/bash
+#PBS -P MST109322
+#PBS -N scatter_sfr_block
+#PBS -l select=1:ncpus=4:mpiprocs=4
+#PBS -q cf40
+#PBS -j eo 
+
+cd /work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block
+
+#OMP_NUM_THREADS=1
+
+echo "Your job starts at Tue Nov 30 21:34:00 CST 2021"
+
+module purge 
+module load anaconda3/5.1.10
+module load intel/2018_u1
+
+source activate /home/u6666666/condapy3
+python ./scatter_sfr_block.py
+source deactivate
+wait
+
+echo "Your job ended at  Tue Nov 30 21:34:00 CST 2021 "
+

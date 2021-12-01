@@ -1,0 +1,1043 @@
+Your job starts at Tue Nov 30 21:04:27 CST 2021
+Exception in thread Thread-1:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-2:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-34:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-40:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-12:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-29:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-20:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-17:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-3:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-7:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-43:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-21:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-27:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-23:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-30:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-36:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-37:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-16:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-50:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-4:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-48:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-13:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-41:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-5:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-39:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-38:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-10:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-11:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+Exception in thread Thread-15:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+Exception in thread Thread-18:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-51:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-68:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-32:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-57:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-63:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-70:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-14:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-45:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+Exception in thread Thread-67:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-78:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-69:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-42:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-59:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-22:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-74:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-64:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+Exception in thread Thread-8:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    job(self.j)
+    N_merge = int(N/n_merge)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+ZeroDivisionError: division by zero
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-75:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-65:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-33:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-24:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-79:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+Exception in thread Thread-58:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-31:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-80:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-55:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-71:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-28:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-66:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-77:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-6:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-72:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+Exception in thread Thread-25:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-9:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-53:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-35:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-26:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+Exception in thread Thread-73:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-44:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-56:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-47:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-54:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-61:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-76:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-62:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-46:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+Exception in thread Thread-19:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+Exception in thread Thread-60:
+    job(self.j)
+Traceback (most recent call last):
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+Exception in thread Thread-49:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    self.run()
+    job(self.j)
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+Exception in thread Thread-52:
+Traceback (most recent call last):
+  File "/home/u6666666/condapy3/lib/python3.9/threading.py", line 954, in _bootstrap_inner
+    self.run()
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 110, in run
+    job(self.j)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 95, in job
+    qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/./scatter_sfr_block.py", line 67, in scattering_loop
+    chain01.scatter_direct(qq,n_merge=0)
+  File "/work1/u6666666/polymer_chain/worm_like_micelle/batchscatter/block/WLM.py", line 508, in scatter_direct
+    N_merge = int(N/n_merge)
+ZeroDivisionError: division by zero
+it cost 129.607913 sec
+Your job ended at  Tue Nov 30 21:04:27 CST 2021 
