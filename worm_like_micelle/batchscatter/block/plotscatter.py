@@ -79,7 +79,8 @@ qq_sfr  = scatter_dict['qq']
 a_sfr  = scatter_dict['a'].T
 
 
-Plot.ax.plot(qq_sfr.T,S_q_sfr[:,[0,3]],'--',color = [0,0,0])
+Plot.ax.plot(qq_sfr.T,S_q_sfr[:,[0]],'--',color = [0,0,0])
+Plot.ax.plot(qq_sfr.T,S_q_sfr[:,[3]],'-.',color = [0,0,0])
 
 #%%
 index_p = (p[0] == list(set_a1)[0])&(p[1] == list(set_a2)[3])
@@ -89,7 +90,7 @@ Plot.plot('-')
 index_p = (p[0] == list(set_a1)[3])&(p[1] == list(set_a2)[0])
 Plot.S_q = S_q[:,index_p]
 Plot.p = p[:,index_p]
-Plot.plot(':')
+Plot.plot('-')
 
 
 

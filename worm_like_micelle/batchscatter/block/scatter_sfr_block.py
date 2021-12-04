@@ -22,12 +22,12 @@ unit_C = np.zeros((3,1)) # coordinate of C atoms in each unit
 # Degree of polymerization
 N_backbone = 5000
 
-n_a = 4
-a1 = N_backbone/np.array([1.25,10,80,640])
+# a1 = N_backbone/np.array([1.25,10,80,640])
 a2 = N_backbone/np.array([1.25,10,80,640])
-f = np.array([0.1, 0.2, 0.3, 0.4, 0.5])
-p = np.meshgrid(a1,a2,f)
-p_a1 = p[0].flatten()
+ra = 2**np.arange(8)
+f = 1/2**(np.arange(8))
+p = np.meshgrid(ra,a2,f)
+p_ra = p[0].flatten()
 p_a2 = p[1].flatten()
 p_f = p[2].flatten()
 n_p = len(p_f)
@@ -64,7 +64,7 @@ def scattering_loop(n_q,n_chain,chain01):
         # tStart = time.time()
         # chain01.scatter_grid(n_grid=n_q*2)
         # chain01.scatter_grid_direct(n_q=len(qq),n_grid=256,box_size=np.max(chain_box[1,:]-chain_box[0,:])+1) 
-        chain01.scatter_direct(qq,n_merge=1)
+        chain01.scatter_direct(qq,n_merge=2)
         S_q_j = S_q_j + chain01.S_q
         # tEnd = time.time()
         # print("\'scatter\' cost %f sec" % (tEnd - tStart))
@@ -76,7 +76,7 @@ def scattering_loop(n_q,n_chain,chain01):
 def job(j):
     # parameters
     # Chain stiffness
-    a_backbone = np.array([p_a1[j],p_a2[j]])
+    a_backbone = np.array([p_a2[j]*p_ra[j],p_a2[j]])
     
     # block ratio
     f = p_f[j]
@@ -128,5 +128,5 @@ tEnd = time.time()
 print("it cost %f sec" % (tEnd - tStart))
 from scipy.io import savemat
 filename = 'scatter_chain_block.mat'
-mdic = {'S_q':S_q, 'p':np.array([p_a1,p_a2,p_f]), 'qq':qq}
+mdic = {'S_q':S_q, 'p':np.array([p_ra,p_a2,p_f]), 'qq':qq}
 savemat(filename, mdic)
