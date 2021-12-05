@@ -63,13 +63,14 @@ filename = 'scatter_chain_block.mat'
 scatter_dict = loadmat(filename)
 S_q  = scatter_dict['S_q']
 p = scatter_dict['p']
-set_a1 = set(p[0])
-set_a2 = set(p[1])
-set_f = set(p[2])
+set_ra = sorted(set(p[0]))
+set_a2 = sorted(set(p[1]))
+set_f = sorted(set(p[2]))
 
 Plot.n_plot = len(set_f)
-Plot.n_color = 5
+Plot.n_color = Plot.n_plot
 Plot.plot_setup()
+Plot.ax.set_xlim([1e-4, 1e-1])
 
 #%%
 filename = 'scatter_chain_sfr_woSA.mat'
@@ -83,11 +84,10 @@ Plot.ax.plot(qq_sfr.T,S_q_sfr[:,[0]],'--',color = [0,0,0])
 Plot.ax.plot(qq_sfr.T,S_q_sfr[:,[3]],'-.',color = [0,0,0])
 
 #%%
-index_p = (p[0] == list(set_a1)[0])&(p[1] == list(set_a2)[3])
-Plot.S_q = S_q[:,index_p]
-Plot.p = p[:,index_p]
-Plot.plot('-')
-index_p = (p[0] == list(set_a1)[3])&(p[1] == list(set_a2)[0])
+index_p_a2 = (p[1] == set_a2[0])
+index_p_ra = (p[0] == set_ra[2])
+index_p_f = (p[2] == set_f[6])
+index_p = index_p_a2&index_p_f
 Plot.S_q = S_q[:,index_p]
 Plot.p = p[:,index_p]
 Plot.plot('-')
