@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 # from scipy import interpolate
 
 #%% load
-filename = 'scatter_chain_block.mat'
+filename = 'scatter_chain_block_3.mat'
 scatter_dict = loadmat(filename)
 S_q  = scatter_dict['S_q']
 p = scatter_dict['p']
@@ -24,7 +24,7 @@ set_a2 = sorted(set(p[1]))
 set_f = sorted(set(p[2]))
 
 #%% SVD
-F = S_q
+F = (S_q.T*qq).T
 F = np.log(S_q)
 # F = F - np.mean(F,axis=0)
 F = F
@@ -33,17 +33,22 @@ U, S, Vh = np.linalg.svd(F)
 score_F = np.matmul(F.T,U)
 
 #%% plot
+plt.close('all')
 index_p_a2 = (p[1] == set_a2[0])
-index_p_ra = (p[0] == set_ra[2])
+index_p_ra = (p[0] == set_ra[7])
 index_p_f = (p[2] == set_f[6])
-index_p = index_p_a2
-# index_p = np.arange(256)
+# index_p = index_p_ra
+index_p = np.arange(len(p[1]))
+pc = np.log(p[0][index_p])
+# pc = p[2][index_p]
 
 fig = plt.figure(figsize=(6, 6))
 ax = fig.add_subplot(projection='3d')
 ax.scatter(score_F[index_p,0], score_F[index_p,1], score_F[index_p,2], 
-           c=np.log(p[2][index_p]),
-           s=10)
+           c=pc,
+           s=40,
+           alpha=1,
+           edgecolors = [0,0,0])
 ax.view_init(elev=25, azim=-135)
 ax.set_xlabel('SVD[0]')
 ax.set_ylabel('SVD[1]')

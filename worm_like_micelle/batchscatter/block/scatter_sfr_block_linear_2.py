@@ -22,7 +22,7 @@ unit_C = np.zeros((3,1)) # coordinate of C atoms in each unit
 # Degree of polymerization
 N_backbone = 5000
 
-i_a2 = 3
+i_a2 = 2
 # a1 = N_backbone/np.array([1.25,10,80,640])
 a2 = N_backbone/np.array([1.25,10,80,640])[i_a2]
 ra = 2**np.arange(8)
