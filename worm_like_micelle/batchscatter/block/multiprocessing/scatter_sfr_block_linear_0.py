@@ -54,7 +54,7 @@ def scattering_loop(n_q,n_chain,chain01):
         S(Q).
 
     """
-    qq = 2*np.pi/(np.logspace(1,5,n_q))
+    qq = qq = (np.logspace(-4,0,65))
     S_q_j = np.zeros(n_q)
     for i in np.arange(n_chain):
 
@@ -91,8 +91,8 @@ def job(j):
     chain01 = WLChain(N_backbone,a_backbone,lambda_backbone,unit_C)
     chain01.f = f
     
-    n_q = 64 
-    n_chain = 1
+    n_q = 65 
+    n_chain = 1000
 
     # tStart_loop = time.time()
     qq, S_q_j = scattering_loop(n_q,n_chain,chain01)
@@ -100,33 +100,22 @@ def job(j):
     # print("\'loop\' cost %f sec" % (tEnd_loop - tStart_loop))
     
     S_q[:,j] = S_q_j
-    
-S_q = np.zeros((64,n_p))
+
+#%% run
+S_q = np.zeros((65,n_p))
 n_j = n_p
-
-
-# class MyProcess(multiprocessing.Process):
-#     def __init__(self, j):
-#         multiprocessing.Process.__init__(self)
-#         self.j = j
-    
-#     def run(self):
-#         job(self.j)
 
 process_list = []
 tStart = time.time()
 
 for j in range(n_j):
-    
-    # job(j)
-    # threads.append(threading.Thread(target = job, args = (j,)))
     process_list.append(multiprocessing.Process(target = job(j)))
     process_list[j].start()
     
 for j in range(n_j):
     process_list[j].join()
 
-qq = 2*np.pi/(np.logspace(1,5,64))
+qq = (np.logspace(-4,0,65))
 
 tEnd = time.time()
 print("it cost %f sec" % (tEnd - tStart))
