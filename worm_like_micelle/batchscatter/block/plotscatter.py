@@ -32,8 +32,8 @@ class Plotscatter():
         
         self.ax.set_xscale('log')
         self.ax.set_yscale('log')
-        self.ax.set_xlim([np.sqrt(np.min(self.qq)*np.max(self.qq))*10**-2,np.sqrt(np.min(self.qq)*np.max(self.qq))*10**2])
-        self.ax.set_ylim([2e-4, 2e0])
+        self.ax.set_xlim([5e-4, 2e-1])
+        self.ax.set_ylim([0.5e-2, 2e0])
         self.ax.set_xlabel('$Q$')
         self.ax.set_ylabel('$S(Q)$')
         self.ax.grid(True,which='major')
@@ -59,35 +59,54 @@ Plot = Plotscatter()
 
 
 #%% load
-filename = 'scatter_chain_block.mat'
+# load mat files
+# grep shape
+filename = 'scatter_chain_block_0.mat'
 scatter_dict = loadmat(filename)
-S_q  = scatter_dict['S_q']
-p = scatter_dict['p']
+qq_max = 2
+qq = scatter_dict['qq'][0,:]
+S_q_0  = scatter_dict['S_q'][qq<qq_max,:]
+p_0 = scatter_dict['p']
+
+
+n_mat = 10
+S_q = np.zeros((np.shape(S_q_0)[0],np.shape(S_q_0)[1]*n_mat))
+p = np.zeros((np.shape(p_0)[0],np.shape(p_0)[1]*n_mat))
+for i in range(n_mat):
+    filename = 'scatter_chain_block_{:d}.mat'.format(i)
+    scatter_dict = loadmat(filename)
+    S_q[:,i*np.shape(S_q_0)[1]:(i+1)*np.shape(S_q_0)[1]] = scatter_dict['S_q'][qq<qq_max,:]
+    p[:,i*np.shape(p_0)[1]:(i+1)*np.shape(p_0)[1]] = scatter_dict['p']
+    
 set_ra = sorted(set(p[0]))
 set_a2 = sorted(set(p[1]))
 set_f = sorted(set(p[2]))
 
+qq = qq[qq<qq_max]
+
+Plot.qq = scatter_dict['qq'][0,:]
+
 Plot.n_plot = len(set_f)
 Plot.n_color = Plot.n_plot
 Plot.plot_setup()
-Plot.ax.set_xlim([1e-4, 1e-1])
+Plot.ax.set_xlim([5e-4, 2e-1])
 
-#%%
-filename = 'scatter_chain_sfr_woSA.mat'
-scatter_dict = loadmat(filename)
-S_q_sfr  = scatter_dict['S_q']
-qq_sfr  = scatter_dict['qq']
-a_sfr  = scatter_dict['a'].T
+# #%%
+# filename = 'scatter_chain_sfr_woSA.mat'
+# scatter_dict = loadmat(filename)
+# S_q_sfr  = scatter_dict['S_q']
+# qq_sfr  = scatter_dict['qq']
+# a_sfr  = scatter_dict['a'].T
 
 
-Plot.ax.plot(qq_sfr.T,S_q_sfr[:,[0]],'--',color = [0,0,0])
-Plot.ax.plot(qq_sfr.T,S_q_sfr[:,[3]],'-.',color = [0,0,0])
+# Plot.ax.plot(qq_sfr.T,S_q_sfr[:,[0]],'--',color = [0,0,0])
+# Plot.ax.plot(qq_sfr.T,S_q_sfr[:,[3]],'-.',color = [0,0,0])
 
 #%%
 index_p_a2 = (p[1] == set_a2[0])
-index_p_ra = (p[0] == set_ra[2])
-index_p_f = (p[2] == set_f[6])
-index_p = index_p_a2&index_p_f
+index_p_ra = (p[0] == set_ra[9])
+index_p_f = (p[2] == set_f[8])
+index_p = index_p_f&index_p_a2
 Plot.S_q = S_q[:,index_p]
 Plot.p = p[:,index_p]
 Plot.plot('-')

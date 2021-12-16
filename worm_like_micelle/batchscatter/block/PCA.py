@@ -64,24 +64,26 @@ pc_0 = p[0][index_p]
 pc_0 = (pc_0-min(pc_0))/(max(pc_0)-min(pc_0))
 
 # property to be presented 1
-pc_1 = p[1][index_p]
+pc_1 = 1/p[1][index_p]
 pc_1 = (pc_1-min(pc_1))/(max(pc_1)-min(pc_1))
 
 # property to be presented 2
 pc_2 = p[2][index_p]
 pc_2 = (pc_2-min(pc_2))/(max(pc_2)-min(pc_2))
 
-c = plt.get_cmap('viridis')(pc_0)
-c[:,0] = pc_0*1
-c[:,1] = pc_1*0
-c[:,2] = pc_2*0
-c[:,3] = np.ones(c[:,0].shape)
+c = plt.get_cmap('viridis')(pc_1)
+# c[:,0] = pc_0*0
+# c[:,1] = pc_1*0
+# c[:,2] = pc_2*1
+# c[:,3] = np.ones(c[:,0].shape)
 
 # SVD
 F = S_q
 F = (F[:,:].T*qq).T
 F = np.log(F)
-# F = F - np.mean(F,axis=0)
+F = F - np.mean(F,axis=0)
+# F = np.gradient(F,axis=0)
+# F = np.gradient(F,axis=0)
 U, S, Vh = np.linalg.svd(F)
 
 score_F = np.matmul(F.T,U)
@@ -123,7 +125,7 @@ plt.show()
 fig = plt.figure(figsize=(6, 6))
 ax_basis = fig.add_subplot()
 
-n_basis = 4
+n_basis = 3
 x = np.linspace(0.0, 1.0, n_basis)
 color = plt.get_cmap('viridis')(x)
 
@@ -142,3 +144,24 @@ ax_var.plot(np.arange(len(S)),S)
 ax_var.set_yscale('log')
 ax_var.set_xlabel('rank')
 ax_var.set_ylabel(r'$\Sigma$')
+
+#%% plot score
+# plt.close('all')
+
+fig = plt.figure(figsize=(6, 6))
+ax_s = fig.add_subplot(projection='3d')
+
+# connect points with the same ra
+ax_s.scatter(p[0,index_p], p[1,index_p], p[2,index_p], 
+            'o',
+            s=200,
+            c = score_F[index_p,2],
+            alpha=1,
+            lw=0,
+            edgecolors='k')
+ax_s.view_init(elev=15, azim=-144)
+ax_s.set_xlabel(r'$b_2/b_1$')
+ax_s.set_ylabel(r'$b_1$')
+ax_s.set_zlabel(r'$f$')
+
+plt.show()
