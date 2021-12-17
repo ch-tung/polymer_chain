@@ -64,14 +64,21 @@ pc_0 = p[0][index_p]
 pc_0 = (pc_0-min(pc_0))/(max(pc_0)-min(pc_0))
 
 # property to be presented 1
-pc_1 = 1/p[1][index_p]
+pc_1 = p[1][index_p]
 pc_1 = (pc_1-min(pc_1))/(max(pc_1)-min(pc_1))
 
 # property to be presented 2
 pc_2 = p[2][index_p]
 pc_2 = (pc_2-min(pc_2))/(max(pc_2)-min(pc_2))
 
-c = plt.get_cmap('viridis')(pc_1)
+pc_3 = np.log(p[1][index_p])*(1-p[2][index_p]) + np.log(p[0][index_p]*p[1][index_p])*p[2][index_p]
+pc_3 = (pc_3-min(pc_3))/(max(pc_3)-min(pc_3)) #stiffness
+
+pc_4 = (np.log(p[1][index_p])**2*(1-p[2][index_p]) + np.log(p[0][index_p]*p[1][index_p])**2*p[2][index_p] - 
+    (np.log(p[1][index_p])*(1-p[2][index_p]) + np.log(p[0][index_p]*p[1][index_p])*p[2][index_p])**2)
+pc_4 = (pc_4-min(pc_4))/(max(pc_4)-min(pc_4)) #stiffness
+
+c = plt.get_cmap('viridis')(pc_4)
 # c[:,0] = pc_0*0
 # c[:,1] = pc_1*0
 # c[:,2] = pc_2*1
