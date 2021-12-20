@@ -78,7 +78,7 @@ pc_4 = (np.log(p[1][index_p])**2*(1-p[2][index_p]) + np.log(p[0][index_p]*p[1][i
     (np.log(p[1][index_p])*(1-p[2][index_p]) + np.log(p[0][index_p]*p[1][index_p])*p[2][index_p])**2)
 pc_4 = (pc_4-min(pc_4))/(max(pc_4)-min(pc_4)) #stiffness
 
-c = plt.get_cmap('viridis')(pc_4)
+c = plt.get_cmap('viridis')(pc_3)
 # c[:,0] = pc_0*0
 # c[:,1] = pc_1*0
 # c[:,2] = pc_2*1
@@ -162,7 +162,7 @@ ax_s = fig.add_subplot(projection='3d')
 ax_s.scatter(p[0,index_p], p[1,index_p], p[2,index_p], 
             'o',
             s=200,
-            c = score_F[index_p,2],
+            c = score_F[index_p,0],
             alpha=1,
             lw=0,
             edgecolors='k')
