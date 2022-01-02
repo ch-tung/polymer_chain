@@ -37,7 +37,7 @@ set_stats0 = sorted(set(stats[:,0]))
 set_stats1 = sorted(set(stats[:,1]))
 set_stats2 = sorted(set(stats[:,2]))
 
-n_mat = 10
+n_mat = 11
 S_q = np.zeros((np.shape(S_q_0)[0],np.shape(S_q_0)[1]*n_mat))
 p = np.zeros((np.shape(p_0)[0],np.shape(p_0)[1]*n_mat))
 for i in range(n_mat):
