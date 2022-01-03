@@ -24,7 +24,7 @@ tStart = time.time()
 # grep shape
 filename = './scatter_chain_block_0.mat'
 scatter_dict = loadmat(filename)
-qq_max = 1
+qq_max = 2
 qq = scatter_dict['qq'][0,:]
 S_q_0  = scatter_dict['S_q'][qq<qq_max,:]
 p_0 = scatter_dict['p']
@@ -56,13 +56,28 @@ set_ra = sorted(set(p[0]))
 set_a2 = sorted(set(p[1]))
 set_f = sorted(set(p[2]))
 
+# fix the deviation high q limit
+import Sk
+q = qq
+L = 1000
+b = L*2
+S_q_rod = Sk.S_rod(q,L)
+
+for i in range(S_q.shape[1]):
+    S_q_i = S_q[:,i]
+    S_q_i[S_q_i<S_q_rod] = S_q_rod[S_q_i<S_q_rod]
+    S_q[:,i] = S_q_i
+
 qq = qq[qq<qq_max]
 # S_q = S_q.T
 
+# SVD
 F = S_q
-F = (F[:,:].T*qq).T
+F = (F.T/S_q_rod.T).T
+# F = (F[:,:].T*qq).T
 F = np.log(F)
 # F = F - np.mean(F,axis=0)
+# F = np.gradient(F,axis=0)
 F = F.T
 
 #%%prepare input
@@ -102,7 +117,7 @@ pm_3 = (p_2*(np.log(p_0*p_1)-pm_1)**3 + (1-p_2)*(np.log(p_1)-pm_1)**3)/np.sqrt(p
 
 #%% GPR
 X = F[index_test,:]
-Y = np.log(p_1)
+Y = p_2
 
 import joblib
 export_path_GPR = './saved_model/' 
@@ -125,7 +140,7 @@ model_name_GPR = 'model_GPR_f'
 export_name_GPR = export_path_GPR + model_name_GPR
 gp_f = joblib.load(export_name_GPR)
 
-Y_predict = gp_b1.predict(X, return_std=True)
+Y_predict = gp_f.predict(X, return_std=True)
 
 #%% plot prediction
 plt.close('all')
@@ -134,7 +149,7 @@ fig = plt.figure(figsize=(6, 6))
 ax = fig.add_subplot()
 
 ax.errorbar(Y,Y_predict[0],yerr=Y_predict[1],fmt='.k',capsize=0)
-ax.scatter(Y,Y_predict[0],c=np.log(p_0))
+ax.scatter(Y,Y_predict[0],c=Y)
 ax.plot([min(Y),max(Y)],[min(Y),max(Y)],'-k')
 
 ax.set_xlabel('Y')

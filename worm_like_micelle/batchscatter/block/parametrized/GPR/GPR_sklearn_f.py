@@ -24,7 +24,7 @@ tStart = time.time()
 # grep shape
 filename = 'scatter_chain_block_0.mat'
 scatter_dict = loadmat(filename)
-qq_max = 1
+qq_max = 2
 qq = scatter_dict['qq'][0,:]
 S_q_0  = scatter_dict['S_q'][qq<qq_max,:]
 p_0 = scatter_dict['p']
@@ -56,14 +56,30 @@ set_ra = sorted(set(p[0]))
 set_a2 = sorted(set(p[1]))
 set_f = sorted(set(p[2]))
 
+# fix the deviation high q limit
+import Sk
+q = qq
+L = 1000
+b = L*2
+S_q_rod = Sk.S_rod(q,L)
+
+for i in range(S_q.shape[1]):
+    S_q_i = S_q[:,i]
+    S_q_i[S_q_i<S_q_rod] = S_q_rod[S_q_i<S_q_rod]
+    S_q[:,i] = S_q_i
+
 qq = qq[qq<qq_max]
 # S_q = S_q.T
 
+# SVD
 F = S_q
-F = (F[:,:].T*qq).T
+F = (F.T/S_q_rod.T).T
+# F = (F[:,:].T*qq).T
 F = np.log(F)
 # F = F - np.mean(F,axis=0)
+# F = np.gradient(F,axis=0)
 F = F.T
+
 #%%prepare input
 index_p_ra = (p[0] != set_ra[0])
 index_p_a2 = (p[1] == set_a2[0])
@@ -103,9 +119,9 @@ pm_3 = (p_2*(np.log(p_0*p_1)-pm_1)**3 + (1-p_2)*(np.log(p_1)-pm_1)**3)/np.sqrt(p
 X = F[index_train,:]
 Y = p_2
 
-len_s = 0.404
+len_s = 0.383
 
-sigma_y2 = 0.00289
+sigma_y2 = 0.00312
 
 kernel = RBF(len_s, (1e-3, 1e1)) + WhiteKernel(sigma_y2, (1e-3,1e0))
 gp = GaussianProcessRegressor(kernel=kernel, alpha=0.0, n_restarts_optimizer=10)
