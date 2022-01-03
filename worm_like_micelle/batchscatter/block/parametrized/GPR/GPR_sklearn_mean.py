@@ -62,14 +62,14 @@ qq = qq[qq<qq_max]
 F = S_q
 F = (F[:,:].T*qq).T
 F = np.log(F)
-F = F - np.mean(F,axis=0)
+# F = F - np.mean(F,axis=0)
 F = F.T
 #%%prepare input
 index_p_ra = (p[0] != set_ra[0])
 index_p_a2 = (p[1] == set_a2[0])
 index_p_f = (p[2] == set_f[0])
 index_p = index_p_ra # bool
-# index_p = np.arange(len(p[1])) # all datapoints, bool
+index_p = np.arange(len(p[1])) # all datapoints, bool
 
 rng = np.random.default_rng(0)
 index = np.arange(len(p[1]))[index_p]
@@ -103,9 +103,9 @@ pm_3 = (p_2*(np.log(p_0*p_1)-pm_1)**3 + (1-p_2)*(np.log(p_1)-pm_1)**3)/np.sqrt(p
 X = F[index_train,:]
 Y = pm_1
 
-len_s = 0.23
+len_s = 0.254
 
-sigma_y2 = 0.00422
+sigma_y2 = 0.00416
 
 kernel = RBF(len_s, (1e-3, 1e1)) + WhiteKernel(sigma_y2, (1e-4,1e-1))
 gp = GaussianProcessRegressor(kernel=kernel, alpha=0.0, n_restarts_optimizer=10)

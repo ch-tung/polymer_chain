@@ -105,7 +105,7 @@ pm_c_3 = (pm_3-np.nanmin(pm_3[np.isfinite(pm_3)]))/(np.nanmax(pm_3[np.isfinite(p
 F = S_q
 F = (F[:,:].T*qq).T
 F = np.log(F)
-F = F - np.mean(F,axis=0)
+# F = F - np.mean(F,axis=0)
 # F = np.gradient(F,axis=0)
 # F = np.gradient(F,axis=0)
 U, S, Vh = np.linalg.svd(F)
@@ -149,6 +149,8 @@ ax.view_init(elev=25, azim=25)
 ax.set_xlabel('SVD[0]')
 ax.set_ylabel('SVD[1]')
 ax.set_zlabel('SVD[2]')
+d_score = np.max(score_F[index_p,0:3],axis = 0)-np.min(score_F[index_p,0:3],axis = 0)
+ax.set_box_aspect([d_score[0],d_score[1],d_score[2]])
 
 plt.show()
 

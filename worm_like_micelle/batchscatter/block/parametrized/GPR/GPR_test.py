@@ -62,7 +62,7 @@ qq = qq[qq<qq_max]
 F = S_q
 F = (F[:,:].T*qq).T
 F = np.log(F)
-F = F - np.mean(F,axis=0)
+# F = F - np.mean(F,axis=0)
 F = F.T
 
 #%%prepare input
@@ -102,7 +102,7 @@ pm_3 = (p_2*(np.log(p_0*p_1)-pm_1)**3 + (1-p_2)*(np.log(p_1)-pm_1)**3)/np.sqrt(p
 
 #%% GPR
 X = F[index_test,:]
-Y = pm_3
+Y = np.log(p_1)
 
 import joblib
 export_path_GPR = './saved_model/' 
@@ -117,9 +117,15 @@ export_name_GPR = export_path_GPR + model_name_GPR
 gp_skew = joblib.load(export_name_GPR)
 model_name_GPR = 'model_GPR_b1'
 export_name_GPR = export_path_GPR + model_name_GPR
-gp_r1 = joblib.load(export_name_GPR)
+gp_b1 = joblib.load(export_name_GPR)
+model_name_GPR = 'model_GPR_rb'
+export_name_GPR = export_path_GPR + model_name_GPR
+gp_rb = joblib.load(export_name_GPR)
+model_name_GPR = 'model_GPR_f'
+export_name_GPR = export_path_GPR + model_name_GPR
+gp_f = joblib.load(export_name_GPR)
 
-Y_predict = gp_skew.predict(X, return_std=True)
+Y_predict = gp_b1.predict(X, return_std=True)
 
 #%% plot prediction
 plt.close('all')
@@ -128,7 +134,7 @@ fig = plt.figure(figsize=(6, 6))
 ax = fig.add_subplot()
 
 ax.errorbar(Y,Y_predict[0],yerr=Y_predict[1],fmt='.k',capsize=0)
-ax.scatter(Y,Y_predict[0],c=Y)
+ax.scatter(Y,Y_predict[0],c=np.log(p_0))
 ax.plot([min(Y),max(Y)],[min(Y),max(Y)],'-k')
 
 ax.set_xlabel('Y')

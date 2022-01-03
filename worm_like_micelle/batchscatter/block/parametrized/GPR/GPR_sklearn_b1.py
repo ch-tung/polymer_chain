@@ -62,25 +62,31 @@ qq = qq[qq<qq_max]
 F = S_q
 F = (F[:,:].T*qq).T
 F = np.log(F)
-F = F - np.mean(F,axis=0)
+# F = F - np.mean(F,axis=0)
 F = F.T
 #%%prepare input
 index_p_ra = (p[0] != set_ra[0])
 index_p_a2 = (p[1] == set_a2[0])
 index_p_f = (p[2] == set_f[0])
-index_p = index_p_ra
-# index_p = np.arange(len(p[1])) # all datapoints
+index_p = index_p_ra # bool
+index_p = np.arange(len(p[1])) # all datapoints, bool
+
+rng = np.random.default_rng(0)
+index = np.arange(len(p[1]))[index_p]
+rng.shuffle(index)
+index_train = index[0:len(index)-100]
+index_test = index[len(index)-100:]
 
 # property to be presented 0
-p_0 = p[0][index_p]
+p_0 = p[0][index_train]
 pc_0 = (p_0-np.nanmin(p_0))/(np.nanmax(p_0)-np.nanmin(p_0))
 
 # property to be presented 1
-p_1 = p[1][index_p]/1000
+p_1 = p[1][index_train]/1000
 pc_1 = (p_1-np.nanmin(p_1))/(np.nanmax(p_1)-np.nanmin(p_1))
 
 # property to be presented 2
-p_2 = p[2][index_p]
+p_2 = p[2][index_train]
 pc_2 = (p_2-np.nanmin(p_2))/(np.nanmax(p_2)-np.nanmin(p_2))
 
 # first moment
@@ -94,12 +100,12 @@ pm_2 = (np.log(p_1)**2*(1-p_2) + np.log(p_0*p_1)**2*p_2 -
 pm_3 = (p_2*(np.log(p_0*p_1)-pm_1)**3 + (1-p_2)*(np.log(p_1)-pm_1)**3)/np.sqrt(pm_2)**3
 
 #%% GPR
-X = F[index_p,:]
-Y = p_1
+X = F[index_train,:]
+Y = np.log(p_1)
 
-len_s = 0.01
+len_s = 0.251
 
-sigma_y2 = 0.01
+sigma_y2 = 0.00136
 
 kernel = RBF(len_s, (1e-3, 1e1)) + WhiteKernel(sigma_y2, (1e-4,1e-1))
 gp = GaussianProcessRegressor(kernel=kernel, alpha=0.0, n_restarts_optimizer=10)

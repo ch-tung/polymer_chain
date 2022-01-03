@@ -62,7 +62,7 @@ qq = qq[qq<qq_max]
 F = S_q
 F = (F[:,:].T*qq).T
 F = np.log(F)
-F = F - np.mean(F,axis=0)
+# F = F - np.mean(F,axis=0)
 F = F.T
 #%%prepare input
 index_p_ra = (p[0] != set_ra[0])
@@ -103,7 +103,7 @@ pm_3 = (p_2*(np.log(p_0*p_1)-pm_1)**3 + (1-p_2)*(np.log(p_1)-pm_1)**3)/np.sqrt(p
 X = F[index_train,:]
 Y = pm_3
 
-len_s = 0.164
+len_s = 0.177
 
 sigma_y2 = 0.00654
 
