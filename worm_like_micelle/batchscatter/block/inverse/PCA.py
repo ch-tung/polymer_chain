@@ -23,31 +23,8 @@ qq = scatter_dict['qq'][0,:]
 S_q_0  = scatter_dict['S_q'][qq<qq_max,:]
 p_0 = scatter_dict['p']
 
-# load parameters
-from scipy.io import loadmat
-filename_stats = 'stats_block.mat'
-filename_parameters = 'parameters_block.mat'
-stats_dict = loadmat(filename_stats)
-parameters_dict = loadmat(filename_parameters)
 
-parameters = parameters_dict['parameters']
-
-# load stats
-filename_stats = 'stats_block.mat'
-filename_parameters = 'parameters_block.mat'
-stats_dict = loadmat(filename_stats)
-parameters_dict = loadmat(filename_parameters)
-
-stats = stats_dict['statistics']
-p_m1 = stats[:,0]
-p_m2 = stats[:,1]
-p_m3 = stats[:,2]
-
-set_m1 = sorted(set(p_m1))
-set_m2 = sorted(set(p_m2))
-set_m3 = sorted(set(p_m3))
-
-n_mat = 11
+n_mat = 10
 S_q = np.zeros((np.shape(S_q_0)[0],np.shape(S_q_0)[1]*n_mat))
 p = np.zeros((np.shape(p_0)[0],np.shape(p_0)[1]*n_mat))
 for i in range(n_mat):
@@ -107,12 +84,13 @@ pm_c_1 = (pm_1-np.nanmin(pm_1))/(np.nanmax(pm_1)-np.nanmin(pm_1))
 pm_c_2 = (pm_2-np.nanmin(pm_2))/(np.nanmax(pm_2)-np.nanmin(pm_2))
 pm_c_3 = (pm_3-np.nanmin(pm_3[np.isfinite(pm_3)]))/(np.nanmax(pm_3[np.isfinite(pm_3)])-np.nanmin(pm_3[np.isfinite(pm_3)]))
 
-index_p_m1 = (p_m1 == set_m1[5])
-index_p_m2 = (p_m2 == set_m2[1])
-index_p_m3 = (p_m3 == set_m3[10])
-index_p_ra = (p[0] != set_ra[0])
+# index_p_m1 = (p_m1 == set_m1[5])
+# index_p_m2 = (p_m2 == set_m2[1])
+# index_p_m3 = (p_m3 == set_m3[10])
+index_p_hetero = (p[0] != set_ra[0])
+index_p_ra = (p[0] == set_ra[0])
 index_p_a2 = (p[1] == set_a2[0])
-index_p_f = (p[2] == set_f[0])
+index_p_f = (p[2] == set_f[4])
 index_p = np.arange(len(p[1])) # all datapoints, bool
 
 # SVD
@@ -192,10 +170,10 @@ fig = plt.figure(figsize=(6, 6))
 ax_F = fig.add_subplot()
 
 # index to plot
-index_plot = index_p_m3&index_p_m2&index_p_ra
+index_plot = index_p_f&index_p_a2
 
 # property to be presented in color
-c_plot = p_m1[index_plot]
+c_plot = np.log(p_0[index_plot])
 x_plot = ((c_plot-np.nanmin(c_plot[np.isfinite(c_plot)])) /
           (np.nanmax(c_plot[np.isfinite(c_plot)])-np.nanmin(c_plot[np.isfinite(c_plot)])))
 
@@ -261,26 +239,26 @@ ax_s.set_zlabel(r'$f$')
 
 plt.show()
 
-#%% plot score in moment space
-# plt.close('all')
+# #%% plot score in moment space
+# # plt.close('all')
 
-fig = plt.figure(figsize=(6, 6))
-ax_s = fig.add_subplot(projection='3d')
+# fig = plt.figure(figsize=(6, 6))
+# ax_s = fig.add_subplot(projection='3d')
 
-# connect points with the same ra
-ax_s.scatter(stats[index_p,0], stats[index_p,1], stats[index_p,2], 
-            'o',
-            s=100,
-            c = c_score,
-            alpha=1,
-            lw=0,
-            edgecolors=c_score)
-ax_s.view_init(elev=20, azim=36)
-ax_s.set_xlabel(r'$\mu$')
-ax_s.set_ylabel(r'$\sigma^{2}$')
-ax_s.set_zlabel(r'$\gamma$')
+# # connect points with the same ra
+# ax_s.scatter(stats[index_p,0], stats[index_p,1], stats[index_p,2], 
+#             'o',
+#             s=100,
+#             c = c_score,
+#             alpha=1,
+#             lw=0,
+#             edgecolors=c_score)
+# ax_s.view_init(elev=20, azim=36)
+# ax_s.set_xlabel(r'$\mu$')
+# ax_s.set_ylabel(r'$\sigma^{2}$')
+# ax_s.set_zlabel(r'$\gamma$')
 
-plt.show()
+# plt.show()
 
 #%% plot scree
 fig = plt.figure(figsize=(6, 6))
@@ -290,4 +268,3 @@ ax_var.plot(np.arange(len(S)),S)
 ax_var.set_yscale('log')
 ax_var.set_xlabel('rank')
 ax_var.set_ylabel(r'$\Sigma$')
-
