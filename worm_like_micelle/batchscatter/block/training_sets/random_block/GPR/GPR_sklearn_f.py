@@ -141,9 +141,9 @@ pm_3 = (p_2*(np.log(p_0*p_1)-pm_1)**3 + (1-p_2)*(np.log(p_1)-pm_1)**3)/np.sqrt(p
 X = F[index_train,:]
 Y = p_2
 
-len_s = 0.365
+len_s = 0.653
 
-sigma_y2 = 0.00308
+sigma_y2 = 0.0179
 
 kernel = RBF(len_s, (1e-3, 1e1)) + WhiteKernel(sigma_y2, (1e-3,1e0))
 gp = GaussianProcessRegressor(kernel=kernel, alpha=0.0, n_restarts_optimizer=10)
