@@ -540,6 +540,124 @@ class WLChain:
         self.qq = qq
         self.S_q = S_q
         
+    def scatter_direct_pw(self, qq, n_merge=1):
+        """
+        Calculate scattering function by taking average at the stage of 
+        plane waves superposition.
+        *Applys only for isotropic systems*
+        
+        Args:
+            qq: array
+                wave vectors
+            n_merge: int
+                merge consecutive n_merge beads into one bead
+        """
+        
+        N = self.N
+        # chain_box = self.box
+        
+        # merge beads
+        N_merge = int(N/n_merge)
+        Cc_merge = np.zeros((3,N_merge))
+        for i in range(N_merge):
+            Cc_merge[:,i] = np.mean(self.Cc[:,i*n_merge:(i*n_merge+n_merge)],axis=1)
+            
+        print('{:d} beads used to calculate S(q)'.format(Cc_merge.shape[1]))
+        
+        phi = np.zeros((3,len(qq)),dtype = 'complex_')
+        for i in range(len(qq)):
+            phi[:,i] = np.sum(np.exp((1.j)*qq[i]*Cc_merge),axis=1)
+        
+        phi = phi
+        
+        def abs2(x):
+            return x.real**2 + x.imag**2
+        
+        S_q = np.sum(abs2(phi),axis=0)/3/N_merge**2
+            
+        self.qq = qq
+        self.S_q = S_q
+        
+    def scatter_direct_block(self, qq, n_merge=1):
+        """
+        Calculate scattering function.
+        
+        Args:
+            qq: array
+                wave vectors
+            n_merge: int
+                merge consecutive n_merge beads into one bead
+        """
+        
+        N = self.N
+        f = self.f
+        N1 = int(N*f)
+        N2 = N-N1
+        # chain_box = self.box
+        
+        # merge beads
+        N_merge = int(N/n_merge)
+        # Cc_merge = np.zeros((3,N_merge))
+        # for i in range(N_merge):
+        #     Cc_merge[:,i] = np.mean(self.Cc[:,i*n_merge:(i*n_merge+n_merge)],axis=1)
+        
+        Cc_1 = self.Cc[:,:self.N1]
+        Cc_2 = self.Cc[:,self.N1:]
+        
+        # # merge beads 12
+        N1_merge = int(N1/n_merge)
+        N2_merge = int(N2/n_merge)
+        Cc_1_merge = np.zeros((3,N1_merge))
+        Cc_2_merge = np.zeros((3,N2_merge))
+        for i in range(N1_merge):
+            Cc_1_merge[:,i] = np.mean(Cc_1[:,i*n_merge:(i*n_merge+n_merge)],axis=1)
+        for i in range(N2_merge):
+            Cc_2_merge[:,i] = np.mean(Cc_2[:,i*n_merge:(i*n_merge+n_merge)],axis=1)
+            
+        print('{:d} + {:d} beads used to calculate S(q)'.format(N1_merge,N2_merge))
+
+        # two-point correlation              
+        nq = len(qq)
+        
+        #S_q_11
+        r_11_jk = Cc_1_merge.T.reshape(N1_merge,1,3) - Cc_1_merge.T.reshape(1,N1_merge,3)
+        d_11_jk = np.sqrt(np.sum(r_11_jk**2,axis=2))
+        
+        S_q_11 = np.zeros(int(nq))
+        d_11_jk_list = d_11_jk[d_11_jk!=0]
+
+        #S_q_22
+        r_22_jk = Cc_2_merge.T.reshape(N2_merge,1,3) - Cc_2_merge.T.reshape(1,N2_merge,3)
+        d_22_jk = np.sqrt(np.sum(r_22_jk**2,axis=2))
+        
+        S_q_22 = np.zeros(int(nq))
+        d_22_jk_list = d_22_jk[d_22_jk!=0]
+
+        #S_q_12
+        r_12_jk = Cc_1_merge.T.reshape(N1_merge,1,3) - Cc_2_merge.T.reshape(1,N2_merge,3)
+        d_12_jk = np.sqrt(np.sum(r_12_jk**2,axis=2))
+        
+        S_q_12 = np.zeros(int(nq))
+        d_12_jk_list = d_12_jk[d_12_jk!=0]
+        
+        for iq in range(int(nq)):
+            sinqr_qr_11 = np.sin(qq[iq]*d_11_jk_list)/(qq[iq]*d_11_jk_list)
+            S_q_11[iq] = np.sum(sinqr_qr_11[np.isnan(sinqr_qr_11)==0])
+            sinqr_qr_12 = np.sin(qq[iq]*d_12_jk_list)/(qq[iq]*d_12_jk_list)
+            S_q_12[iq] = np.sum(sinqr_qr_12[np.isnan(sinqr_qr_12)==0])
+            sinqr_qr_22 = np.sin(qq[iq]*d_22_jk_list)/(qq[iq]*d_22_jk_list)
+            S_q_22[iq] = np.sum(sinqr_qr_22[np.isnan(sinqr_qr_22)==0])
+                
+        S_q_11 = S_q_11/N_merge**2        
+        S_q_22 = S_q_22/N_merge**2
+        S_q_12 = S_q_12/N_merge**2*2
+            
+        self.qq = qq
+        self.S_q_11 = S_q_11
+        self.S_q_22 = S_q_22
+        self.S_q_12 = S_q_12
+        self.S_q = S_q_12+S_q_11+S_q_22
+        
     def check_SA(self):
         """
         check self avoiding

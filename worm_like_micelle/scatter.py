@@ -19,10 +19,10 @@ from WLM import WLChain
 unit_C = np.zeros((3,1)) # coordinate of C atoms in each unit
 
 # Degree of polymerization
-N_backbone = 5000
+N_backbone = 1000
 
 # Chain stiffness
-a_backbone = 1e1
+a_backbone = np.array([1e2,1e1])
 
 # Unit persistence
 lambda_backbone = 1
@@ -31,27 +31,30 @@ lambda_backbone = 1
 chain01 = WLChain(N_backbone,a_backbone,lambda_backbone,unit_C)
 chain01.d_exc = 1
 
-n_q = 32
+n_q = 65 
 # qq = np.zeros(n_q)
-qq = 2*np.pi/(np.logspace(1,5,n_q))
+qq = (np.logspace(-4,0,n_q))
 S_q = np.zeros(n_q)
 
-n_chain = 10
+n_chain = 100
 tStart_loop = time.time()
 for i in range(n_chain):
 
     tStart = time.time()
-    chain01.apply_SA = 1
+    chain01.apply_SA = 0
+    chain01.d_exc = chain01.a*0.1*2
+    chain01.f = 0.5
+    chain01.chain_block()
     # chain01.chain()
     # chain01.chain_fix_val_free_rot()
     #chain01.ring(n_harmonics=40,sigma=10)
     #chain01.ring_q()
     
     # chain_grid method
-    chain01.d_exc = 1
-    chain01.kappa = 5
-    chain01.epsilon = 0.1
-    chain01.chain_grid()
+    # chain01.d_exc = 1
+    # chain01.kappa = 2
+    # chain01.epsilon = 0
+    # chain01.chain_grid_shear()
     tEnd = time.time()
     print("\'chain\' cost %f sec" % (tEnd - tStart))
     
@@ -61,7 +64,8 @@ for i in range(n_chain):
     tStart = time.time()
     # chain01.scatter_grid(n_grid=n_q*2)
     # chain01.scatter_grid_direct(n_q=len(qq),n_grid=256,box_size=np.max(chain_box[1,:]-chain_box[0,:])+1) 
-    chain01.scatter_direct(qq,n_merge=2)
+    # chain01.scatter_direct_pw(qq,n_merge=1)
+    chain01.scatter_direct_block(qq,n_merge=1)
     S_q = S_q + chain01.S_q
     tEnd = time.time()
     print("\'scatter\' cost %f sec" % (tEnd - tStart))
