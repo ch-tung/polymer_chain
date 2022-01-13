@@ -76,6 +76,11 @@ n_homo = 100
 S_q_homo = np.zeros((len(q),n_homo))
 for i in range(n_homo):
     S_q_homo[:,i] = Sk.Sk(q,L,L/(0.1+(i)*100/n_homo))
+    
+from scipy.io import savemat
+filename = 'scatter_homo.mat'
+mdic = {'S_q_homo':S_q_homo, 'qq':qq}
+savemat(filename, mdic)
 
 d_th = 100
 S_q_original = S_q*1
@@ -136,9 +141,9 @@ pm_c_3 = (pm_3-np.nanmin(pm_3[np.isfinite(pm_3)]))/(np.nanmax(pm_3[np.isfinite(p
 # index_p_m1 = (p_m1 == set_m1[10])
 # index_p_m2 = (p_m2 == set_m2[10])
 # index_p_m3 = (p_m3 == set_m3[10])
-index_p_ra = (p[0] == set_ra[0])
+index_p_ra = (p[0] == set_ra[4])
 index_p_a2 = (p[1] == set_a2[0])
-index_p_f = (p[2] == set_f[0])
+index_p_f = (p[2] == set_f[4])
 index_p_all = np.arange(len(p[1])) # all datapoints, bool
 index_p = index_p_all[p[0][index_p_all]<100]
 
@@ -208,7 +213,7 @@ ax.scatter(0, 0, 0,
 ax.plot(score_F_homo[:,0], score_F_homo[:,1], score_F_homo[:,2], 
             '-r',
             lw=4)
-ax.view_init(elev=36, azim=105)
+ax.view_init(elev=24, azim=-24)
 ax.set_xlabel('SVD[0]')
 ax.set_ylabel('SVD[1]')
 ax.set_zlabel('SVD[2]')
@@ -234,10 +239,10 @@ ax_basis.set_ylabel('score')
 #%% plot F
 
 # index to plot
-index_plot = index_p_ra&index_p_f
+index_plot = index_p_a2&index_p_ra
 
 # property to be presented in color
-c_plot = p_1[index_plot]
+c_plot = (p_2[index_plot])
 x_plot = ((c_plot-np.nanmin(c_plot[np.isfinite(c_plot)])) /
           (np.nanmax(c_plot[np.isfinite(c_plot)])-np.nanmin(c_plot[np.isfinite(c_plot)])))
 
