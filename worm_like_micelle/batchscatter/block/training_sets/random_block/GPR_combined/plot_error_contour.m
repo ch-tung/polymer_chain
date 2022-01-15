@@ -8,6 +8,7 @@ for j = 1:3
     data = load(filenames{j});
     Y_GT = data.Y_GT;
     Y_infer = data.Y_infer;
+    Y_infer_std = data.Y_infer_std;
     
     AE = abs(Y_infer-Y_GT);
     [maxAE, i_maxAE] = max(AE);
@@ -47,7 +48,17 @@ for j = 1:3
         YY((X>ymin-Dy/16)&(X<ymax+Dy/16),(X>ymin-Dy/16)&(X<ymax+Dy/16)),...
         D_all((X>ymin-Dy/16)&(X<ymax+Dy/16),(X>ymin-Dy/16)&(X<ymax+Dy/16)))
     plot([ymin-Dy/8,ymax+Dy/8],[ymin-Dy/8,ymax+Dy/8],'-','Color','#A0A0A0')
-    plot(Y_GT(i_maxAE),Y_infer(i_maxAE),'xr','LineWidth',2,'MarkerSize',20)
+    plot([Y_GT(i_maxAE),Y_GT(i_maxAE)],...
+        [Y_infer(i_maxAE),Y_GT(i_maxAE)],'--','LineWidth',2,'MarkerSize',20,'Color','r')
+%     plot(Y_GT(i_maxAE),Y_infer(i_maxAE),'xr','LineWidth',2,'MarkerSize',20)
+%     plot(Y_GT(i_maxAE),Y_GT(i_maxAE),'sk','LineWidth',8,'MarkerSize',24)
+    plot(Y_GT(i_maxAE),Y_GT(i_maxAE),'ow','LineWidth',2,'MarkerSize',16,...
+    'MarkerFaceColor','w','MarkerEdgeColor','k')
+    plot(Y_GT(i_maxAE),Y_infer(i_maxAE),'or','LineWidth',2,'MarkerSize',16,...
+    'MarkerFaceColor','r','MarkerEdgeColor','k')
+
+%     errorbar(Y_GT(i_maxAE),Y_infer(i_maxAE),Y_infer_std(i_maxAE),...
+%         'r','LineWidth',2,'MarkerSize',20,'CapSize',12)
     
     caxis([0 4])
     colormap(flipud(gray))
@@ -88,3 +99,13 @@ end
 disp(['i_maxAE = ',num2str(i_maxAE)])
 p_GT_maxAE = Y_GT_all(i_maxAE,:);
 p_infer_maxAE = Y_infer_all(i_maxAE,:);
+
+% %% plot prediction cloud
+% figure(4);
+% axis equal
+% E_all = abs(Y_infer_all-Y_GT_all);
+% RMSE_all = std(E_all);
+% hold on
+% plot3(E_all(:,1)/RMSE_all(1),E_all(:,2)/RMSE_all(2),E_all(:,3)/RMSE_all(3),...
+%     'k.','MarkerSize',1)
+% grid on
