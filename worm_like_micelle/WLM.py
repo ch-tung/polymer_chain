@@ -222,7 +222,7 @@ class WLChain:
     #     self.l_end2end = np.sqrt(np.sum((self.Cc[:,0]-self.Cc[:,-1])**2,axis=0))
     #     self.box = np.vstack((np.min(self.Cc, axis=1), np.max(self.Cc, axis=1)))
     
-    def plot(self, filename=[], show_axes=1, save=0, end=1):
+    def plot(self, filename=[], show_axes=1, save=0, end=1, axeslabel='off'):
         """
         Plot polymer chain.
         
@@ -261,6 +261,11 @@ class WLChain:
         d_box = np.max([np.max(self.Cc[0,:])-np.min(self.Cc[0,:]),
                         np.max(self.Cc[1,:])-np.min(self.Cc[1,:]),
                         np.max(self.Cc[2,:])-np.min(self.Cc[2,:])])
+        
+        if axeslabel=='on':
+            ax.set_xlabel(r'$x$')
+            ax.set_ylabel(r'$y$')
+            ax.set_zlabel(r'$z$')
         
         if show_axes==0:
             ax.set_xticklabels([])
@@ -697,6 +702,10 @@ class WLChain:
         2D spectrum along 
         velocity gradient–vorticity(y–z), flow–vorticity (x–z), and flow–velocity gradient (x–y) planes
         '''
+        
+        def abs2(x):
+            return x.real**2 + x.imag**2
+        
         S_q_2D = np.zeros((int(nq)*2+1,int(nq)*2+1,3))
         qq_2D = np.concatenate((-np.flip(qq), np.array([0.0]), qq))
         i_axes_list = [[1,2],[0,2],[0,1]]
@@ -706,10 +715,12 @@ class WLChain:
                 qqx = qq_2D[iqx]
                 for iqy in range(len(qq)+1):
                     qqy = qq_2D[iqy]
-                    if (qqx*2+qqy**2) != 0:
-                        qr_xy = qqx*r_jk_list[:,i_axes[0]] + qqy*r_jk_list[:,i_axes[1]]
-                        sinqr_qr_2D = np.sin(qr_xy)/(qr_xy)
-                        S_q_2D[iqx,iqy,i] = np.sum(sinqr_qr_2D[np.isnan(sinqr_qr_2D)==0])
+                    # if (qqx*2+qqy**2) != 0:
+                    qr_xy = qqx*r_jk_list[:,i_axes[0]] + qqy*r_jk_list[:,i_axes[1]]
+                    # sinqr_qr_2D = np.sin(qr_xy)/(qr_xy)
+                    # S_q_2D[iqx,iqy,i] = np.sum(sinqr_qr_2D[np.isnan(sinqr_qr_2D)==0])
+                    phi = np.exp((-1.j)*qr_xy)
+                    S_q_2D[iqx,iqy,i] = abs2(np.mean(phi))
             
             # S(q) = S(-q)
             for iqx in range(len(qq_2D)):
@@ -718,8 +729,8 @@ class WLChain:
                     if qqy>0:
                         S_q_2D[iqx,iqy,i] = S_q_2D[len(qq_2D)-1-iqx,len(qq_2D)-1-iqy,i]
                         
-            S_q_2D[:,:,i] = S_q_2D[:,:,i]/N_merge**2
-            S_q_2D[len(qq),len(qq),i] = 1
+            # S_q_2D[:,:,i] = S_q_2D[:,:,i]/N_merge**2
+            # S_q_2D[len(qq),len(qq),i] = 1
             
         self.qq_2D = qq_2D
         self.S_q_2D = S_q_2D

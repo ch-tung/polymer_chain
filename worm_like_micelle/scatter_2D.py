@@ -22,7 +22,7 @@ unit_C = np.zeros((3,1)) # coordinate of C atoms in each unit
 N_backbone = 1000
 
 # Chain stiffness
-a_backbone = np.array([1e2,1e1])
+# a_backbone = np.array([1e2,1e1])
 a_backbone = 1e1
 
 # Unit persistence
@@ -39,7 +39,7 @@ qq = (np.linspace(1/n_q,1,n_q)/10)
 S_q = np.zeros(n_q)
 S_q_2D = np.zeros((int(n_q)*2+1,int(n_q)*2+1,3))
 
-n_chain = 1
+n_chain = 10
 tStart_loop = time.time()
 for i in range(n_chain):
 
@@ -48,16 +48,16 @@ for i in range(n_chain):
     chain01.d_exc = chain01.a*0.1*2
     chain01.f = 0.5
     # chain01.chain_block()
-    chain01.chain()
+    # chain01.chain()
     # chain01.chain_fix_val_free_rot()
     #chain01.ring(n_harmonics=40,sigma=10)
     #chain01.ring_q()
     
     # chain_grid method
-    # chain01.d_exc = 1
-    # chain01.kappa = 2
-    # chain01.epsilon = 0
-    # chain01.chain_grid_shear()
+    chain01.d_exc = 1
+    chain01.kappa = 2
+    chain01.epsilon = 0.02
+    chain01.chain_grid_shear()
     tEnd = time.time()
     print("\'chain\' cost %f sec" % (tEnd - tStart))
     
@@ -69,7 +69,7 @@ for i in range(n_chain):
     # chain01.scatter_grid_direct(n_q=len(qq),n_grid=256,box_size=np.max(chain_box[1,:]-chain_box[0,:])+1) 
     # chain01.scatter_direct_pw(qq,n_merge=1)
     #chain01.scatter_direct_block(qq,n_merge=1)
-    chain01.scatter_direct_aniso(qq,n_merge=1)
+    chain01.scatter_direct_aniso(qq,n_merge=2)
     S_q = S_q + chain01.S_q
     S_q_2D = S_q_2D + chain01.S_q_2D
     tEnd = time.time()
@@ -84,7 +84,7 @@ S_q = S_q/n_chain
 S_q_2D = S_q_2D/n_chain
 
 # chain01.close()
-chain01.plot()
+chain01.plot(axeslabel='on')
 
 #%%
 import matplotlib.pyplot as plt
@@ -115,7 +115,7 @@ fig_2D.subplots_adjust(left=0.1, bottom=0.1, right=0.95, top=0.95, wspace=0.4, h
 labels = [[r'$Q_y$',r'$Q_z$'],[r'$Q_x$',r'$Q_z$'],[r'$Q_x$',r'$Q_y$']]
 
 for i in range(3):
-    ax_2D[i].pcolor(xx, yy, S_q_2D[:,:,i],shading='auto')
+    ax_2D[i].pcolor(xx, yy, S_q_2D[:,:,i],shading='auto',vmin=0.0, vmax=1.0)
     # ax_2D[i].pcolor(S_q_2D[:,:,i],shading='auto')
     ax_2D[i].set_xlabel(labels[i][0])
     ax_2D[i].set_ylabel(labels[i][1])

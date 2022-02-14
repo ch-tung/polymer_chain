@@ -617,7 +617,8 @@ def chain_grid_shear(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
         abort = 0
         for i in range(N):
             if i==0:
-                n_i[i] = random.choice(np.arange(6))
+                # n_i[i] = random.choice(np.arange(6))
+                n_i[i] = 0
                 n[:,i] = r_n[n_i[i],:]
                 l[:,i] = n[:,i]
                 
@@ -746,7 +747,8 @@ def chain_grid_shear_woSA(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
         abort = 0
         for i in range(N):
             if i==0:
-                n_i[i] = random.choice(np.arange(6))
+                # n_i[i] = random.choice(np.arange(6))
+                n_i[i] = 0
                 n[:,i] = r_n[n_i[i],:]
                 l[:,i] = n[:,i]
                 
