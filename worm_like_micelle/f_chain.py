@@ -627,7 +627,7 @@ def chain_grid_shear(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
                 Z = np.zeros((6,6))
                 for iz in range(6):
                     E_phi = kappa*(sin_ij2[iz,:])
-                    E_x = -epsilon*(cos_ij[0,:])*l[2,i-1]
+                    E_x = -epsilon*(cos_ij[0,:])*l[1,i-1]
                     
                     E = E_phi + E_x
                     z_i = np.exp(-E)
@@ -757,7 +757,7 @@ def chain_grid_shear_woSA(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
                 Z = np.zeros((6,6))
                 for iz in range(6):
                     E_phi = kappa*(sin_ij2[iz,:])
-                    E_x = -epsilon*(cos_ij[0,:])*l[2,i-1]
+                    E_x = -epsilon*(cos_ij[0,:])*l[1,i-1]
                     
                     E = E_phi + E_x
                     z_i = np.exp(-E)
