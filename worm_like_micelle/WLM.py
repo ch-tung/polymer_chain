@@ -749,6 +749,67 @@ class WLChain:
         self.qq = qq
         self.S_q = S_q
         
+    def scatter_direct_RSHE(self, qq, n_merge=1):
+        """
+        Calculate scattering function.
+        
+        Args:
+            qq: array
+                wave vectors
+            n_merge: int
+                merge consecutive n_merge beads into one bead
+        """
+        
+        N = self.N
+        # chain_box = self.box
+        
+        # merge beads
+        N_merge = int(N/n_merge)
+        Cc_merge = np.zeros((3,N_merge))
+        for i in range(N_merge):
+            Cc_merge[:,i] = np.mean(self.Cc[:,i*n_merge:(i*n_merge+n_merge)],axis=1)
+            
+        print('{:d} beads used to calculate S(q)'.format(Cc_merge.shape[1]))
+
+        # two-point correlation
+        n_list = N_merge
+        # r_jk = self.Cc.T.reshape(n_list,1,3) - self.Cc.T.reshape(1,n_list,3)
+        r_jk = Cc_merge.T.reshape(n_list,1,3) - Cc_merge.T.reshape(1,n_list,3)
+        d_jk = np.sqrt(np.sum(r_jk**2,axis=2))
+        d_jk_list = d_jk[d_jk!=0]
+        r_jk_list = np.zeros((len(d_jk_list),3))
+        for i in range(3):
+            r_jk_i = r_jk[:,:,i]
+            r_jk_list[:,i] = r_jk_i[d_jk!=0]
+        
+        nq = len(qq)
+        
+        S_q = np.zeros(int(nq))
+        S_q_lm = np.zeros((int(nq),6))
+        RSHE_coeff = [np.sqrt(1/np.pi)/2,
+                      np.sqrt(15/np.pi)/2,np.sqrt(15/np.pi)/2,np.sqrt(5/np.pi)/4,np.sqrt(15/np.pi)/2,np.sqrt(15/np.pi)/4]/(np.sqrt(1/np.pi)/2)
+        for iq in range(int(nq)):
+            sinqr_qr = np.sin(qq[iq]*d_jk_list)/(qq[iq]*d_jk_list)
+            S_q[iq] = np.sum(sinqr_qr[np.isnan(sinqr_qr)==0])
+            
+            Y0mq = RSHE_coeff[0]
+            S_q_lm[iq,0] = np.sum((sinqr_qr*Y0mq)[np.isnan(sinqr_qr)==0])
+            
+            Y2mq = [RSHE_coeff[1]*r_jk_list[:,0]*r_jk_list[:,1]/d_jk_list**2,
+                    RSHE_coeff[2]*r_jk_list[:,1]*r_jk_list[:,2]/d_jk_list**2,
+                    RSHE_coeff[3]*(2*r_jk_list[:,2]**2-r_jk_list[:,0]**2-r_jk_list[:,1]**2)/d_jk_list**2,
+                    RSHE_coeff[4]*r_jk_list[:,0]*r_jk_list[:,2]/d_jk_list**2,
+                    RSHE_coeff[5]*(r_jk_list[:,0]**2-r_jk_list[:,1]**2)/d_jk_list**2]
+            for im in range(5):
+                S_q_lm[iq,im+1] = np.sum((sinqr_qr*Y2mq[im])[np.isnan(sinqr_qr)==0])
+        
+        S_q = S_q/N_merge**2
+        S_q_lm = S_q_lm/N_merge**2
+        
+        self.qq = qq
+        self.S_q = S_q
+        self.S_q_lm = S_q_lm
+        
     def check_SA(self):
         """
         check self avoiding
