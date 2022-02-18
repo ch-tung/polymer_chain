@@ -376,7 +376,7 @@ def chain_fix_val_free_rot_woSA(N, a, lambda_seg, unit_C, apply_SA=0, d_exc=1):
 
 #%% 
 import random
-def chain_grid(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
+def chain_grid(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1, grid='SC'):
     """
     Monte Carlo simulations of lattice models for polymer chains.
     
@@ -418,10 +418,20 @@ def chain_grid(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
     i_diameter = int(np.ceil(np.pi/2*d_exc/lambda_seg))
     
     # coordinate 
-    # 6 orientations following the arrangement of standard dice
-    # 1/6 for +x/-x; 2/5 for +y/-y; 3/4 for +z/-z
-    r_n = np.array([[1,0,0],[0,1,0],[0,0,1],[0,0,-1],[0,-1,0],[-1,0,0]])
-    r_opp = np.array([5,4,3,2,1,0])
+    if grid=='SC':
+        # 6 orientations following the arrangement of standard dice
+        # 1/6 for +x/-x; 2/5 for +y/-y; 3/4 for +z/-z
+        r_n = np.array([[1,0,0],[0,1,0],[0,0,1],[0,0,-1],[0,-1,0],[-1,0,0]])
+        r_opp = np.array([5,4,3,2,1,0])
+    
+    if grid=='RB':
+        # rhombic dodecahedron
+        r_n = np.array([[0,1,1],[0,-1,-1],[0,1,-1],[0,-1,1],
+                        [1,0,1],[-1,0,-1],[1,0,-1],[-1,0,1],
+                        [1,1,0],[-1,-1,0],[1,-1,0],[-1,1,0]])/np.sqrt(2)
+        r_opp = np.array([1,0,3,2,
+                          5,4,7,6,
+                          9,8,11,10])
     
     cos_ij = r_n@r_n.T
     sin_ij2 = 1-cos_ij**2
@@ -431,10 +441,12 @@ def chain_grid(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
     l = np.zeros((3,N))
     
     # energy
-    Z = np.zeros((6,6))
-    for i in range(6):
-        E_phi = kappa*(sin_ij2[i,:])
-        E_x = -epsilon*(cos_ij[0,:])
+    Z = np.zeros((len(r_n),len(r_n)))
+    for i in range(len(r_n)):
+        # E_phi = kappa*(sin_ij2[iz,:])
+        # E_x = -epsilon*(cos_ij[0,:])*l[1,i-1]
+        E_phi = kappa*((np.arccos(cos_ij[i,:])/np.pi*2)**2)
+        E_x = -epsilon*(r_n[:,0])
         
         E = E_phi + E_x
         z_i = np.exp(-E)
@@ -448,13 +460,13 @@ def chain_grid(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
         abort = 0
         for i in range(N):
             if i==0:
-                n_i[i] = random.choice(np.arange(6))
+                n_i[i] = random.choice(np.arange(len(r_n)))
                 n[:,i] = r_n[n_i[i],:]
                 l[:,i] = n[:,i]
                 
             else:
                 z = Z[:,n_i[i-1]]
-                n_i[i] = random.choices(np.arange(6),weights=z)[0]
+                n_i[i] = random.choices(np.arange(len(r_n)),weights=z)[0]
                             
                 n[:,i] = r_n[n_i[i],:]
                 l[:,i] = l[:,i-1] + n[:,i]
@@ -484,7 +496,7 @@ def chain_grid(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
                         print('retry ({:d})'.format(n_retry+1))
                         # n_retry+=1
                         z = Z[:,n_i[i-1]]
-                        n_i[i] = random.choices(np.arange(6),weights=z)[0]
+                        n_i[i] = random.choices(np.arange(len(r_n)),weights=z)[0]
                                     
                         n[:,i] = r_n[n_i[i],:]
                         l[:,i] = l[:,i-1] + n[:,i]
@@ -504,15 +516,25 @@ def chain_grid(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
     
     return lc, Cc, n, Z
 
-def chain_grid_woSA(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=0):
+def chain_grid_woSA(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=0, grid='SC'):
     # d2_exc = d_exc**2
     i_diameter = int(np.ceil(np.pi/2*d_exc/lambda_seg))
     
     # coordinate 
-    # 6 orientations following the arrangement of standard dice
-    # 1/6 for +x/-x; 2/5 for +y/-y; 3/4 for +z/-z
-    r_n = np.array([[1,0,0],[0,1,0],[0,0,1],[0,0,-1],[0,-1,0],[-1,0,0]])
-    r_opp = np.array([5,4,3,2,1,0])
+    if grid=='SC':
+        # 6 orientations following the arrangement of standard dice
+        # 1/6 for +x/-x; 2/5 for +y/-y; 3/4 for +z/-z
+        r_n = np.array([[1,0,0],[0,1,0],[0,0,1],[0,0,-1],[0,-1,0],[-1,0,0]])
+        r_opp = np.array([5,4,3,2,1,0])
+    
+    if grid=='RB':
+        # rhombic dodecahedron
+        r_n = np.array([[0,1,1],[0,-1,-1],[0,1,-1],[0,-1,1],
+                        [1,0,1],[-1,0,-1],[1,0,-1],[-1,0,1],
+                        [1,1,0],[-1,-1,0],[1,-1,0],[-1,1,0]])/np.sqrt(2)
+        r_opp = np.array([1,0,3,2,
+                          5,4,7,6,
+                          9,8,11,10])
     
     cos_ij = r_n@r_n.T
     sin_ij2 = 1-cos_ij**2
@@ -522,10 +544,12 @@ def chain_grid_woSA(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=0):
     l = np.zeros((3,N))
     
     # energy
-    Z = np.zeros((6,6))
-    for i in range(6):
-        E_phi = kappa*(sin_ij2[i,:])
-        E_x = -epsilon*(cos_ij[0,:])
+    Z = np.zeros((len(r_n),len(r_n)))
+    for i in range(len(r_n)):
+        # E_phi = kappa*(sin_ij2[iz,:])
+        # E_x = -epsilon*(cos_ij[0,:])*l[1,i-1]
+        E_phi = kappa*((np.arccos(cos_ij[i,:])/np.pi*2)**2)
+        E_x = -epsilon*(r_n[:,0])
         
         E = E_phi + E_x
         z_i = np.exp(-E)
@@ -539,13 +563,13 @@ def chain_grid_woSA(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=0):
         abort = 0
         for i in range(N):
             if i==0:
-                n_i[i] = random.choice(np.arange(6))
+                n_i[i] = random.choice(np.arange(len(r_n)))
                 n[:,i] = r_n[n_i[i],:]
                 l[:,i] = n[:,i]
                 
             else:
                 z = Z[:,n_i[i-1]]
-                n_i[i] = random.choices(np.arange(6),weights=z)[0]
+                n_i[i] = random.choices(np.arange(len(r_n)),weights=z)[0]
                             
                 n[:,i] = r_n[n_i[i],:]
                 l[:,i] = l[:,i-1] + n[:,i]
@@ -558,7 +582,7 @@ def chain_grid_woSA(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=0):
     
     return lc, Cc, n, Z
 
-def chain_grid_shear(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
+def chain_grid_shear(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1, grid='SC'):
     """
     Monte Carlo simulations of lattice models for polymer chains.
     
@@ -600,10 +624,20 @@ def chain_grid_shear(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
     i_diameter = int(np.ceil(np.pi/2*d_exc/lambda_seg))
     
     # coordinate 
-    # 6 orientations following the arrangement of standard dice
-    # 1/6 for +x/-x; 2/5 for +y/-y; 3/4 for +z/-z
-    r_n = np.array([[1,0,0],[0,1,0],[0,0,1],[0,0,-1],[0,-1,0],[-1,0,0]])
-    r_opp = np.array([5,4,3,2,1,0])
+    if grid=='SC':
+        # 6 orientations following the arrangement of standard dice
+        # 1/6 for +x/-x; 2/5 for +y/-y; 3/4 for +z/-z
+        r_n = np.array([[1,0,0],[0,1,0],[0,0,1],[0,0,-1],[0,-1,0],[-1,0,0]])
+        r_opp = np.array([5,4,3,2,1,0])
+    
+    if grid=='RB':
+        # rhombic dodecahedron
+        r_n = np.array([[0,1,1],[0,-1,-1],[0,1,-1],[0,-1,1],
+                        [1,0,1],[-1,0,-1],[1,0,-1],[-1,0,1],
+                        [1,1,0],[-1,-1,0],[1,-1,0],[-1,1,0]])/np.sqrt(2)
+        r_opp = np.array([1,0,3,2,
+                          5,4,7,6,
+                          9,8,11,10])
     
     cos_ij = r_n@r_n.T
     sin_ij2 = 1-cos_ij**2
@@ -617,17 +651,19 @@ def chain_grid_shear(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
         abort = 0
         for i in range(N):
             if i==0:
-                n_i[i] = random.choice(np.arange(6))
+                n_i[i] = random.choice(np.arange(len(r_n)))
                 # n_i[i] = 0
                 n[:,i] = r_n[n_i[i],:]
                 l[:,i] = n[:,i]
                 
             else:
                 # energy
-                Z = np.zeros((6,6))
-                for iz in range(6):
-                    E_phi = kappa*(sin_ij2[iz,:])
-                    E_x = -epsilon*(cos_ij[0,:])*l[1,i-1]
+                Z = np.zeros((len(r_n),len(r_n)))
+                for iz in range(len(r_n)):
+                    # E_phi = kappa*(sin_ij2[iz,:])
+                    # E_x = -epsilon*(cos_ij[0,:])*l[1,i-1]
+                    E_phi = kappa*((np.arccos(cos_ij[iz,:])/np.pi*2)**2)
+                    E_x = -epsilon*(r_n[:,0])*l[1,i-1]
                     
                     E = E_phi + E_x
                     z_i = np.exp(-E)
@@ -638,7 +674,7 @@ def chain_grid_shear(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
                     
                 z = Z[:,n_i[i-1]]
                 
-                n_i[i] = random.choices(np.arange(6),weights=z)[0]
+                n_i[i] = random.choices(np.arange(len(r_n)),weights=z)[0]
                             
                 n[:,i] = r_n[n_i[i],:]
                 l[:,i] = l[:,i-1] + n[:,i]
@@ -668,7 +704,7 @@ def chain_grid_shear(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
                         print('retry ({:d})'.format(n_retry+1))
                         # n_retry+=1
                         z = Z[:,n_i[i-1]]
-                        n_i[i] = random.choices(np.arange(6),weights=z)[0]
+                        n_i[i] = random.choices(np.arange(len(r_n)),weights=z)[0]
                                     
                         n[:,i] = r_n[n_i[i],:]
                         l[:,i] = l[:,i-1] + n[:,i]
@@ -688,7 +724,7 @@ def chain_grid_shear(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
     
     return lc, Cc, n, Z
 
-def chain_grid_shear_woSA(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
+def chain_grid_shear_woSA(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1, grid='SC'):
     """
     Monte Carlo simulations of lattice models for polymer chains.
     
@@ -730,10 +766,20 @@ def chain_grid_shear_woSA(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
     i_diameter = int(np.ceil(np.pi/2*d_exc/lambda_seg))
     
     # coordinate 
-    # 6 orientations following the arrangement of standard dice
-    # 1/6 for +x/-x; 2/5 for +y/-y; 3/4 for +z/-z
-    r_n = np.array([[1,0,0],[0,1,0],[0,0,1],[0,0,-1],[0,-1,0],[-1,0,0]])
-    r_opp = np.array([5,4,3,2,1,0])
+    if grid=='SC':
+        # 6 orientations following the arrangement of standard dice
+        # 1/6 for +x/-x; 2/5 for +y/-y; 3/4 for +z/-z
+        r_n = np.array([[1,0,0],[0,1,0],[0,0,1],[0,0,-1],[0,-1,0],[-1,0,0]])
+        r_opp = np.array([5,4,3,2,1,0])
+    
+    if grid=='RB':
+        # rhombic dodecahedron
+        r_n = np.array([[0,1,1],[0,-1,-1],[0,1,-1],[0,-1,1],
+                        [1,0,1],[-1,0,-1],[1,0,-1],[-1,0,1],
+                        [1,1,0],[-1,-1,0],[1,-1,0],[-1,1,0]])/np.sqrt(2)
+        r_opp = np.array([1,0,3,2,
+                          5,4,7,6,
+                          9,8,11,10])
     
     cos_ij = r_n@r_n.T
     sin_ij2 = 1-cos_ij**2
@@ -747,17 +793,19 @@ def chain_grid_shear_woSA(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
         abort = 0
         for i in range(N):
             if i==0:
-                n_i[i] = random.choice(np.arange(6))
+                n_i[i] = random.choice(np.arange(len(r_n)))
                 # n_i[i] = 0
                 n[:,i] = r_n[n_i[i],:]
                 l[:,i] = n[:,i]
                 
             else:
                 # energy
-                Z = np.zeros((6,6))
-                for iz in range(6):
-                    E_phi = kappa*(sin_ij2[iz,:])
-                    E_x = -epsilon*(cos_ij[0,:])*l[1,i-1]
+                Z = np.zeros((len(r_n),len(r_n)))
+                for iz in range(len(r_n)):
+                    # E_phi = kappa*(sin_ij2[iz,:])
+                    # E_x = -epsilon*(cos_ij[0,:])*l[1,i-1]
+                    E_phi = kappa*((np.arccos(cos_ij[iz,:])/np.pi*2)**2)
+                    E_x = -epsilon*(r_n[:,0])*l[1,i-1]
                     
                     E = E_phi + E_x
                     z_i = np.exp(-E)
@@ -768,7 +816,7 @@ def chain_grid_shear_woSA(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1):
                     
                 z = Z[:,n_i[i-1]]
                 
-                n_i[i] = random.choices(np.arange(6),weights=z)[0]
+                n_i[i] = random.choices(np.arange(len(r_n)),weights=z)[0]
                             
                 n[:,i] = r_n[n_i[i],:]
                 l[:,i] = l[:,i-1] + n[:,i]
