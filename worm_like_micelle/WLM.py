@@ -788,12 +788,20 @@ class WLChain:
         S_q_lm = np.zeros((int(nq),6))
         RSHE_coeff = [np.sqrt(1/np.pi)/2,
                       np.sqrt(15/np.pi)/2,np.sqrt(15/np.pi)/2,np.sqrt(5/np.pi)/4,np.sqrt(15/np.pi)/2,np.sqrt(15/np.pi)/4]/(np.sqrt(1/np.pi)/2)
+        
+        def j0(x):
+            return np.sin(x)/(x)
+        
+        def j2(x):
+            return np.sin(x)/(x)*(3/x**2-1)-3*np.cos(x)/x**2        
+        
         for iq in range(int(nq)):
-            sinqr_qr = np.sin(qq[iq]*d_jk_list)/(qq[iq]*d_jk_list)
-            S_q[iq] = np.sum(sinqr_qr[np.isnan(sinqr_qr)==0])
+            j0_qr = j0(qq[iq]*d_jk_list)
+            j2_qr = j2(qq[iq]*d_jk_list)
+            S_q[iq] = np.sum(j0_qr[np.isnan(j0_qr)==0])
             
             Y0mq = RSHE_coeff[0]
-            S_q_lm[iq,0] = np.sum((sinqr_qr*Y0mq)[np.isnan(sinqr_qr)==0])
+            S_q_lm[iq,0] = np.sum((j0_qr*Y0mq)[np.isnan(j0_qr)==0])
             
             Y2mq = [RSHE_coeff[1]*r_jk_list[:,0]*r_jk_list[:,1]/d_jk_list**2,
                     RSHE_coeff[2]*r_jk_list[:,1]*r_jk_list[:,2]/d_jk_list**2,
@@ -801,7 +809,7 @@ class WLChain:
                     RSHE_coeff[4]*r_jk_list[:,0]*r_jk_list[:,2]/d_jk_list**2,
                     RSHE_coeff[5]*(r_jk_list[:,0]**2-r_jk_list[:,1]**2)/d_jk_list**2]
             for im in range(5):
-                S_q_lm[iq,im+1] = np.sum((sinqr_qr*Y2mq[im])[np.isnan(sinqr_qr)==0])
+                S_q_lm[iq,im+1] = np.sum((j2_qr*Y2mq[im])[np.isnan(j2_qr)==0])
         
         S_q = S_q/N_merge**2
         S_q_lm = S_q_lm/N_merge**2
