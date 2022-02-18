@@ -444,9 +444,9 @@ def chain_grid(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=1, grid='SC'):
     Z = np.zeros((len(r_n),len(r_n)))
     for i in range(len(r_n)):
         # E_phi = kappa*(sin_ij2[iz,:])
-        # E_x = -epsilon*(cos_ij[0,:])*l[1,i-1]
+        # E_x = -epsilon*(cos_ij[0,:])
         E_phi = kappa*((np.arccos(cos_ij[i,:])/np.pi*2)**2)
-        E_x = -epsilon*(r_n[:,0])
+        E_x = -epsilon*(r_n[:,0]) 
         
         E = E_phi + E_x
         z_i = np.exp(-E)
@@ -547,7 +547,7 @@ def chain_grid_woSA(N, kappa, epsilon, lambda_seg, apply_SA=1, d_exc=0, grid='SC
     Z = np.zeros((len(r_n),len(r_n)))
     for i in range(len(r_n)):
         # E_phi = kappa*(sin_ij2[iz,:])
-        # E_x = -epsilon*(cos_ij[0,:])*l[1,i-1]
+        # E_x = -epsilon*(cos_ij[0,:])
         E_phi = kappa*((np.arccos(cos_ij[i,:])/np.pi*2)**2)
         E_x = -epsilon*(r_n[:,0])
         
