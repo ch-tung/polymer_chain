@@ -52,8 +52,9 @@ for i = 1:3
 %     plot(qL,S_q_rod,'k-','LineWidth',2)
     
     % S_q
-    plot(qL,S_q_GT(i,:),'k-','LineWidth',2)
+%     plot(qL,S_q_GT(i,:),'k--','LineWidth',2)
     plot(qL,S_q_infer(i,:),'r-','LineWidth',2)
+    plot(qL,S_q_GT(i,:),'k--','LineWidth',2)
     
     
     xlim([1e-1,1e3])
@@ -85,9 +86,9 @@ for i = 1:3
 %     plot(qL,S_q_rod./S_q_rod,'k-','LineWidth',2)
     
     % S_q
-    plot(qL,qL*0,'k-','LineWidth',2)
+%     plot(qL,qL*0,'k--','LineWidth',2)
     plot(qL,(S_q_infer(i,:)-S_q_GT(i,:))./S_q_GT(i,:)*100,'r-','LineWidth',2)
-    
+    plot(qL,qL*0,'k--','LineWidth',2)
     
     xlim([1e-1,1e3])
     ylim([-6e0,1e0])
