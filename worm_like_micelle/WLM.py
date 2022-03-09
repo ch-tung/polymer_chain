@@ -750,7 +750,7 @@ class WLChain:
         self.qq = qq
         self.S_q = S_q
         
-    def scatter_direct_RSHE(self, qq, n_merge=1):
+    def scatter_direct_RSHE(self, qq, rr=[], n_merge=1, calculate_g_r=0):
         """
         Calculate scattering function.
         
@@ -784,9 +784,13 @@ class WLChain:
             r_jk_list[:,i] = r_jk_i[d_jk!=0]
         
         nq = len(qq)
+        nr = len(rr)
         
         S_q = np.zeros(int(nq))
         S_q_lm = np.zeros((int(nq),6))
+        g_r = np.zeros(int(nr))
+        g_r_lm = np.zeros((int(nr),6))
+        
         RSHE_coeff = [np.sqrt(1/np.pi)/2,
                       np.sqrt(15/np.pi)/2,np.sqrt(15/np.pi)/2,np.sqrt(5/np.pi)/4,np.sqrt(15/np.pi)/2,np.sqrt(15/np.pi)/4]/(np.sqrt(1/np.pi)/2)
         
@@ -818,6 +822,29 @@ class WLChain:
         self.qq = qq
         self.S_q = S_q
         self.S_q_lm = S_q_lm
+        
+        if calculate_g_r == 1:
+            for ir in range(int(nr)):
+                if ir == 0:
+                    continue
+                index_r = (d_jk_list>rr[ir-1])&(d_jk_list<rr[ir])
+                n_r = np.sum(index_r)
+                d_r = rr[ir]-rr[ir-1]
+                g_r[ir] = n_r/d_r
+                
+                g_r_lm[ir,0] = n_r/d_r
+                
+                Y2mq = [RSHE_coeff[1]*r_jk_list[index_r,0]*r_jk_list[index_r,1]/d_jk_list[index_r]**2,
+                        RSHE_coeff[2]*r_jk_list[index_r,1]*r_jk_list[index_r,2]/d_jk_list[index_r]**2,
+                        RSHE_coeff[3]*(2*r_jk_list[index_r,2]**2-r_jk_list[index_r,0]**2-r_jk_list[index_r,1]**2)/d_jk_list[index_r]**2,
+                        RSHE_coeff[4]*r_jk_list[index_r,0]*r_jk_list[index_r,2]/d_jk_list[index_r]**2,
+                        RSHE_coeff[5]*(r_jk_list[index_r,0]**2-r_jk_list[index_r,1]**2)/d_jk_list[index_r]**2]
+                for im in range(5):
+                    g_r_lm[ir,im+1] = np.sum(Y2mq[im])/d_r
+            
+            self.rr = rr
+            self.g_r = g_r
+            self.g_r_lm = g_r_lm
         
     def check_SA(self):
         """
