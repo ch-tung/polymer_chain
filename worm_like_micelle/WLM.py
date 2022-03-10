@@ -666,7 +666,7 @@ class WLChain:
         
     def scatter_direct_aniso(self, qq, n_merge=1):
         """
-        Calculate scattering function.
+        Calculate 2D spectra.
         
         Args:
             qq: array
@@ -757,8 +757,12 @@ class WLChain:
         Args:
             qq: array
                 wave vectors
+            rr: array
+                pair distances
             n_merge: int
                 merge consecutive n_merge beads into one bead
+            calculate_g_r: 0 or 1
+                if 1, calculate the RSHE of real space correlations
         """
         
         N = self.N
@@ -845,6 +849,47 @@ class WLChain:
             self.rr = rr
             self.g_r = g_r
             self.g_r_lm = g_r_lm
+            
+    def segment_corr(self, rr=[]):
+        """
+        Calculate scattering function.
+        
+        Args:
+            rr: array
+                pair distances
+        """
+        
+        N = self.N
+        segment = self.n # segment vector
+
+        # two-point correlation
+        n_list = N
+        r_jk = self.Cc.T.reshape(n_list,1,3) - self.Cc.T.reshape(1,n_list,3)
+        d_jk = np.sqrt(np.sum(r_jk**2,axis=2))
+
+        nr = len(rr)
+        
+        M_jk = np.zeros((3,3,n_list,n_list))
+        for i in range(3):
+            for j in range(3):
+                M_jk[i,j,:,:] = np.outer(segment[i,:],segment[j,:])       
+
+        cos_r = np.zeros(int(nr))
+        M_corr = np.zeros((3,3,nr))
+        
+        dr = rr[1]-rr[0]
+        index_jk = np.floor(d_jk/dr)
+        for ir in range(int(nr)):
+            index_r = np.reshape(index_jk==ir,n_list**2)
+            for i in range(3):
+                for j in range(3):
+                    M_jk_ij = np.reshape(M_jk[i,j,:,:],n_list**2)
+                    M_corr[i,j,ir] = np.mean(M_jk_ij[index_r])
+            cos_r[ir] = np.trace(M_corr[:,:,ir])
+        
+        self.rr = rr
+        self.cos_r = cos_r
+        self.M_corr = M_corr
         
     def check_SA(self):
         """
