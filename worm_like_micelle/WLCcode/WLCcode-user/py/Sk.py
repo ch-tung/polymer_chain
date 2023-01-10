@@ -7,6 +7,9 @@ WLC scattering functions based on the MATLAB code modified by Guan-Rong Huang Oc
 
 import numpy as np
 import f_Sk
+# from numba import jit
+from scipy.special import sici as sici
+
 
 def Sk(q,L,b):
     p1 = 4.12
@@ -58,4 +61,9 @@ def Sk(q,L,b):
                         np.pi/(q[i]*L))
                 
     return S
-                
+
+
+def S_rod(q,L):
+    y = 2*sici(q*L)[0]/(q*L) - 4*np.sin(q*L/2)**2/(q*L)**2
+
+    return y                

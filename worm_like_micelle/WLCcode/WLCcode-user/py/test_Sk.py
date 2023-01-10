@@ -33,15 +33,17 @@ qq = (np.logspace(-4,0,65))
 import Sk
 
 q = qq
-L = 5000
-b = 1000
+L = 1000
+b = L*2
 S_q_th = Sk.Sk(q,L,b)
+S_q_rod = Sk.S_rod(q,L)
 
 plt.close('all')
 fig = plt.figure(figsize=(6, 6))
 ax = fig.add_subplot()
 ax.plot(qq,S_q_th)
-ax.plot(qq[qq*b>3.1],S_q_th[qq*b>3.1])
+ax.plot(qq,S_q_rod,'-k')
+# ax.plot(qq[qq*b>3.1],S_q_th[qq*b>3.1])
 
 ax.set_xscale('log')
 ax.set_yscale('log')

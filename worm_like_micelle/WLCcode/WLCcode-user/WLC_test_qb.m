@@ -10,14 +10,14 @@ l_contour = 5000;
 
 % load('../../scatter_chain_prstnc.mat')
 load('scatter_chain_sfr_SA.mat')
-plot(qq'.*a(1:6),S_q(:,1:6)./a(1:6)*l_contour,'--r','LineWidth',1)
+plot(qq'.*a(1:4),S_q(:,1:4)./a(1:4)*l_contour,'--r','LineWidth',1)
 
 load('scatter_chain_fvfr_SA.mat')
-plot(qq'.*a(1:6),S_q(:,1:6)./a(1:6)*l_contour,'--b','LineWidth',1)
+plot(qq'.*a(1:4),S_q(:,1:4)./a(1:4)*l_contour,'--b','LineWidth',1)
 
 b = a;
 
-for j = 1:6
+for j = 1:4
     L = l_contour;
     bj = b(j);
     n_q = 64;
