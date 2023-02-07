@@ -496,7 +496,7 @@ class WLChain:
         self.qq = qq
         self.S_q = S_q
         
-    def scatter_direct(self, qq, n_merge=1):
+    def scatter_direct(self, qq, n_merge=1, p_sub=1.0):
         """
         Calculate scattering function.
         
@@ -516,12 +516,14 @@ class WLChain:
         for i in range(N_merge):
             Cc_merge[:,i] = np.mean(self.Cc[:,i*n_merge:(i*n_merge+n_merge)],axis=1)
             
-        print('{:d} beads used to calculate S(q)'.format(Cc_merge.shape[1]))
+#         print('{:d} beads used to calculate S(q)'.format(Cc_merge.shape[1]))
 
         # two-point correlation
-        n_list = N_merge
+        n_list = int(N_merge*p_sub)
+        i_list = np.random.choice(np.arange(N_merge), size=n_list)
         # r_jk = self.Cc.T.reshape(n_list,1,3) - self.Cc.T.reshape(1,n_list,3)
-        r_jk = Cc_merge.T.reshape(n_list,1,3) - Cc_merge.T.reshape(1,n_list,3)
+        # r_jk = Cc_merge.T.reshape(n_list,1,3) - Cc_merge.T.reshape(1,n_list,3)
+        r_jk = Cc_merge[:,i_list].T.reshape(n_list,1,3) - Cc_merge[:,i_list].T.reshape(1,n_list,3)
         d_jk = np.sqrt(np.sum(r_jk**2,axis=2))
         
         # radial average
@@ -541,7 +543,7 @@ class WLChain:
             sinqr_qr = np.sin(qq[iq]*d_jk_list)/(qq[iq]*d_jk_list)
             S_q[iq] = np.sum(sinqr_qr[np.isnan(sinqr_qr)==0])
         
-        S_q = S_q/N_merge**2
+        S_q = S_q/n_list**2
             
         self.qq = qq
         self.S_q = S_q
@@ -870,26 +872,31 @@ class WLChain:
         nr = len(rr)
         
         M_jk = np.zeros((3,3,n_list,n_list))
-        for i in range(3):
-            for j in range(3):
-                M_jk[i,j,:,:] = np.outer(segment[i,:],segment[j,:])       
+        for l in range(3):
+            for m in range(3):
+                M_jk[l,m,:,:] = np.outer(segment[l,:],segment[m,:])
+        M_jk_lm = np.reshape(M_jk,(3,3,n_list**2))
+        
+        cos_lm = np.trace(M_jk_lm, axis1=0, axis2=1)
+        P2_lm = (3*cos_lm**2-1)/2
 
         cos_r = np.zeros(int(nr))
+        P2_r = np.zeros(int(nr))
         M_corr = np.zeros((3,3,nr))
         
         dr = rr[1]-rr[0]
         index_jk = np.floor(d_jk/dr)
-        for ir in range(int(nr)):
+
+        for ir in range(nr):
             index_r = np.reshape(index_jk==ir,n_list**2)
-            for i in range(3):
-                for j in range(3):
-                    M_jk_ij = np.reshape(M_jk[i,j,:,:],n_list**2)
-                    M_corr[i,j,ir] = np.mean(M_jk_ij[index_r])
-            cos_r[ir] = np.trace(M_corr[:,:,ir])
+            cos_r[ir] = np.mean(cos_lm[index_r])
+            P2_r[ir] = np.mean(P2_lm[index_r])
+            M_corr[:,:,ir] = np.mean(M_jk_lm[:,:,index_r],axis=2)
         
         self.rr = rr
         self.cos_r = cos_r
         self.M_corr = M_corr
+        self.P2_r = P2_r
         
     def check_SA(self):
         """
