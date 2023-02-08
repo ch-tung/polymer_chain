@@ -12,6 +12,7 @@ def rotation(O,a):
     theta_q = np.sqrt(-np.log(1-np.random.rand(1)*(1-delta))*2/a)/2
     # ----------------------------------------
     # theta = 2*theta_q = sqrt(-ln(1-X)/a)
+    # theta_q is half of the rotation angle
     # where X is a random variable in [0,1]
     #       a is the persistence length
     # ----------------------------------------
@@ -72,6 +73,7 @@ def rotation_dihedral(O,a):
     # theta = 2*theta_q
     # 2*a = [1+cos(theta)]/[1-cos(theta)]
     # where a is the persistence length
+    # theta_q is half of the rotation angle
     # ----------------------------------------
     
     # if theta_q>np.pi/3*2:

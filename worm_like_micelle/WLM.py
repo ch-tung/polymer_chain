@@ -110,7 +110,7 @@ class WLChain:
         Call the chain function acd calculate particle trajectory in WL-chain.
         """
         
-        # call 'chain_Rayleigh' function
+        # call 'chain_fix_val_free_rot' function
         if self.apply_SA == 0:
             self.lc, self.Cc, self.O, self.n = chain_fix_val_free_rot_woSA(self.N,self.a,self.lmbda,self.unit_C,
                                                               apply_SA=self.apply_SA,d_exc=self.d_exc)
